@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Recitation</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-refresher (ionRefresh)="_doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card *ngFor = "let v of _vocabulary">
+    <ion-card-title>
+      {{v.name}}
+    </ion-card-title>
+    <img [src]="v.cover"/>
+    <ion-card-content>
+      <p>
+        {{v.description}}
+      </p>
+    </ion-card-content>
+    <button ion-button clear small color="danger" icon-left (click)='_goVocabularyOverall(v)'>
+      <ion-icon name='book'></ion-icon>
+      Enter
+    </button>
+  </ion-card>
+  
+</ion-content>

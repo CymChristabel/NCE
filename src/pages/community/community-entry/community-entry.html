@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Community Entry</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+
+<ion-content padding>
+  	<ion-refresher (ionRefresh)="_doRefresh($event)">
+		<ion-refresher-content
+			pullingIcon="arrow-dropdown"
+			pullingText="Pull to refresh"
+			refreshingSpinner="circles"
+			refreshingText="Refreshing...">
+		</ion-refresher-content>
+  	</ion-refresher>
+
+	<ion-list>
+		<button ion-item *ngFor="let i of _communityList" (click)="_goPostList(i)"> 
+			<ion-thumbnail item-left>
+				<img src="img/temp-avatar.jpg">
+			</ion-thumbnail>
+			<ion-row>
+				<ion-col width-50>
+					<h2>{{i.name}}</h2>
+					<h3>{{i.description}}</h3>
+				</ion-col>
+				<ion-col width-20>
+					<p>Topics: {{i.topic}}</p>
+				</ion-col>
+			</ion-row>
+		</button>
+	</ion-list>
+</ion-content>

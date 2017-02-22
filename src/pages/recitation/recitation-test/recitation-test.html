@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>test</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+	<div align="center">
+		<h1>{{_problem.name}}</h1>
+	</div>
+	<div *ngFor='let v of _problem.set'>
+		<button ion-button full color='light' (click)="_onAnswerClick(v.isTrue)">{{v.explainnation}}</button>
+		<p></p>
+		<p></p>
+	</div>
+</ion-content>

@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Slide</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-slides #_slider (ionWillChange)="onSlideChanged()">
+    <ion-slide *ngFor="let p of _slide">
+      <h1>{{p.name}}</h1>
+      <p *ngFor='let e of p.explainnation'>{{e}}</p>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

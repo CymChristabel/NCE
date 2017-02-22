@@ -1,0 +1,70 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>community-post-list</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+	<ion-refresher (ionRefresh)="_doRefresh($event)">
+		<ion-refresher-content
+			pullingIcon="arrow-dropdown"
+			pullingText="Pull to refresh"
+			refreshingSpinner="circles"
+			refreshingText="Refreshing...">
+		</ion-refresher-content>
+  	</ion-refresher>
+
+  	<ion-item> 
+		<ion-thumbnail item-left>
+			<img src="img/temp-avatar.jpg">
+		</ion-thumbnail>
+		<ion-row>
+			<ion-col width-50>
+				<h2>{{_community.name}}</h2>
+				<h3>{{_community.description}}</h3>
+			</ion-col>
+		</ion-row>
+		<button ion-button small item-right>follow</button>
+	</ion-item>
+
+	<ion-card *ngFor="let p of _post">
+
+		<ion-item>
+			<ion-avatar item-left>
+				<img src="img/temp-avatar.jpg">
+			</ion-avatar>
+			<h2>{{p.username}}</h2>
+			<p>{{p.postName}}</p>
+		</ion-item>
+
+		<img *ngIf="p.img != null" [src]="p.img">
+
+		<ion-card-content>
+			<p>{{p.detail}}</p>
+		</ion-card-content>
+
+		<ion-row>
+			<ion-col>
+				<button ion-button icon-left clear small>
+					<ion-icon name="thumbs-up"></ion-icon>
+					<div>{{p.like}} Likes</div>
+				</button>
+			</ion-col>
+			<ion-col>
+				<button ion-button icon-left clear small>
+					<ion-icon name="text"></ion-icon>
+					<div>{{p.commentNum}} Comments</div>
+				</button>
+			</ion-col>
+			<ion-col center text-center>
+				<ion-note>{{p.dateDiff}}</ion-note>
+			</ion-col>
+		</ion-row>
+
+	</ion-card>
+
+</ion-content>

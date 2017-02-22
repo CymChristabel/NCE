@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>RecitationOverallView</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+    <div class="progress-outer">
+    	<div class="progress-inner" [style.width]="_progress + '%'">
+        	{{_progress}}%
+    	</div>
+    </div>
+
+	<h2>Current recitation progress: {{_vocabulary.currentProcess}}</h2>
+
+	<button ion-button *ngIf="_vocabulary.currentProcess == 0" (click) = '_goRecitationSlidePage()'>start</button>
+	<button ion-button *ngIf="_vocabulary.currentProcess != 0" (click) = '_goRecitationSlidePage()'>resume</button>
+
+</ion-content>

@@ -1,0 +1,54 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Register</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="_registerForm" (ngSubmit)="_onSubmit(_registerForm)">
+        <ion-list>
+            <ion-item>
+                <ion-label floating>
+                    <ion-icon name="mail"></ion-icon>
+                    &nbsp; E-mail
+                </ion-label>
+                <ion-input formControlName='email' placeHolder='Email'>
+                </ion-input>
+            </ion-item>
+            <div *ngIf="_registerForm.controls['email'].hasError('incorrectMailFormat') && _registerForm.controls['email'].touched" class="alert alert-danger">invalid email</div>
+            <div *ngIf="_registerForm.controls['email'].hasError('required') && _registerForm.controls['email'].touched">cannot be empty</div>
+            <ion-item>
+                <ion-label floating>
+                    <ion-icon name="lock"></ion-icon>
+                    &nbsp; Password
+                </ion-label>
+                <ion-input formControlName='password' placeHolder='Password'>
+                </ion-input>
+            </ion-item>
+            <div *ngIf="_registerForm.controls['password'].hasError('minlength') && _registerForm.controls['password'].touched" class="alert alert-danger">At least 8 character</div>
+            <div *ngIf="_registerForm.controls['password'].hasError('maxlength') && _registerForm.controls['password'].touched" class="alert alert-danger">At most 16 character</div>
+            <div *ngIf="_registerForm.controls['password'].hasError('required') && _registerForm.controls['password'].touched">cannot be empty</div>
+            <ion-item>
+                <ion-label floating>
+                    <ion-icon name="lock"></ion-icon>
+                    &nbsp; Repeat Password
+                </ion-label>
+                <ion-input formControlName='repeatPassword' placeHolder='RepeatPassword'>
+                </ion-input>
+            </ion-item>
+            <div *ngIf="_registerForm.controls['repeatPassword'].hasError('minlength') && _registerForm.controls['repeatPassword'].touched" class="alert alert-danger">At least 8 character</div>
+            <div *ngIf="_registerForm.controls['repeatPassword'].hasError('maxlength') && _registerForm.controls['repeatPassword'].touched" class="alert alert-danger">At most 16 character</div>
+            <div *ngIf="_registerForm.controls['repeatPassword'].touched && _registerForm.controls['password'].touched && _registerForm.controls['password'].value != _registerForm.controls['repeatPassword'].value" class="alert alert-danger">password dismatch</div>
+            <div *ngIf="_registerForm.controls['repeatPassword'].hasError('required') && _registerForm.controls['repeatPassword'].touched">cannot be empty</div>
+            <ion-item>
+                <ion-label floating>
+                    <ion-icon name="ionitron"></ion-icon>
+                    &nbsp; Nickname
+                </ion-label>
+                <ion-input formControlName='nickname' placeHolder='Nickname'>
+                </ion-input>
+            </ion-item>
+        </ion-list>
+        <button ion-button full>submit</button>
+    </form>
+</ion-content>
