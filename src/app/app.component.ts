@@ -9,7 +9,7 @@ import { RegisterPage } from '../pages/register/register';
 
 import { CommunityEntryPage } from '../pages/community/community-entry/community-entry';
 
-import { TaskOverallPage } from '../pages/task/task-overall/task-overall';
+import { GeneralPage } from '../pages/general/general';
 
 import { StorageService } from '../providers/storage.service'; 
 
@@ -21,7 +21,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage: any = TaskOverallPage;
+  rootPage: any = LoginPage;
   pages: Array<{title: string, component: any}>;
 
   constructor(
@@ -37,7 +37,7 @@ export class MyApp {
       { title: 'login', component: LoginPage },
       { title: 'register', component: RegisterPage },
       { title: 'community', component: CommunityEntryPage },
-      { title: 'task', component: TaskOverallPage }
+      { title: 'task', component: GeneralPage }
     ];
   }
 

@@ -1,0 +1,58 @@
+<ion-header>
+
+  <ion-navbar>
+  	<button ion-button menuToggle>
+  		<ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>general</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-card>
+		<ion-card-header>
+			Today's progress
+		</ion-card-header>
+		<ion-card-content>
+			<div id="chart"></div>
+	    	<ion-row no-padding>
+				<ion-col>
+					<ion-icon name='star'></ion-icon>
+					{{_task.length}}
+				</ion-col>
+				<ion-col text-right>
+					<ion-icon name='share-alt'></ion-icon>
+					Share
+				</ion-col>
+			</ion-row>
+			<button ion-button full> 
+				Add New Study
+			</button>
+		</ion-card-content>
+	</ion-card>
+
+	<ion-list>
+		<ion-list-header>
+			Today's Object
+		</ion-list-header>
+		<ion-item-sliding *ngFor="let t of _task">
+            <button ion-item full>
+                <ion-row>
+                    <ion-col>
+                        <h1>{{t.title}}</h1>
+                    </ion-col>
+                    <ion-col width-20 *ngIf="t.isFinished">
+                        <ion-icon name="md-checkmark" class="default"></ion-icon>
+                    </ion-col>
+                </ion-row>
+            </button>
+            <ion-item-options>
+                <button ion-button large color="danger">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+	</ion-list>
+</ion-content>

@@ -19,7 +19,7 @@ import { ForgetPasswordPage } from '../pages/forget-password/forget-password';
 import { CommunityEntryPage } from '../pages/community/community-entry/community-entry';
 import { CommunityPostListPage } from '../pages/community/community-post-list/community-post-list';
 //task manager related
-import { TaskOverallPage } from '../pages/task/task-overall/task-overall';
+import { GeneralPage } from '../pages/general/general';
 //service related
 import { HttpService } from '../providers/http.service';
 import { StorageService } from '../providers/storage.service';
@@ -38,7 +38,7 @@ import { StorageService } from '../providers/storage.service';
     ForgetPasswordPage,
     CommunityEntryPage,
     CommunityPostListPage,
-    TaskOverallPage
+    GeneralPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -58,7 +58,7 @@ import { StorageService } from '../providers/storage.service';
     ForgetPasswordPage,
     CommunityEntryPage,
     CommunityPostListPage,
-    TaskOverallPage
+    GeneralPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
