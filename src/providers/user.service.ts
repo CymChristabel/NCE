@@ -21,7 +21,14 @@ export class UserService {
 	private _user: UserDetail;
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
-
+		console.log('init user service...');
+		this._storageService.get('user').then(
+			user => {
+				if(user != undefined)
+				{
+					this._user = user;
+				}
+			}, err => console.log(err));
 	}
 
 	public login(user: User){
@@ -41,6 +48,10 @@ export class UserService {
 	
 	public signUp(user: User){
 		return this._httpService.post('/auth/signup', user).map(res => res.json());
+	}
+
+	public getUser(){
+		return this._user;
 	}
 
 }

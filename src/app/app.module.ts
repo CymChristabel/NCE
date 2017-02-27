@@ -20,6 +20,9 @@ import { CommunityEntryPage } from '../pages/community/community-entry/community
 import { CommunityPostListPage } from '../pages/community/community-post-list/community-post-list';
 //task manager related
 import { GeneralPage } from '../pages/general/general';
+import { SelectPage } from '../pages/select/select';
+//NCE related
+import { NCEStudyPage, PopoverMenuPage } from '../pages/nce-study/nce-study';
 //service related
 import { HttpService } from '../providers/http.service';
 import { StorageService } from '../providers/storage.service';
@@ -38,7 +41,10 @@ import { StorageService } from '../providers/storage.service';
     ForgetPasswordPage,
     CommunityEntryPage,
     CommunityPostListPage,
-    GeneralPage
+    GeneralPage,
+    NCEStudyPage,
+    PopoverMenuPage,
+    SelectPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -58,7 +64,10 @@ import { StorageService } from '../providers/storage.service';
     ForgetPasswordPage,
     CommunityEntryPage,
     CommunityPostListPage,
-    GeneralPage
+    GeneralPage,
+    NCEStudyPage,
+    PopoverMenuPage,
+    SelectPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
