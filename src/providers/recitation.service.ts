@@ -47,6 +47,10 @@ export class RecitationService{
 		}
 	}
 
+	public get(){
+		return this._vocabularyList;
+	}
+
 	public getVocabularyList(){
 		return this._httpService.get({
 			url: '/recitationvocabulary',

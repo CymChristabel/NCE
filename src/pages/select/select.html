@@ -26,56 +26,14 @@
 <ion-content padding>
   	<div [ngSwitch]="select">
 	    <ion-list *ngSwitchCase="'NCE'">
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-puppy-1.jpg">
-	        </ion-thumbnail>
-	        <h2>Ruby</h2>
-	      </ion-item>
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-puppy-2.jpg">
-	        </ion-thumbnail>
-	        <h2>Oscar</h2>
-	      </ion-item>
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-puppy-4.jpg">
-	        </ion-thumbnail>
-	        <h2>Zoey</h2>
-	      </ion-item>
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-puppy-3.jpg">
-	        </ion-thumbnail>
-	        <h2>Otto</h2>
+	      <ion-item *ngFor = "let i of _nceService.getBookList()">
+	        <h2>{{i.title}}</h2>
 	      </ion-item>
 	    </ion-list>
 
 	    <ion-list *ngSwitchCase="'recitation'">
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-kitten-1.jpg">
-	        </ion-thumbnail>
-	        <h2>Luna</h2>
-	      </ion-item>
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-kitten-3.jpg">
-	        </ion-thumbnail>
-	        <h2>Milo</h2>
-	      </ion-item>
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-kitten-4.jpg">
-	        </ion-thumbnail>
-	        <h2>Bandit</h2>
-	      </ion-item>
-	      <ion-item>
-	        <ion-thumbnail item-left>
-	          <img src="assets/img/thumbnail-kitten-2.jpg">
-	        </ion-thumbnail>
-	        <h2>Nala</h2>
+	      <ion-item *ngFor = "let i of _recitationService.get()">
+	        <h2>{{i.name}}</h2>
 	      </ion-item>
 		</ion-list>
 	</div>

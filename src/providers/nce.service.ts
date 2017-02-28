@@ -17,7 +17,7 @@ export class NCEService {
 			localBookList => {
 				if(localBookList == undefined)
 				{
-					this.getBookList().subscribe(
+					this.getRemoteBookList().subscribe(
 						bookList => {
 							this._bookList = bookList;
 							this._storageService.set('NCE_book_list', bookList);
@@ -30,16 +30,15 @@ export class NCEService {
 			}, err => console.log(err));
 	}
 
-	public getBook(bookID: number){
-		return this._httpService.get({
-			url: '/nce_book',
-			data: {
-				id: bookID
-			}
-		}).map(res => res.json());
+	public getBookList(){
+		return this._bookList;
 	}
 
-	public getBookList(){
+	public getBook(booklist: number, book: number){
+		return this._bookList[booklist].lession[book];
+	}
+
+	public getRemoteBookList(){
 		return this._httpService.get({
 			url: '/nce_book',
 			data: {}

@@ -1,7 +1,7 @@
 <ion-content padding class="container tutorial">
-   <button ion-button icon-left class="skip-login">
+   <button ion-button icon-left class="skip-login" (click)="goLoginPage()">
         <ion-icon name="skip-forward"></ion-icon>
-        Skip log in
+        Skip
     </button>
     <ion-slides>
         <ion-slide *ngFor="let slide of slides">
@@ -11,10 +11,10 @@
             <div *ngIf="slide.loginbutton">
                 <ion-row>
                     <ion-col>
-                        <button ion-button full block (click)="skipLogin()">Skip Login</button>
+                        <button ion-button full block (click)="goGeneralPage()">Skip Login</button>
                     </ion-col>
                     <ion-col>
-                        <button ion-button full block outline class="register"(click)="login()">Log In</button>
+                        <button ion-button full block outline class="register"(click)="goLoginPage()">Log In</button>
                     </ion-col>
                 </ion-row>
             </div>

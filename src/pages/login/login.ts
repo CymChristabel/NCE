@@ -11,8 +11,7 @@ import { StorageService } from '../../providers/storage.service';
 
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html',
-  providers: [ UserService ]
+  templateUrl: 'login.html'
 })
 
 export class LoginPage {

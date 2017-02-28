@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from "ionic-angular";
 
+import { GeneralPage } from '../general/general';
+import { LoginPage } from '../login/login';
 
 @Component({
     selector: 'page-landing',
@@ -34,11 +36,11 @@ export class LandingPage {
         }
     ];
 
-    login() {
-        
+    goLoginPage() {
+        this._navCtrl.setRoot(LoginPage);
     }
 
-    skipLogin() {
-        
+    goGeneralPage() {
+        this._navCtrl.setRoot(GeneralPage);
     }
 }

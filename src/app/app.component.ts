@@ -51,17 +51,6 @@ export class MyApp {
         }
         else
         {
-          // this._storageService.get('user').then(
-          //   user => {
-          //     if(user == undefined)
-          //     {
-          //       this.rootPage = LoginPage;
-          //     }
-          //     else
-          //     {
-          //       this.rootPage = GeneralPage;
-          //     }
-          //   }, err => console.log(err))
           if(this._userService.getUser() == undefined)
           {
             this.rootPage = LoginPage;

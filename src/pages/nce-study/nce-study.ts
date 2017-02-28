@@ -108,15 +108,11 @@ export class NCEStudyPage implements OnInit{
   	private _lession;
 
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
-		
+		this._lession = this._nceService.getBook(1, 1);
 	}
 
 	ngOnInit(){
-		this._nceService.getBook(1).subscribe(
-			data => {
-				this._lession = data;
-				console.log(this._lession)
-			}, err => console.log(err));
+
 	}
 
 	private _presentPopover(myEvent){

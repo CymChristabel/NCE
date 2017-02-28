@@ -11,8 +11,8 @@ import { NCEService } from '../../providers/nce.service';
 */
 @Component({
   selector: 'page-select',
-  templateUrl: 'select.html',
-  providers: [ RecitationService, NCEService ]
+  templateUrl: 'select.html'
+  // providers: [ RecitationService, NCEService ]
 })
 export class SelectPage {
 	private select: string = 'NCE';

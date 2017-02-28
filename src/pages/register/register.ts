@@ -6,8 +6,7 @@ import { User, UserService } from '../../providers/user.service';
 
 @Component({
 	selector: 'page-register',
-  	templateUrl: 'register.html',
-  	providers: [ UserService ]
+  	templateUrl: 'register.html'
 })
 
 export class RegisterPage{
