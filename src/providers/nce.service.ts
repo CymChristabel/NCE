@@ -26,6 +26,7 @@ export class NCEService {
 				else
 				{
 					this._bookList = localBookList;
+					console.log(this._bookList[0].lession[0])
 				}
 			}, err => console.log(err));
 	}
@@ -35,7 +36,10 @@ export class NCEService {
 	}
 
 	public getBook(booklist: number, book: number){
-		return this._bookList[booklist].lession[book];
+		if(this._bookList[booklist].lession[book] != undefined)
+		{
+			return this._bookList[booklist].lession[book];
+		}
 	}
 
 	public getRemoteBookList(){

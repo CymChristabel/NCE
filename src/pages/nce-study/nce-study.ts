@@ -4,6 +4,8 @@ import { MediaPlugin } from 'ionic-native';
 
 import { NCEService } from '../../providers/nce.service';
 
+import * as _ from 'lodash';
+
 /*
   Generated class for the NCEStudy page.
 
@@ -98,18 +100,23 @@ export class PopoverMenuPage {
 
 @Component({
 	selector: 'page-nce-study',
-	templateUrl: 'nce-study.html',
-	providers : [ NCEService ]
+	templateUrl: 'nce-study.html'
 })
 
 export class NCEStudyPage implements OnInit{
 	@ViewChild('popoverContent', { read: ElementRef }) content: ElementRef;
   	@ViewChild('popoverText', { read: ElementRef }) text: ElementRef;
   	private _lession;
+  	private _showTranslation;
 
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
-		this._lession = this._nceService.getBook(1, 1);
-	}
+		this._lession = this._nceService.getBook(0, 0);
+		this._lession.engText = _.split(this._lession.engText, '\n');
+		this._lession.chnText = _.split(this._lession.chnText, '\n');
+		this._lession.word = _.split(this._lession.word, '\n')
+		this._showTranslation = false;
+
+ 	}
 
 	ngOnInit(){
 
@@ -124,6 +131,10 @@ export class NCEStudyPage implements OnInit{
 		popover.present({
 			ev: myEvent
 		});
+	}
+
+	private _switch(){
+		this._showTranslation = !this._showTranslation;
 	}
 
 }

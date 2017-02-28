@@ -42,7 +42,6 @@ export class RecitationService{
 					{
 						this._vocabularyList[i].isDownloaded = true;
 					}
-					console.log(this._vocabularyList[i]);
 				}, err => console.log(err));
 		}
 	}
