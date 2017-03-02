@@ -3,6 +3,8 @@ import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
 import { Vocabulary } from '../interfaces/vocabulary.interface';
 
+import * as _ from 'lodash';
+
 @Injectable()
 
 export class RecitationService{
@@ -36,11 +38,18 @@ export class RecitationService{
 				vocabulary => {
 					if(vocabulary == undefined)
 					{
-						this._vocabularyList[i].isDownloaded = false
+						this._vocabularyList[i].isDownloaded = false;
 					}
 					else
 					{
 						this._vocabularyList[i].isDownloaded = true;
+						this._storageService.get('vocabularyProgress:' + this._vocabularyList[i].id).then(
+							progress => {
+								if(typeof progress === 'number')
+								{
+									this._vocabularyList[i].progress = progress;
+								}
+							}, err => console.log(err));
 					}
 				}, err => console.log(err));
 		}
@@ -50,6 +59,40 @@ export class RecitationService{
 		return this._vocabularyList;
 	}
 
+	public getVocabulary(vocabularyID: number){
+		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
+		if(temp.isDownloaded == false)
+		{
+			this._httpService.get({
+				url: '/recitationvocabulary',
+				data: {
+					id: vocabularyID
+				}
+			})
+			.map(res => res.json())
+			.subscribe(
+				vocabulary => {
+					this._storageService.set('vocabulary:' + vocabularyID, vocabulary[0].word);
+					this._storageService.set('vocabularyProgress:' + vocabularyID, 0);
+					temp.isDownloaded = true;
+					temp.word = vocabulary[0].word;
+					temp.progress = 0;
+				}, err => console.log(err));
+		}
+		else
+		{
+			this._storageService.get('vocabulary:' + vocabularyID).then(
+				word => {
+					temp.word = word;
+				}, err => console.log(err));
+			this._storageService.get('vocabularyProgress:' + vocabularyID).then(
+				progress => {
+					temp.progress = progress;
+				}, err => console.log(err));
+		}
+		return temp;
+	}
+
 	public getVocabularyList(){
 		return this._httpService.get({
 			url: '/recitationvocabulary',
@@ -57,14 +100,14 @@ export class RecitationService{
 		}).map(res => res.json());
 	}
 
-	public getVocabulary(vocabularyID: number){
-		return this._httpService.get({
-			url: '/recitationvocabulary',
-			data: {
-				id: vocabularyID
-			}
-		}).map(res => res.json());
-	}
+	// public getVocabulary(vocabularyID: number){
+	// 	return this._httpService.get({
+	// 		url: '/recitationvocabulary',
+	// 		data: {
+	// 			id: vocabularyID
+	// 		}
+	// 	}).map(res => res.json());
+	// }
 
 	public getLocalVocabularyList(id: number){
 		return this._storageService.get('vocabularyList');

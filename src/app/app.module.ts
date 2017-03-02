@@ -21,6 +21,7 @@ import { CommunityPostListPage } from '../pages/community/community-post-list/co
 //task manager related
 import { GeneralPage } from '../pages/general/general';
 import { SelectPage } from '../pages/select/select';
+import { SelectDetailPage } from '../pages/select-detail/select-detail';
 //NCE related
 import { NCEStudyPage, PopoverMenuPage } from '../pages/nce-study/nce-study';
 //service related
@@ -44,7 +45,8 @@ import { StorageService } from '../providers/storage.service';
     GeneralPage,
     NCEStudyPage,
     PopoverMenuPage,
-    SelectPage
+    SelectPage,
+    SelectDetailPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -67,7 +69,8 @@ import { StorageService } from '../providers/storage.service';
     GeneralPage,
     NCEStudyPage,
     PopoverMenuPage,
-    SelectPage
+    SelectPage,
+    SelectDetailPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -77,10 +80,3 @@ import { StorageService } from '../providers/storage.service';
   ]
 })
 export class AppModule {}
-
-    // provide(AuthHttp, {
-    //   useFactory: (http) => {
-    //     return new AuthHttp(new AuthConfig, http);
-    //   },
-    //   deps: [Http]
-    // })

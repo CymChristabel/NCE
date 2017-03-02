@@ -21,8 +21,10 @@ export class RecitationSlidePage implements OnInit{
 	private _isEndOfSlide: boolean;
 
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _recitationService: RecitationService){
-		this._vocabularyID = this._navParam.get('vocabularyID');
-		this._isEndOfSlide = false;
+		// if(this._navParam.get('isRecitation'))
+		// {
+		// 	this._slide = this._navParam.get('')
+		// }
 	}
 
 

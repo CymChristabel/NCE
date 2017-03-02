@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, MenuController } from 'ionic-angular';
 
+import { SelectPage } from '../select/select';
+ 
 import * as c3 from 'c3';
 
 /*
@@ -51,5 +53,9 @@ export class GeneralPage {
         ids: 'data2'
       });
     }, 2500);
+  }
+
+  private _goSelectPage(){
+    this._navCtrl.push(SelectPage);
   }
 }

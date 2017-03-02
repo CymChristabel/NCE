@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav, ToastController } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network } from 'ionic-native';
 
-import { RecitationSelectPage } from '../pages/recitation/recitation-select/recitation-select';
+import { RecitationVocabularyOverallPage } from '../pages/recitation/recitation-vocabulary-overall/recitation-vocabulary-overall';
 import { LandingPage } from '../pages/landing/landing';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
@@ -65,7 +65,7 @@ export class MyApp {
 
     // set our app's pages
     this.pages = [
-      { title: 'Recitation', component: RecitationSelectPage },
+      { title: 'Recitation', component: RecitationVocabularyOverallPage },
       { title: 'landing', component: LandingPage },
       { title: 'login', component: LoginPage },
       { title: 'register', component: RegisterPage },

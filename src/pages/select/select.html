@@ -26,15 +26,15 @@
 <ion-content padding>
   	<div [ngSwitch]="select">
 	    <ion-list *ngSwitchCase="'NCE'">
-	      <ion-item *ngFor = "let i of _nceService.getBookList()">
+	      <button ion-item *ngFor = "let i of _nceService.getBookList()" (click)="_goDetailPage(i)">
 	        <h2>{{i.title}}</h2>
-	      </ion-item>
+	      </button>
 	    </ion-list>
 
 	    <ion-list *ngSwitchCase="'recitation'">
-	      <ion-item *ngFor = "let i of _recitationService.get()">
+	      <button ion-item *ngFor = "let i of _recitationService.get()" (click)="_goDetailPage(i)">
 	        <h2>{{i.name}}</h2>
-	      </ion-item>
+	      </button>
 		</ion-list>
 	</div>
 </ion-content>

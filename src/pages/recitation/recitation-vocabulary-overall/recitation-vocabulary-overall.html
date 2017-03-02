@@ -8,14 +8,14 @@
 <ion-content padding>
 
     <div class="progress-outer">
-    	<div class="progress-inner" [style.width]="_progress + '%'">
-        	{{_progress}}%
+    	<div class="progress-inner" [style.width]="_vocabulary.progress + '%'">
+        	{{_vocabulary.progress}}%
     	</div>
     </div>
 
-	<h2>Current recitation progress: {{_vocabulary.currentProcess}}</h2>
+	<h2>当前背诵进度: {{_vocabulary.progress}}</h2>
 
-	<button ion-button *ngIf="_vocabulary.currentProcess == 0" (click) = '_goRecitationSlidePage()'>start</button>
-	<button ion-button *ngIf="_vocabulary.currentProcess != 0" (click) = '_goRecitationSlidePage()'>resume</button>
+	<button ion-button *ngIf="_vocabulary.progress == 0" (click) = '_goRecitationSlidePage()'>start</button>
+	<button ion-button *ngIf="_vocabulary.progress != 0" (click) = '_goRecitationSlidePage()'>resume</button>
 
 </ion-content>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
+import { SelectDetailPage } from '../select-detail/select-detail';
+
 import { RecitationService } from '../../providers/recitation.service';
 import { NCEService } from '../../providers/nce.service';
 /*
@@ -12,7 +14,6 @@ import { NCEService } from '../../providers/nce.service';
 @Component({
   selector: 'page-select',
   templateUrl: 'select.html'
-  // providers: [ RecitationService, NCEService ]
 })
 export class SelectPage {
 	private select: string = 'NCE';
@@ -22,6 +23,10 @@ export class SelectPage {
 
 	ionViewDidLoad() {
 		
+	}
+
+	private _goDetailPage(object: any){
+		this._navCtrl.push(SelectDetailPage, {'detail': object});
 	}
 
 }
