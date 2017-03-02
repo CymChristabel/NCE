@@ -16,9 +16,9 @@ import { NCEService } from '../../providers/nce.service';
   templateUrl: 'select.html'
 })
 export class SelectPage {
-	private select: string = 'NCE';
+	private _select;
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _recitationService: RecitationService, private _nceService: NCEService) {
-
+		this._select = 'NCE';
 	}
 
 	ionViewDidLoad() {
@@ -26,7 +26,7 @@ export class SelectPage {
 	}
 
 	private _goDetailPage(object: any){
-		this._navCtrl.push(SelectDetailPage, {'detail': object});
+		this._navCtrl.push(SelectDetailPage, {'detail': object, 'type': this._select});
 	}
 
 }

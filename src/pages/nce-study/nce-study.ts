@@ -42,14 +42,14 @@ export class PopoverMenuPage {
 		},
 	};
 
-	constructor(private navParams: NavParams) {
+	constructor(private _navParams: NavParams) {
 
 	}
 
   	ngOnInit() {
-	    if (this.navParams.data) {
-	      this._contentEle = this.navParams.data.contentEle;
-	      this._textEle = this.navParams.data.textEle;
+	    if (this._navParams.data) {
+	      this._contentEle = this._navParams.data.contentEle;
+	      this._textEle = this._navParams.data.textEle;
 
 	      this._background = this.getColorName(this._contentEle.style.backgroundColor);
 	      this.setFontFamily();

@@ -16,7 +16,7 @@
 <ion-content padding>
 	<ion-card>
 
-    <img src="assets/img/NCE2.jpg" height="40%" width="40%" />
+    <img [src]="_img" height="40%" width="40%" />
 
     <ion-card-content>
       <ion-card-title>
@@ -27,6 +27,11 @@
       </p>
     </ion-card-content>
 
+    <ion-item>
+    	<button ion-button full (click)="_showModal()">
+    		Show list
+    	</button>
+    </ion-item>
     <ion-item>
     	<ion-label>Notification Time</ion-label>
     	<ion-datetime displayFormat="hh:mm A" pickerFormat="hh mm A" [(ngModel)]="_time"></ion-datetime>

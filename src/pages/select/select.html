@@ -12,7 +12,7 @@
 		<ion-title>select</ion-title>
 	</ion-navbar>
 	<ion-toolbar no-border-top>
-	    <ion-segment [(ngModel)]="select">
+	    <ion-segment [(ngModel)]="_select">
 			<ion-segment-button value="NCE">
 				NCE
 			</ion-segment-button>
@@ -24,7 +24,7 @@
 </ion-header>
 
 <ion-content padding>
-  	<div [ngSwitch]="select">
+  	<div [ngSwitch]="_select">
 	    <ion-list *ngSwitchCase="'NCE'">
 	      <button ion-item *ngFor = "let i of _nceService.getBookList()" (click)="_goDetailPage(i)">
 	        <h2>{{i.title}}</h2>
