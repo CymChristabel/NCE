@@ -1,7 +1,6 @@
 import { HttpService } from './http.service';
 import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
-import { Vocabulary } from '../interfaces/vocabulary.interface';
 
 import * as _ from 'lodash';
 
@@ -113,7 +112,7 @@ export class RecitationService{
 		return this._storageService.get('vocabularyList');
 	}
 
-	public setLocalVocabularyList(vocabularyList: Vocabulary){
+	public setLocalVocabularyList(vocabularyList: any){
 		return this._storageService.set('vocabularyList', vocabularyList);
 	}
 	

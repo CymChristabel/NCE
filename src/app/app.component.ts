@@ -14,17 +14,16 @@ import { SelectPage } from '../pages/select/select';
 
 import { NCEStudyPage } from '../pages/nce-study/nce-study';
 
+import { TaskService } from '../providers/task.service';
 import { RecitationService } from '../providers/recitation.service';
 import { NCEService } from '../providers/nce.service';
 import { UserService } from '../providers/user.service';
-import { StorageService } from '../providers/storage.service'; 
+import { StorageService } from '../providers/storage.service';
 
-declare var navigator: any;
-declare var Connection: any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [ StorageService, RecitationService, NCEService, UserService ]
+  providers: [ StorageService, RecitationService, NCEService, UserService, TaskService ]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -38,9 +37,10 @@ export class MyApp {
     public menu: MenuController,
     private _toastCtrl: ToastController,
     private _storageService: StorageService,
+    private _userService: UserService,
     private _RecitationService: RecitationService,
     private _nceService: NCEService,
-    private _userService: UserService
+    private _taskService: TaskService
   ) {
     this._storageService.get('isFirst').then(
       isFirst => {
@@ -57,6 +57,7 @@ export class MyApp {
           }
           else
           {
+            console.log(this._userService.getUser())
             this.rootPage = GeneralPage;
           }
         }

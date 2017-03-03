@@ -3,6 +3,8 @@ import { NavController, NavParams, MenuController } from 'ionic-angular';
 
 import { SelectPage } from '../select/select';
  
+import { TaskService } from '../../providers/task.service';
+
 import * as c3 from 'c3';
 
 /*
@@ -17,10 +19,10 @@ import * as c3 from 'c3';
 })
 export class GeneralPage {
 	chart;
-	private _task;
-	constructor(private _navCtrl: NavController, private _menu: MenuController) {
+	private _taskList;
+	constructor(private _navCtrl: NavController, private _menu: MenuController, private _taskService: TaskService) {
   		this._menu.swipeEnable(true, 'left');
-  		this._task = [{ title: '卓越请客', isFinished: true }, { title: '文杰减肥', isFinished: false }];
+  		this._taskList = this._taskService.get();
   	}
 
 

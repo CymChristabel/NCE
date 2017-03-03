@@ -5,7 +5,6 @@ import { RecitationSlidePage } from '../recitation-slide/recitation-slide';
 
 import { RecitationService } from '../../../providers/recitation.service';
 
-import { Word, Vocabulary, Problem } from '../../../interfaces/vocabulary.interface';
 
 @Component({
 	selector: 'page-recitation-test',
@@ -14,8 +13,8 @@ import { Word, Vocabulary, Problem } from '../../../interfaces/vocabulary.interf
 })
 
 export class RecitationTestPage{
-	private _wordList: Word[];
-	private _problem: Problem;
+	private _wordList;
+	private _problem;
 	private _currentProblem: number;
 	private _vocabularyID: number;
 

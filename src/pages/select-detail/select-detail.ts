@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController} from 'ionic-angular';
 
 import { RecitationService } from '../../providers/recitation.service';
+import { TaskService } from '../../providers/task.service';
 
 import { ModalContentPage } from './modal-content';
 
@@ -23,7 +24,7 @@ export class SelectDetailPage {
 	private _type;
 	private _img;
 
-	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _modalCtrl: ModalController, private _recitationService: RecitationService) {
+	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _modalCtrl: ModalController, private _recitationService: RecitationService, private _taskService: TaskService) {
 		this._detail = this._navParams.get('detail');
 		this._type = this._navParams.get('type');
 		if(this._type == 'NCE')
@@ -49,5 +50,16 @@ export class SelectDetailPage {
 			modal = this._modalCtrl.create(ModalContentPage, { 'detail': this._detail.word, 'type': this._type});
 		}
 		modal.present();
+	}
+
+	private _submitTask(){
+		this._taskService.addTask({
+			type: this._type,
+			title: this._detail.title,
+			progress: 0,
+			time: this._time,
+			isFinished: false
+		});
+		this._navCtrl.pop();
 	}
 }

@@ -5,8 +5,6 @@ import { RecitationVocabularyOverallPage } from '../recitation-vocabulary-overal
 
 import { RecitationService } from '../../../providers/recitation.service';
 
-import { Vocabulary } from '../../../interfaces/vocabulary.interface';
-
 @Component({
   selector: 'page-recitation-select',
   templateUrl: 'recitation-select.html',
@@ -14,7 +12,7 @@ import { Vocabulary } from '../../../interfaces/vocabulary.interface';
 })
 
 export class RecitationSelectPage implements OnInit{
-	private _vocabulary: Vocabulary;
+	private _vocabulary;
 
   	constructor(private _navCtrl: NavController, private _recitationService: RecitationService) {
 

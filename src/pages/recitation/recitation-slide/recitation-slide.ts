@@ -5,8 +5,6 @@ import { RecitationSummaryPage } from '../recitation-summary/recitation-summary'
 
 import { RecitationService } from '../../../providers/recitation.service';
 
-import { Word, Vocabulary } from '../../../interfaces/vocabulary.interface';
-
 @Component({
 	selector: 'page-recitation-slide',
 	templateUrl: 'recitation-slide.html',

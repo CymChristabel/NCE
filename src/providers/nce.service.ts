@@ -26,7 +26,6 @@ export class NCEService {
 				else
 				{
 					this._bookList = localBookList;
-					console.log(this._bookList[0].lession[0])
 				}
 			}, err => console.log(err));
 	}

@@ -4,7 +4,6 @@ import { NavController, NavParams, Slides } from 'ionic-angular';
 import { RecitationSlidePage } from '../recitation-slide/recitation-slide';
 import { RecitationTestPage } from '../recitation-test/recitation-test';
 
-import { Word, Vocabulary } from '../../interfaces/vocabulary.interface';
 
 @Component({
 	selector: 'page-recitation-summary',

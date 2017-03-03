@@ -37,7 +37,7 @@
     	<ion-datetime displayFormat="hh:mm A" pickerFormat="hh mm A" [(ngModel)]="_time"></ion-datetime>
     </ion-item>
     <ion-item>
-    	<button ion-button full>
+    	<button ion-button full (click)="_submitTask()">
     		Create Task
     	</button>
     </ion-item>

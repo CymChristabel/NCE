@@ -20,7 +20,7 @@
 	    	<ion-row no-padding>
 				<ion-col>
 					<ion-icon name='star'></ion-icon>
-					{{_task.length}}
+					{{_taskList.length}}
 				</ion-col>
 				<ion-col text-right>
 					<ion-icon name='share-alt'></ion-icon>
@@ -35,9 +35,9 @@
 
 	<ion-list>
 		<ion-list-header>
-			Today's Object
+			今日任务
 		</ion-list-header>
-		<ion-item-sliding *ngFor="let t of _task">
+		<ion-item-sliding *ngFor="let t of _taskList">
             <button ion-item full>
                 <ion-row>
                     <ion-col>
@@ -46,6 +46,14 @@
                     <ion-col width-20 *ngIf="t.isFinished">
                         <ion-icon name="md-checkmark" class="default"></ion-icon>
                     </ion-col>
+                </ion-row>
+                <ion-row>
+                	<ion-col>
+                		<h3>当前进度:{{t.progress}}</h3>
+                	</ion-col>
+                	<ion-col>
+                		<h3>Start time:{{t.time}}</h3>
+                	</ion-col>
                 </ion-row>
             </button>
             <ion-item-options>
