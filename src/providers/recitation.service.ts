@@ -99,15 +99,6 @@ export class RecitationService{
 		}).map(res => res.json());
 	}
 
-	// public getVocabulary(vocabularyID: number){
-	// 	return this._httpService.get({
-	// 		url: '/recitationvocabulary',
-	// 		data: {
-	// 			id: vocabularyID
-	// 		}
-	// 	}).map(res => res.json());
-	// }
-
 	public getLocalVocabularyList(id: number){
 		return this._storageService.get('vocabularyList');
 	}

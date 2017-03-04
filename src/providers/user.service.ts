@@ -2,56 +2,45 @@ import { HttpService } from './http.service';
 import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
 
-export interface User{
-	token: string;
-	user: UserDetail;
-}
-
-export interface UserDetail{
-	email: string;
-	password: string;
-	nickname: string;
-	avatar: string;
-	studyNotification: string;
-}
-
 @Injectable()
 export class UserService {
 
-	private _user: UserDetail;
+	private _userData;
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
-		console.log('init user service...');
-		this._storageService.get('user').then(
-			user => {
-				if(user != undefined)
-				{
-					this._user = user;
-				}
+		this._storageService.get('userData').then(
+			userData => {
+				this._userData = userData;
 			}, err => console.log(err));
 	}
 
-	public login(user: User){
+	public login(user: any){
 		return this._httpService.post('/auth/login', user).map(res => res.json());
 	}
 
-	public updateUser(data: User){
-		this._user = data.user;
-		console.log('JWT ' + data.token);
-		this._httpService.updateAuthToken('JWT ' + data.token);
-		this._storageService.set('user', data);
+	public updateUser(userData: any){
+		this._userData = userData.user;
+		this._httpService.updateAuthToken('JWT ' + userData.token);
+		this._storageService.set('userData', userData);
 	}
 
 	public logout(){
 		return this._storageService.set('auth_token', '');
 	}
 	
-	public signUp(user: User){
+	public signUp(user: any){
 		return this._httpService.post('/auth/signup', user).map(res => res.json());
 	}
 
+	public testAuth(){
+		return this._httpService.get({
+			url: '/auth/testAuth',
+			data: {}
+		}).map(res => res.json());
+	}
+
 	public getUser(){
-		return this._user;
+		return this._userData;
 	}
 
 }

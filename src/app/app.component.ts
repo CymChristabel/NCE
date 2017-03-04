@@ -57,8 +57,17 @@ export class MyApp {
           }
           else
           {
-            console.log(this._userService.getUser())
-            this.rootPage = GeneralPage;
+            this._userService.testAuth().subscribe(
+              res => {
+                if(res.code == "E_UNAUTHORIZED")
+                {
+                  this.rootPage = LoginPage;
+                }
+                else
+                {
+                  this.rootPage = GeneralPage;
+                }
+              }, err => console.log(err));
           }
         }
       }, err => console.log(err));

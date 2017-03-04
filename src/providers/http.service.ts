@@ -18,15 +18,15 @@ export class HttpService{
 	static BASE_URL: string = "http://localhost:1337";
     private _authToken: string;    
 	constructor(private _http: Http, private _storageService: StorageService) {
-        this._storageService.get('user')
-            .then(user => {
-                if (user != undefined)
+        this._storageService.get('userData')
+            .then(userData => {
+                if (userData != undefined)
                 {
-                    this._authToken = 'JWT ' + user.token;
+                    this._authToken = 'JWT ' + userData.token;
                 }
                 else
                 {
-                    console.log('user not found');
+                    console.log('userData not found');
                 }
         });
     }

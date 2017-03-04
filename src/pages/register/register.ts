@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 
-import { User, UserService } from '../../providers/user.service';
+import { UserService } from '../../providers/user.service';
 
 @Component({
 	selector: 'page-register',
