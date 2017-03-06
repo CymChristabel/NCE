@@ -7,8 +7,7 @@ import { RecitationService } from '../../../providers/recitation.service';
 
 @Component({
   selector: 'page-recitation-select',
-  templateUrl: 'recitation-select.html',
-  providers: [RecitationService]
+  templateUrl: 'recitation-select.html'
 })
 
 export class RecitationSelectPage implements OnInit{
@@ -19,11 +18,8 @@ export class RecitationSelectPage implements OnInit{
   	}
 
   	ngOnInit(){
-  		this._recitationService.getVocabularyList().subscribe(
-  			data => {
-  				this._vocabulary = data; 
-  			}, error => console.log(error)
-  		);
+      this._vocabulary = this._recitationService.getVocabularyList();
+      console.log(this._vocabulary);
   	}
 
   private _doRefresh(refresher){
@@ -35,9 +31,9 @@ export class RecitationSelectPage implements OnInit{
       }, 2000);
   }
 
-	private _goVocabularyOverall(vocabulary: Object){
+	private _goVocabularyOverall(id: number){
 		this._navCtrl.push(RecitationVocabularyOverallPage, { 
-			vocabulary: vocabulary
+			id: id
 		});
 	}
 }

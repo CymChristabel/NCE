@@ -11,29 +11,17 @@ import { RecitationTestPage } from '../recitation-test/recitation-test';
 })
 
 export class RecitationSummaryPage{
-	private _summary: any;
-	private _vocabularyID: number;
 
 	constructor(private _navCtrl: NavController, private _navParam: NavParams){
-		this._summary = this._navParam.get('wordList');
-		this._vocabularyID = this._navParam.get('vocabularyID');
-		this._summary.pop();//remove dummy item
+		this._navParam.get('wordList').pop();
 	}
 
 	private _goRecitationSlidePage(){
-		this._navCtrl.pop()
-		this._navCtrl.push(RecitationSlidePage, {
-			isFromOverallPage: false,
-			slide: this._summary,
-			vocabularyID: this._vocabularyID
-		})
+		this._navCtrl.pop();
 	}
 
 	private _goRecitationTestPage(){
 		this._navCtrl.pop();
-		this._navCtrl.push(RecitationTestPage, {
-			wordList: this._summary,
-			vocabularyID: this._vocabularyID
-		})
+		this._navCtrl.push(RecitationTestPage, this._navParam.data)
 	}
 }

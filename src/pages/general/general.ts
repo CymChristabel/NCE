@@ -6,7 +6,7 @@ import { SelectPage } from '../select/select';
 import { TaskService } from '../../providers/task.service';
 
 import * as c3 from 'c3';
-
+import * as _ from 'lodash';
 /*
   Generated class for the General page.
 

@@ -8,20 +8,17 @@ import { RecitationService } from '../../../providers/recitation.service';
 
 @Component({
 	selector: 'page-recitation-test',
-	templateUrl: 'recitation-test.html',
-	providers: [RecitationService]
+	templateUrl: 'recitation-test.html'
 })
 
 export class RecitationTestPage{
 	private _wordList;
 	private _problem;
-	private _currentProblem: number;
-	private _vocabularyID: number;
+	private _currentProblem;
 
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _recitationService: RecitationService, private _toastCtrl: ToastController){
 		this._wordList = this._navParam.get('wordList');
 		this._currentProblem = 0;
-		this._vocabularyID = this._navParam.get('vocabularyID');
 
 		for(let i = 0; i < this._wordList.length * this._wordList.length; i++)
 		{
@@ -41,7 +38,8 @@ export class RecitationTestPage{
 
 		this._problem.set.push({
 			explainnation: this._wordList[this._currentProblem].explainnation[Math.floor(Math.random() * this._wordList[this._currentProblem].explainnation.length)],
-			isTrue: true});
+			isTrue: true
+		});
 
 		for(let i = 1; i <= 3; i++)
 		{
@@ -71,12 +69,15 @@ export class RecitationTestPage{
 			//go to next list
 			else
 			{
-				this._recitationService.updateCurrentProcess(this._vocabularyID, this._wordList.length);
+				if(this._navParam.get('type') == 'NCE')
+				{
+
+				}
+				else
+				{
+					this._recitationService.updateProgress(this._navParam.get('id'), this._wordList.length);
+				}
 				this._navCtrl.pop();
-				this._navCtrl.push(RecitationSlidePage, {
-					isFromOverallPage: true,
-					vocabularyID: this._vocabularyID
-				});
 			}
 		}
 		else

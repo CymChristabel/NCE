@@ -23,6 +23,7 @@ export class HttpService{
                 if (userData != undefined)
                 {
                     this._authToken = 'JWT ' + userData.token;
+                    console.log(this._authToken);
                 }
                 else
                 {

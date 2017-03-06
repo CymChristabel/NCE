@@ -7,15 +7,25 @@
 
 <ion-content padding>
 
-    <div class="progress-outer">
-    	<div class="progress-inner" [style.width]="_vocabulary.progress + '%'">
-        	{{_vocabulary.progress}}%
-    	</div>
-    </div>
+  <ion-card>
+    <img src="assets/img/tawawa.jpg"/>
+    <ion-card-content>
+      <ion-card-title>
+        {{_vocabulary.title}}
+      </ion-card-title>
+      <p>
+        {{_vocabulary.description}}
+      </p>
+    </ion-card-content>
+  </ion-card>
 
-	<h2>当前背诵进度: {{_vocabulary.progress}}</h2>
+  <p>当前背诵进度:</p>
+  <div class="progress-outer" *ngIf = "_vocabulary.isDownloaded">
+  	<div class="progress-inner" [style.width]="_vocabulary.progress + '%'">
+      	{{_vocabulary.progress}}%
+  	</div>
+  </div>
 
-	<button ion-button *ngIf="_vocabulary.progress == 0" (click) = '_goRecitationSlidePage()'>start</button>
-	<button ion-button *ngIf="_vocabulary.progress != 0" (click) = '_goRecitationSlidePage()'>resume</button>
-
+  <button ion-button *ngIf = "!_vocabulary.isDownloaded" full (click) = "_downloadPress()">Download</button>
+  <button ion-button *ngIf = "_vocabulary.isDownloaded" full (click)= "_goRecitationSlidePage()">Strat</button>
 </ion-content>

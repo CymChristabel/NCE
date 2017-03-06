@@ -46,6 +46,14 @@ export class LoginPage {
     this._navCtrl.setRoot(GeneralPage);
   }
 
+  private _generateToast(message: string){
+    return this._toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'buttom'
+    });
+  }
+
   private _onSubmit(form: FormGroup){
 
     if(form.valid)
@@ -56,13 +64,19 @@ export class LoginPage {
           this._goGeneralPage();
         },
         err => {
-          let toast = this._toastCtrl.create({
-            message: JSON.parse(err._body).message,
-            duration: 3000,
-            position: 'bottom'
-          });
-          toast.present();
+          this._generateToast(JSON.parse(err._body).message).present();
         });
+    }
+    else
+    {
+      if(form.get('email').valid == false)
+      {
+        this._generateToast('invalid email input').present();
+      }
+      else
+      {
+        this._generateToast('password should between 8 and 16 characters').present();
+      }
     }
   }
 

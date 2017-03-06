@@ -19,20 +19,10 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <ion-card *ngFor = "let v of _vocabulary">
-    <ion-card-title>
-      {{v.name}}
-    </ion-card-title>
-    <img [src]="v.cover"/>
-    <ion-card-content>
-      <p>
-        {{v.description}}
-      </p>
-    </ion-card-content>
-    <button ion-button clear small color="danger" icon-left (click)='_goVocabularyOverall(v)'>
-      <ion-icon name='book'></ion-icon>
-      Enter
+  <ion-list>
+    <button ion-item *ngFor = "let v of _vocabulary" (click)="_goVocabularyOverall(v.id)">
+      {{v.title}}
     </button>
-  </ion-card>
+  </ion-list>
   
 </ion-content>

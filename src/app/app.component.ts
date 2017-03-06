@@ -6,8 +6,11 @@ import { RecitationVocabularyOverallPage } from '../pages/recitation/recitation-
 import { LandingPage } from '../pages/landing/landing';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
+import { RecitationSelectPage } from '../pages/recitation/recitation-select/recitation-select';
 
 import { CommunityEntryPage } from '../pages/community/community-entry/community-entry';
+
+import { MainPage } from '../pages/main/main';
 
 import { GeneralPage } from '../pages/general/general';
 import { SelectPage } from '../pages/select/select';
@@ -65,7 +68,7 @@ export class MyApp {
                 }
                 else
                 {
-                  this.rootPage = GeneralPage;
+                  this.rootPage = MainPage;
                 }
               }, err => console.log(err));
           }
@@ -75,7 +78,7 @@ export class MyApp {
 
     // set our app's pages
     this.pages = [
-      { title: 'Recitation', component: RecitationVocabularyOverallPage },
+      { title: 'Recitation', component: RecitationSelectPage },
       { title: 'landing', component: LandingPage },
       { title: 'login', component: LoginPage },
       { title: 'register', component: RegisterPage },

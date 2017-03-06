@@ -4,6 +4,8 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { MyApp } from './app.component';
 
+import { MainPage } from '../pages/main/main';
+
 //recitation related
 import { RecitationSelectPage } from '../pages/recitation/recitation-select/recitation-select';
 import { RecitationVocabularyOverallPage } from '../pages/recitation/recitation-vocabulary-overall/recitation-vocabulary-overall';
@@ -48,7 +50,8 @@ import { StorageService } from '../providers/storage.service';
     PopoverMenuPage,
     SelectPage,
     SelectDetailPage,
-    ModalContentPage
+    ModalContentPage,
+    MainPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -73,7 +76,8 @@ import { StorageService } from '../providers/storage.service';
     PopoverMenuPage,
     SelectPage,
     SelectDetailPage,
-    ModalContentPage
+    ModalContentPage,
+    MainPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

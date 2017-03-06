@@ -23,15 +23,17 @@ export class RecitationVocabularyOverallPage {
 	private _vocabulary;
 
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _recitationService: RecitationService) {
-		this._vocabulary = this._recitationService.getVocabulary(1);
+		this._vocabulary = this._recitationService.getVocabulary(this._navParam.get('id'));
+	}
+
+	private _downloadPress(){
+		this._recitationService.downloadVocabulary(this._vocabulary.id);
 	}
 
 	private _goRecitationSlidePage(){
 		this._navCtrl.push(RecitationSlidePage, {
-			word: this._vocabulary.word,
-			progress: this._vocabulary.progress,
-			limit: 10,
-			isRecitation: true
+			id: this._vocabulary.id,
+			type: 'recitation'
 		});
 	}
 

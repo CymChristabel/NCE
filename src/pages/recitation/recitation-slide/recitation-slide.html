@@ -9,7 +9,7 @@
 
 
 <ion-content padding>
-  <ion-slides #_slider (ionWillChange)="onSlideChanged()">
+  <ion-slides #_slider (ionSlideWillChange)="onSlideChanged()">
     <ion-slide *ngFor="let p of _slide">
       <h1>{{p.name}}</h1>
       <p *ngFor='let e of p.explainnation'>{{e}}</p>

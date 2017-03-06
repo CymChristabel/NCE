@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NavController, Platform, NavParams, ViewController } from 'ionic-angular';
+import { NavController, Platform, NavParams, ViewController } from 'ionic-angular';
 
 import * as _ from 'lodash';
 

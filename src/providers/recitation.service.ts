@@ -12,7 +12,12 @@ export class RecitationService{
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
 		console.log('init vocabulary service....');
 		this._vocabularyList = [];
-		this.getVocabularyList().subscribe(
+		this._httpService.get({
+			url: '/recitationvocabulary',
+			data: {}
+		})
+		.map(res => res.json())
+		.subscribe(
 			vocabularyList => {
 				this._vocabularyList = vocabularyList;
 				this._storageService.set('vocabularyList', vocabularyList);
@@ -29,7 +34,7 @@ export class RecitationService{
 					}, err => console.log('vocabulary local:' + err))
 			});
 	}
-
+	//check whether words are downloaded and set the progress
 	private _checkDownload(){
 		for(let i = 0; i < this._vocabularyList.length; i++)
 		{
@@ -38,6 +43,8 @@ export class RecitationService{
 					if(vocabulary == undefined)
 					{
 						this._vocabularyList[i].isDownloaded = false;
+						this._vocabularyList[i].progress = 0;
+
 					}
 					else
 					{
@@ -54,68 +61,44 @@ export class RecitationService{
 		}
 	}
 
-	public get(){
-		return this._vocabularyList;
-	}
-
 	public getVocabulary(vocabularyID: number){
 		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
-		if(temp.isDownloaded == false)
-		{
-			this._httpService.get({
-				url: '/recitationvocabulary',
-				data: {
-					id: vocabularyID
-				}
-			})
-			.map(res => res.json())
-			.subscribe(
-				vocabulary => {
-					this._storageService.set('vocabulary:' + vocabularyID, vocabulary[0].word);
-					this._storageService.set('vocabularyProgress:' + vocabularyID, 0);
-					temp.isDownloaded = true;
-					temp.word = vocabulary[0].word;
-					temp.progress = 0;
-				}, err => console.log(err));
-		}
-		else
+		if(_.has(temp, 'word') == false)
 		{
 			this._storageService.get('vocabulary:' + vocabularyID).then(
 				word => {
 					temp.word = word;
 				}, err => console.log(err));
-			this._storageService.get('vocabularyProgress:' + vocabularyID).then(
-				progress => {
-					temp.progress = progress;
-				}, err => console.log(err));
 		}
 		return temp;
 	}
 
-	public getVocabularyList(){
-		return this._httpService.get({
+	public downloadVocabulary(vocabularyID: number){
+		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
+		this._httpService.get({
 			url: '/recitationvocabulary',
-			data: {}
-		}).map(res => res.json());
+			data: {
+				id: vocabularyID
+			}
+		})
+		.map(res => res.json())
+		.subscribe(
+			vocabulary => {
+				this._storageService.set('vocabulary:' + vocabularyID, vocabulary[0].word);
+				this._storageService.set('vocabularyProgress:' + vocabularyID, 0);
+				temp.isDownloaded = true;
+				temp.word = vocabulary[0].word;
+			}, err => console.log(err));
+		return temp;
 	}
 
-	public getLocalVocabularyList(id: number){
-		return this._storageService.get('vocabularyList');
+	public getVocabularyList(){
+		return this._vocabularyList;
 	}
 
-	public setLocalVocabularyList(vocabularyList: any){
-		return this._storageService.set('vocabularyList', vocabularyList);
-	}
-	
-	public getCurrentProcess(id: number){
-		//return this._storageService.get();
+	public updateProgress(vocabularyID: number, value: number){
+		_.find(this._vocabularyList, ['id', vocabularyID]).progress = _.find(this._vocabularyList, ['id', vocabularyID]).progress + value;
+		this._storageService.set('vocabularyProgress:' + vocabularyID, _.find(this._vocabularyList, ['id', vocabularyID]).progress);
 	}
 
-	public updateCurrentProcess(id: number, change: number){
-		this.getLocalVocabularyList(id)
-			.then(data => {
-				data.currentProcess = data.currentProcess + change;
-				this.setLocalVocabularyList(data);
-			})
-	}
 }

@@ -32,8 +32,8 @@
 	    </ion-list>
 
 	    <ion-list *ngSwitchCase="'recitation'">
-	      <button ion-item *ngFor = "let i of _recitationService.get()" (click)="_goDetailPage(i)">
-	        <h2>{{i.name}}</h2>
+	      <button ion-item *ngFor = "let i of _recitationService.getVocabularyList()" (click)="_goDetailPage(i)">
+	        <h2>{{i.title}}</h2>
 	      </button>
 		</ion-list>
 	</div>
