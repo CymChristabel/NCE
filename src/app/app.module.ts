@@ -12,6 +12,7 @@ import { RecitationVocabularyOverallPage } from '../pages/recitation/recitation-
 import { RecitationSlidePage } from '../pages/recitation/recitation-slide/recitation-slide';
 import { RecitationSummaryPage } from '../pages/recitation/recitation-summary/recitation-summary';
 import { RecitationTestPage } from '../pages/recitation/recitation-test/recitation-test';
+import { RecitationModalPage } from '../pages/recitation/recitation-vocabulary-overall/modal';
 //user related
 import { LandingPage } from '../pages/landing/landing';
 import { LoginPage } from '../pages/login/login';
@@ -29,6 +30,7 @@ import { ModalContentPage } from '../pages/select-detail/modal-content';
 import { NCEStudyPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study';
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
 import { NCEOverallPage } from '../pages/nce/nce-overall/nce-overall';
+import { NCEModalPage } from '../pages/nce/nce-overall/modal';
 //service related
 import { HttpService } from '../providers/http.service';
 import { StorageService } from '../providers/storage.service';
@@ -41,6 +43,7 @@ import { StorageService } from '../providers/storage.service';
     RecitationSlidePage,
     RecitationSummaryPage,
     RecitationTestPage,
+    RecitationModalPage,
     LandingPage,
     LoginPage,
     RegisterPage,
@@ -48,14 +51,16 @@ import { StorageService } from '../providers/storage.service';
     CommunityEntryPage,
     CommunityPostListPage,
     GeneralPage,
-    NCEStudyPage,
     PopoverMenuPage,
     SelectPage,
     SelectDetailPage,
     ModalContentPage,
     MainPage,
+    NCEStudyPage,
     NCESelectPage,
-    NCEOverallPage
+    NCEOverallPage,
+    NCEModalPage,
+
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -69,6 +74,7 @@ import { StorageService } from '../providers/storage.service';
     RecitationSlidePage,
     RecitationSummaryPage,
     RecitationTestPage,
+    RecitationModalPage,
     LandingPage,
     LoginPage,
     RegisterPage,
@@ -83,7 +89,8 @@ import { StorageService } from '../providers/storage.service';
     ModalContentPage,
     MainPage,
     NCESelectPage,
-    NCEOverallPage
+    NCEOverallPage,
+    NCEModalPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
