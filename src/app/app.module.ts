@@ -26,7 +26,9 @@ import { SelectPage } from '../pages/select/select';
 import { SelectDetailPage } from '../pages/select-detail/select-detail';
 import { ModalContentPage } from '../pages/select-detail/modal-content';
 //NCE related
-import { NCEStudyPage, PopoverMenuPage } from '../pages/nce-study/nce-study';
+import { NCEStudyPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study';
+import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
+import { NCEOverallPage } from '../pages/nce/nce-overall/nce-overall';
 //service related
 import { HttpService } from '../providers/http.service';
 import { StorageService } from '../providers/storage.service';
@@ -51,7 +53,9 @@ import { StorageService } from '../providers/storage.service';
     SelectPage,
     SelectDetailPage,
     ModalContentPage,
-    MainPage
+    MainPage,
+    NCESelectPage,
+    NCEOverallPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -77,7 +81,9 @@ import { StorageService } from '../providers/storage.service';
     SelectPage,
     SelectDetailPage,
     ModalContentPage,
-    MainPage
+    MainPage,
+    NCESelectPage,
+    NCEOverallPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

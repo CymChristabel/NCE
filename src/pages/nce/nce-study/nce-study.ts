@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { NavController, NavParams, PopoverController, ViewController } from 'ionic-angular';
 import { MediaPlugin } from 'ionic-native';
 
-import { NCEService } from '../../providers/nce.service';
+import { NCEService } from '../../../providers/nce.service';
 
 import * as _ from 'lodash';
 
@@ -110,7 +110,7 @@ export class NCEStudyPage implements OnInit{
   	private _showTranslation;
 
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
-		this._lession = this._nceService.getBook(0, 0);
+		// this._lession = this._nceService.getBook(0, 0);
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
 		this._lession.word = _.split(this._lession.word, '\n')

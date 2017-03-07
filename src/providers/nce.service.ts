@@ -2,12 +2,8 @@ import { HttpService } from './http.service';
 import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
 
-/*
-  Generated class for the NCEService provider.
+import * as _ from 'lodash';
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
 @Injectable()
 export class NCEService {
 	private _bookList;
@@ -34,11 +30,15 @@ export class NCEService {
 		return this._bookList;
 	}
 
-	public getBook(booklist: number, book: number){
-		if(this._bookList[booklist].lession[book] != undefined)
-		{
-			return this._bookList[booklist].lession[book];
-		}
+	// public getBook(booklist: number, book: number){
+	// 	if(this._bookList[booklist].lession[book] != undefined)
+	// 	{
+	// 		return this._bookList[booklist].lession[book];
+	// 	}
+	// }
+
+	public getBook(id: number){
+		return _.find(this._bookList, { id: id });
 	}
 
 	public getRemoteBookList(){
