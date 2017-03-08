@@ -76,6 +76,7 @@ export class RecitationSlidePage{
 		}
 		this._slider.slideTo(0, 10);
 	}
+
 	onSlideChanged(){
 		if(this._slider.isEnd()){
 			this._navCtrl.push(RecitationSummaryPage, { 

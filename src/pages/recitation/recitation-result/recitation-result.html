@@ -1,0 +1,31 @@
+<!--
+  Generated template for the RecitationResult page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>recitation-result</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+ 	<ion-list>
+	    <ion-item-group>
+	      <ion-item-divider color = "light">未记住</ion-item-divider>
+	        <button ion-item detail-push (click) = "_showWordModal(j)" *ngFor = "let j of _word.false">
+	          {{j.name}}
+	        </button>
+	    </ion-item-group>
+	    <ion-item-group>
+	      <ion-item-divider color = "light">记住的</ion-item-divider>
+	        <button ion-item detail-push (click) = "_showWordModal(j)" *ngFor = "let j of _word.true">
+	          {{j.name}}
+	        </button>
+	    </ion-item-group>
+  	</ion-list>
+</ion-content>

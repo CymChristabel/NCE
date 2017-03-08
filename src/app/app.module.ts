@@ -13,14 +13,12 @@ import { RecitationSlidePage } from '../pages/recitation/recitation-slide/recita
 import { RecitationSummaryPage } from '../pages/recitation/recitation-summary/recitation-summary';
 import { RecitationTestPage } from '../pages/recitation/recitation-test/recitation-test';
 import { RecitationModalPage } from '../pages/recitation/recitation-vocabulary-overall/modal';
+import { RecitationResultPage } from '../pages/recitation/recitation-result/recitation-result';
 //user related
 import { LandingPage } from '../pages/landing/landing';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { ForgetPasswordPage } from '../pages/forget-password/forget-password';
-//community related
-import { CommunityEntryPage } from '../pages/community/community-entry/community-entry';
-import { CommunityPostListPage } from '../pages/community/community-post-list/community-post-list';
 //task manager related
 import { GeneralPage } from '../pages/general/general';
 import { SelectPage } from '../pages/select/select';
@@ -31,6 +29,8 @@ import { NCEStudyPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study'
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
 import { NCEOverallPage } from '../pages/nce/nce-overall/nce-overall';
 import { NCEModalPage } from '../pages/nce/nce-overall/modal';
+//etc
+import { WordModalPage } from '../pages/word-modal/word-modal';
 //service related
 import { HttpService } from '../providers/http.service';
 import { StorageService } from '../providers/storage.service';
@@ -44,12 +44,11 @@ import { StorageService } from '../providers/storage.service';
     RecitationSummaryPage,
     RecitationTestPage,
     RecitationModalPage,
+    RecitationResultPage,
     LandingPage,
     LoginPage,
     RegisterPage,
     ForgetPasswordPage,
-    CommunityEntryPage,
-    CommunityPostListPage,
     GeneralPage,
     PopoverMenuPage,
     SelectPage,
@@ -60,6 +59,7 @@ import { StorageService } from '../providers/storage.service';
     NCESelectPage,
     NCEOverallPage,
     NCEModalPage,
+    WordModalPage
 
   ],
   imports: [
@@ -75,12 +75,11 @@ import { StorageService } from '../providers/storage.service';
     RecitationSummaryPage,
     RecitationTestPage,
     RecitationModalPage,
+    RecitationResultPage,
     LandingPage,
     LoginPage,
     RegisterPage,
     ForgetPasswordPage,
-    CommunityEntryPage,
-    CommunityPostListPage,
     GeneralPage,
     NCEStudyPage,
     PopoverMenuPage,
@@ -90,7 +89,8 @@ import { StorageService } from '../providers/storage.service';
     MainPage,
     NCESelectPage,
     NCEOverallPage,
-    NCEModalPage
+    NCEModalPage,
+    WordModalPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

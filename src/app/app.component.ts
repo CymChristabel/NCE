@@ -8,8 +8,6 @@ import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { RecitationSelectPage } from '../pages/recitation/recitation-select/recitation-select';
 
-import { CommunityEntryPage } from '../pages/community/community-entry/community-entry';
-
 import { MainPage } from '../pages/main/main';
 
 import { GeneralPage } from '../pages/general/general';
@@ -82,7 +80,6 @@ export class MyApp {
       { title: 'landing', component: LandingPage },
       { title: 'login', component: LoginPage },
       { title: 'register', component: RegisterPage },
-      { title: 'community', component: CommunityEntryPage },
       { title: 'task', component: GeneralPage },
       { title: 'NCE', component: NCESelectPage },
       { title: 'select', component: SelectPage }
