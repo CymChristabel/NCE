@@ -73,7 +73,7 @@ export class RecitationService{
 		return temp;
 	}
 
-	public downloadVocabulary(vocabularyID: number){
+	public downloadVocabulary(vocabularyID: number, loading: any = undefined){
 		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
 		this._httpService.get({
 			url: '/recitationvocabulary',
@@ -88,7 +88,14 @@ export class RecitationService{
 				this._storageService.set('vocabularyProgress:' + vocabularyID, 0);
 				temp.isDownloaded = true;
 				temp.word = vocabulary[0].word;
-			}, err => console.log(err));
+				if(loading)
+				{
+					loading.dismiss();
+				}
+			}, err => {
+				console.log(err);
+				loading.dismiss();
+			});
 		return temp;
 	}
 
