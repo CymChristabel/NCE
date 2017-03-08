@@ -27,5 +27,13 @@
 	          {{j.name}}
 	        </button>
 	    </ion-item-group>
+		<ion-row>
+			<ion-col>
+				<button ion-button full color="danger" (click)="_reciteAgain()">再来一遍</button>
+			</ion-col>
+			<ion-col>
+				<button ion-button full (click)="_goNext()">下一组</button>
+			</ion-col>
+		</ion-row>
   	</ion-list>
 </ion-content>

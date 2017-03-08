@@ -18,6 +18,7 @@ export class RecitationSummaryPage{
 
 	private _goRecitationSlidePage(){
 		this._navCtrl.pop();
+		this._navCtrl.push(RecitationSlidePage, { id: this._navParam.get('id'), type: this._navParam.get('type') });
 	}
 
 	private _goRecitationTestPage(){

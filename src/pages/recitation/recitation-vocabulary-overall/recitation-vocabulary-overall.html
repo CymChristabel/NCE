@@ -21,8 +21,8 @@
 
   <p>当前背诵进度:</p>
   <div class="progress-outer" *ngIf = "_vocabulary.isDownloaded">
-  	<div class="progress-inner" [style.width]="_vocabulary.progress + '%'">
-      	{{_vocabulary.progress}}%
+  	<div class="progress-inner" [style.width]="_progressBar + '%'">
+      	{{_progressBar}}%
   	</div>
   </div>
   <button ion-button full *ngIf = "_vocabulary.isDownloaded" (click)="_showModal()">Show word list</button>

@@ -4,8 +4,6 @@ import { NavController, NavParams, Slides, ToastController} from 'ionic-angular'
 import { RecitationSlidePage } from '../recitation-slide/recitation-slide';
 import { RecitationResultPage } from '../recitation-result/recitation-result';
 
-import { RecitationService } from '../../../providers/recitation.service';
-
 import * as _ from 'lodash';
 
 @Component({
@@ -18,7 +16,7 @@ export class RecitationTestPage{
 	private _problem;
 	private _currentProblem;
 
-	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _recitationService: RecitationService, private _toastCtrl: ToastController){
+	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _toastCtrl: ToastController){
 		this._wordList = this._navParam.get('wordList');
 		this._currentProblem = 0;
 
@@ -75,7 +73,7 @@ export class RecitationTestPage{
 			else
 			{
 				this._navCtrl.pop();
-				this._navCtrl.push(RecitationResultPage, { wordList: this._wordList });
+				this._navCtrl.push(RecitationResultPage, { wordList: this._wordList, id: this._navParam.get('id'), type: this._navParam.get('type') });
 				// if(this._navParam.get('type') == 'NCE')
 				// {
 

@@ -24,6 +24,7 @@ export class RecitationSlidePage{
 
 	ionViewWillEnter()
 	{
+		console.log(this._navParam.data);
 		if(this._id == undefined)
 		{
 			this._id = this._navParam.get('id');
@@ -79,6 +80,7 @@ export class RecitationSlidePage{
 
 	onSlideChanged(){
 		if(this._slider.isEnd()){
+			this._navCtrl.pop();
 			this._navCtrl.push(RecitationSummaryPage, { 
 				wordList: this._slide,
 				id: this._id,
