@@ -19,7 +19,7 @@
   <ion-list>
     <ion-item-group *ngFor="let i of _word">
       <ion-item-divider color="light">{{ i[0].name[0].toUpperCase() }}</ion-item-divider>
-        <button ion-item detail-push *ngFor="let j of i">
+        <button ion-item detail-push (click) = "_showWordModal(j)" *ngFor="let j of i">
           {{j.name}}
         </button>
     </ion-item-group>

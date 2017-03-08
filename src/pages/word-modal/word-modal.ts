@@ -12,4 +12,8 @@ export class WordModalPage{
 	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController){
 		this._word = this._navParams.get('word');
 	}
+
+	private _dismiss(){
+		this._viewCtrl.dismiss();
+	}
 }

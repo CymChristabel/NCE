@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from 'ionic-angular';
 
-import { WordModalPage } from '../../../word-modal';
+import { WordModalPage } from '../../word-modal/word-modal';
 
 import * as _ from 'lodash';
 

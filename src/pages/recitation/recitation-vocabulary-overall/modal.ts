@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, NavParams, ViewController } from 'ionic-angular';
+import { NavController, Platform, NavParams, ViewController, ModalController } from 'ionic-angular';
+
+import { WordModalPage } from '../../word-modal/word-modal';
 
 import * as _ from 'lodash';
 
@@ -12,7 +14,7 @@ export class RecitationModalPage{
 	private _word;
 	private _enableInfiniteScroll;
 
-	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController){
+	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController, private _modalCtrl: ModalController){
 		this._tempWord = _.groupBy(this._navParams.get('word'), (value) => { return value.name[0].toUpperCase() });
 		this._word = [];
 		this._pushWord();
@@ -71,5 +73,29 @@ export class RecitationModalPage{
 			this._pushWord();
 			this._enableInfiniteScroll = true;
 		}
+	}
+
+	private _showWordModal(word: any){
+		let temp = _.words(word.explainnation);
+		let mark = -1;
+		for(let i = 0; i < temp.length; i++)
+		{
+			if(temp[i][0].toLowerCase() >= 'a' && temp[i][0].toLowerCase() <= 'z')
+			{
+				mark = i;
+				temp[i] = temp[i] + '.';
+			}
+			else
+			{
+				temp[mark] = temp[mark] + ' ' + temp[i];
+			}
+		}
+		_.remove(temp, (value) => {
+			return !(value[0].toLowerCase() >= 'a' && value[0].toLowerCase() <= 'z');
+		});
+		word.explainnation = temp;
+		let modal = this._modalCtrl.create(WordModalPage, { word: word });
+
+		modal.present();
 	}
 }
