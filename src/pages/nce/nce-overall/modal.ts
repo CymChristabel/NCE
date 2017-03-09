@@ -16,12 +16,8 @@ export class NCEModalPage{
 		
 	}
   
-  private _goNCEStudyPage(lession: any){
-    this._navCtrl.push(NCEStudyPage, { lession: lession });
-  }
-  
-	private _dismiss(){
-		this._viewCtrl.dismiss();
+	private _goNCEStudyPage(selectedLession: any){
+		this._viewCtrl.dismiss({ selectedLession: selectedLession });
 	}
   
 }

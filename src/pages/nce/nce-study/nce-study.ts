@@ -2,6 +2,8 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { NavController, NavParams, PopoverController, ViewController } from 'ionic-angular';
 import { MediaPlugin } from 'ionic-native';
 
+import { RecitationSlidePage } from '../../recitation/recitation-slide/recitation-slide';
+
 import * as _ from 'lodash';
 
 /*
@@ -52,6 +54,7 @@ export class PopoverMenuPage {
 	      this._background = this.getColorName(this._contentEle.style.backgroundColor);
 	      this.setFontFamily();
 	    }
+
   	}
 
 	getColorName(background) {
@@ -83,8 +86,8 @@ export class PopoverMenuPage {
 		this._textEle.style.color = this._colors[color].fg;
 	}
 
-	changeFontSize(fontSsize) {
-		this._textEle.style.fontSize = fontSsize;
+	changeFontSize(fontSize) {
+		this._textEle.style.fontSize = fontSize;
 	}
 
 	changeFontFamily() {
@@ -111,12 +114,13 @@ export class NCEStudyPage implements OnInit{
 		this._lession = this._navParams.get('lession');
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
-		this._lession.word = _.split(this._lession.word, '\n');
+
 		this._showTranslation = false;
+
  	}
 
 	ngOnInit(){
-
+		this.text.nativeElement.style.fontSize = 'medium';
 	}
 
 	private _presentPopover(myEvent){
@@ -134,4 +138,12 @@ export class NCEStudyPage implements OnInit{
 		this._showTranslation = !this._showTranslation;
 	}
 
+	private _goRecitationSlidePage(){
+		this._navCtrl.push(RecitationSlidePage, { 
+			wordList: this._lession.word,
+			bookID: this._navParams.get('bookID'),
+			lessionID: this._lession.id,
+			type: 'NCE'
+		});
+	}
 }

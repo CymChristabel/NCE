@@ -42,7 +42,7 @@ export class RecitationVocabularyOverallPage {
 
 	private _goRecitationSlidePage(){
 		this._navCtrl.push(RecitationSlidePage, {
-			id: this._vocabulary.id,
+			vocabularyID: this._vocabulary.id,
 			type: 'recitation'
 		});
 	}

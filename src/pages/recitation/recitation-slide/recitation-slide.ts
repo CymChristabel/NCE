@@ -15,7 +15,6 @@ import * as _ from 'lodash';
 export class RecitationSlidePage{
 	@ViewChild('_slider') _slider: Slides;
 
-	private _id;
 	private _slide;
 	private _progress;
 
@@ -24,68 +23,100 @@ export class RecitationSlidePage{
 
 	ionViewWillEnter()
 	{
-		console.log(this._navParam.data);
-		if(this._id == undefined)
+		// if(this._id == undefined)
+		// {
+		// 	this._id = this._navParam.get('id');
+		// }
+		if(this._navParam.get('review') == undefined)
 		{
-			this._id = this._navParam.get('id');
-		}
-		if(this._navParam.get('type') == "NCE" && this._slide == undefined)
-		{
-			console.log(1);
-		}
-		else if(this._navParam.get('type') == 'recitation' && (this._slide == undefined || this._progress != this._recitationService.getVocabulary(this._id).progress))
-		{
-			this._progress = this._recitationService.getVocabulary(this._id).progress;
-
-			if(this._recitationService.getVocabulary(this._id).word.length >= this._progress + 10)
+			if(this._navParam.get('type') == "NCE")
 			{
-				this._slide = _.slice(this._recitationService.getVocabulary(this._id).word, this._progress, this._progress + 10);
-			}
-			else
-			{
-				this._slide = _.slice(this._recitationService.getVocabulary(this._id).word, this._progress, this._recitationService.getVocabulary(this._id).word.length - 1);
-			}
-
-			for(let i = 0; i < this._slide.length; i++)
-			{
-				let temp = _.words(this._slide[i].explainnation);
-				let tempWord = undefined;
-				this._slide[i].explainnation = [];
-
-				for(let j = 0; j < temp.length; j++)
+				let tempWordList = _.remove(_.split(this._navParam.get('wordList'), '\n'), (value) => { return value.length != 0 });
+				for(let i = 0; i < tempWordList.length; i++)
 				{
-					if(temp[j][0] >='a' && temp[j][0] <= 'z')
+					let temp = _.words(tempWordList[i]);
+					tempWordList[i] = {};
+					tempWordList[i].name = temp[0];
+					tempWordList[i].explainnation = '';
+					for(let j = 1; j < temp.length; j++)
 					{
-						if(tempWord != undefined)
-						{
-							this._slide[i].explainnation.push(tempWord);
-						}
-						tempWord = temp[j];
+						tempWordList[i].explainnation = tempWordList[i].explainnation + ' ' + temp[j];
 					}
-					else
-					{
-						tempWord = tempWord + ' ' + temp[j];
-					}
-					if(j == temp.length - 1)
+				}
+				this._slide = tempWordList;
+			}
+			else if(this._navParam.get('type') == 'recitation')
+			{
+				this._progress = this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).progress;
+
+				if(this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).word.length >= this._progress + 10)
+				{
+					this._slide = _.slice(this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).word, this._progress, this._progress + 10);
+				}
+				else
+				{
+					this._slide = _.slice(this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).word, this._progress, this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).word.length - 1);
+				}
+			}
+			this._initExplainnation();
+		}
+		else
+		{
+			this._slide = this._navParam.get('wordList');
+		}
+	}
+
+	private _initExplainnation(){
+		for(let i = 0; i < this._slide.length; i++)
+		{
+			let temp = _.words(this._slide[i].explainnation);
+			let tempWord = undefined;
+			this._slide[i].explainnation = [];
+
+			for(let j = 0; j < temp.length; j++)
+			{
+				if(temp[j][0] >='a' && temp[j][0] <= 'z')
+				{
+					if(tempWord != undefined)
 					{
 						this._slide[i].explainnation.push(tempWord);
 					}
+					tempWord = temp[j];
+				}
+				else
+				{
+					tempWord = tempWord + ' ' + temp[j];
+				}
+				if(j == temp.length - 1)
+				{
+					this._slide[i].explainnation.push(tempWord);
 				}
 			}
-			
-			this._slide.push('temp');
 		}
-		this._slider.slideTo(0, 10);
+		this._slide.push('temp');
+		// this._slider.slideTo(0, 10);
 	}
 
 	onSlideChanged(){
 		if(this._slider.isEnd()){
 			this._navCtrl.pop();
-			this._navCtrl.push(RecitationSummaryPage, { 
-				wordList: this._slide,
-				id: this._id,
-				type: this._navParam.get('type')
-			});
+			if(this._navParam.get('type') == 'NCE')
+			{
+				this._navCtrl.push(RecitationSummaryPage,{
+					wordList: this._slide,
+					type: this._navParam.get('type'),
+					lessionID: this._navParam.get('lessionID'),
+					bookID: this._navParam.get('bookID')
+				});
+			}
+			else
+			{
+				this._navCtrl.push(RecitationSummaryPage,{
+					wordList: this._slide,
+					type: this._navParam.get('type'),
+					vocabularyID: this._navParam.get('vocabularyID')
+				});
+			}			
 		}
 	}
 }

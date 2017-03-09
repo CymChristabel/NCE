@@ -4,7 +4,7 @@
       List
     </ion-title>
     <ion-buttons start>
-      <button ion-button (click)="_dismiss()">
+      <button ion-button (click)="_viewCtrl.dismiss()">
         <span ion-text color="primary" showWhen="ios">Cancel</span>
         <ion-icon name="md-close" showWhen="android, windows"></ion-icon>
       </button>
@@ -14,8 +14,8 @@
 
 <ion-content>
   <ion-list>
-    <button ion-item *ngFor="let i of _lession" (click) = "_goNCEStudyPage(i)">
-      {{ i.title }}
+    <button ion-item *ngFor="let l of _lession" (click) = "_goNCEStudyPage(l)">
+      {{ l.title }}
     </button>
   </ion-list>
 </ion-content>

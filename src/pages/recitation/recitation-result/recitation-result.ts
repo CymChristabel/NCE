@@ -28,12 +28,16 @@ export class RecitationResultPage {
 
 	private _reciteAgain(){
 		this._navCtrl.pop();
-		this._navCtrl.push(RecitationSlidePage, { id: this._navParams.get('id'), type: this._navParams.get('type') });
+		this._navParams.data.review = true;
+		this._navCtrl.push(RecitationSlidePage, this._navParams.data);
 	}
 
 	private _goNext(){
-		this._recitationService.updateProgress(this._navParams.get('id'), this._navParams.get('wordList').length);
 		this._navCtrl.pop();
-		this._navCtrl.push(RecitationSlidePage, { id: this._navParams.get('id'), type: this._navParams.get('type') });
+		if(this._navParams.get('type') == 'recitation')
+		{
+			this._recitationService.updateProgress(this._navParams.get('id'), this._navParams.get('wordList').length);
+			this._navCtrl.push(RecitationSlidePage, this._navParams.data);
+		}
 	}
 }

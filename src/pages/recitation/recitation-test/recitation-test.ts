@@ -73,15 +73,7 @@ export class RecitationTestPage{
 			else
 			{
 				this._navCtrl.pop();
-				this._navCtrl.push(RecitationResultPage, { wordList: this._wordList, id: this._navParam.get('id'), type: this._navParam.get('type') });
-				// if(this._navParam.get('type') == 'NCE')
-				// {
-
-				// }
-				// else
-				// {
-				// 	this._recitationService.updateProgress(this._navParam.get('id'), this._wordList.length);
-				// }
+				this._navCtrl.push(RecitationResultPage, this._navParam.data);
 			}
 		}
 		else

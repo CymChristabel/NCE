@@ -32,7 +32,10 @@
 				<button ion-button full color="danger" (click)="_reciteAgain()">再来一遍</button>
 			</ion-col>
 			<ion-col>
-				<button ion-button full (click)="_goNext()">下一组</button>
+				<button ion-button full (click)="_goNext()">
+					<div *ngIf = "_navParams.get('type') == 'recitation'">下一组</div>
+					<div *ngIf = "_navParams.get('type') == 'NCE'">返回课文</div>
+				</button>
 			</ion-col>
 		</ion-row>
   	</ion-list>
