@@ -14,8 +14,8 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let i of _lession">
+    <button ion-item *ngFor="let i of _lession" (click) = "_goNCEStudyPage(i)">
       {{ i.title }}
-    </ion-item>
+    </button>
   </ion-list>
 </ion-content>
