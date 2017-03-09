@@ -110,12 +110,11 @@ export class NCEStudyPage implements OnInit{
   	private _showTranslation;
 
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
-		// this._lession = this._nceService.getBook(0, 0);
+		this._lession = this._navCtrl.get('lession');
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
-		this._lession.word = _.split(this._lession.word, '\n')
+		this._lession.word = _.split(this._lession.word, '\n');
 		this._showTranslation = false;
-
  	}
 
 	ngOnInit(){
