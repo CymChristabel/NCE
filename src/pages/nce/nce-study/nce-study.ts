@@ -2,8 +2,6 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { NavController, NavParams, PopoverController, ViewController } from 'ionic-angular';
 import { MediaPlugin } from 'ionic-native';
 
-import { NCEService } from '../../../providers/nce.service';
-
 import * as _ from 'lodash';
 
 /*
@@ -85,8 +83,8 @@ export class PopoverMenuPage {
 		this._textEle.style.color = this._colors[color].fg;
 	}
 
-	changeFontSize(direction) {
-		this._textEle.style.fontSize = direction;
+	changeFontSize(fontSsize) {
+		this._textEle.style.fontSize = fontSsize;
 	}
 
 	changeFontFamily() {
@@ -109,8 +107,8 @@ export class NCEStudyPage implements OnInit{
   	private _lession;
   	private _showTranslation;
 
-	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
-		this._lession = this._navCtrl.get('lession');
+	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController) {
+		this._lession = this._navParams.get('lession');
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
 		this._lession.word = _.split(this._lession.word, '\n');

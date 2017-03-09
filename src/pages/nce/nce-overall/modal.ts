@@ -16,7 +16,7 @@ export class NCEModalPage{
 		
 	}
   
-  private _goNCEStudy(lession: any){
+  private _goNCEStudyPage(lession: any){
     this._navCtrl.push(NCEStudyPage, { lession: lession });
   }
   
