@@ -8,6 +8,7 @@ export class UserService {
 	private _userData;
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
+		this._storageService.clear();
 		this._storageService.get('userData').then(
 			userData => {
 				this._userData = userData;
