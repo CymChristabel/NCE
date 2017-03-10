@@ -11,28 +11,50 @@ export class RecitationService{
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
 		console.log('init vocabulary service....');
-		this._vocabularyList = [];
-		this._httpService.get({
-			url: '/recitationvocabulary',
-			data: {}
-		})
-		.map(res => res.json())
-		.subscribe(
-			vocabularyList => {
-				this._vocabularyList = vocabularyList;
-				this._storageService.set('vocabularyList', vocabularyList);
-				this._checkDownload();
-			}, err => {
-				console.log('vocabulary remote:' + err);
-				this._storageService.get('vocabularyList').then(
-					localVocabularyList => {
-						if(localVocabularyList != undefined)
-						{
-							this._vocabularyList = localVocabularyList;
+		this._storageService.get('vocabularyList').then(
+			localVocabularyList => {
+				if(localVocabularyList == undefined)
+				{
+					this._httpService.get({
+						url: '/recitationvocabulary',
+						data: {}
+					})
+					.map(res => res.json())
+					.subscribe(
+						vocabularyList => {
+							this._vocabularyList = vocabularyList;
+							this._storageService.set('vocabularyList', vocabularyList);
 							this._checkDownload();
-						}
-					}, err => console.log('vocabulary local:' + err))
-			});
+						}, err => console.log('vocabulary remote:' + err));
+				}
+				else
+				{
+					this._vocabularyList = localVocabularyList;
+					this._checkDownload();
+				}
+			}
+		)
+		// this._httpService.get({
+		// 	url: '/recitationvocabulary',
+		// 	data: {}
+		// })
+		// .map(res => res.json())
+		// .subscribe(
+		// 	vocabularyList => {
+		// 		this._vocabularyList = vocabularyList;
+		// 		this._storageService.set('vocabularyList', vocabularyList);
+		// 		this._checkDownload();
+		// 	}, err => {
+		// 		console.log('vocabulary remote:' + err);
+		// 		this._storageService.get('vocabularyList').then(
+		// 			localVocabularyList => {
+		// 				if(localVocabularyList != undefined)
+		// 				{
+		// 					this._vocabularyList = localVocabularyList;
+		// 					this._checkDownload();
+		// 				}
+		// 			}, err => console.log('vocabulary local:' + err))
+		// 	});
 	}
 	//check whether words are downloaded and set the progress
 	private _checkDownload(){
