@@ -11,6 +11,7 @@ export class UserService {
 		this._storageService.get('userData').then(
 			userData => {
 				this._userData = userData;
+				console.log(this._userData);
 			}, err => console.log(err));
 	}
 

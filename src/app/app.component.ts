@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav, ToastController } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network } from 'ionic-native';
 
-import { RecitationVocabularyOverallPage } from '../pages/recitation/recitation-vocabulary-overall/recitation-vocabulary-overall';
 import { LandingPage } from '../pages/landing/landing';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
@@ -32,6 +31,8 @@ export class MyApp {
   // make HelloIonicPage the root (or first) page
   rootPage: any;
   pages: Array<{title: string, component: any}>;
+
+  private _nickname;
 
   constructor(
     public platform: Platform,
@@ -67,6 +68,7 @@ export class MyApp {
                 else
                 {
                   this.rootPage = MainPage;
+                  this._nickname = this._userService.getUser().user.nickname;
                 }
               }, err => console.log(err));
           }
