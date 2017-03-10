@@ -32,8 +32,6 @@ export class MyApp {
   rootPage: any;
   pages: Array<{title: string, component: any}>;
 
-  private _nickname;
-
   constructor(
     public platform: Platform,
     public menu: MenuController,
@@ -68,9 +66,14 @@ export class MyApp {
                 else
                 {
                   this.rootPage = MainPage;
-                  this._nickname = this._userService.getUser().user.nickname;
                 }
-              }, err => console.log(err));
+              }, err => {
+                if(err.status == 0)
+                {
+                  this._generateToast('network error').present();  
+                }
+                this.rootPage = MainPage;
+              });
           }
         }
       }, err => console.log(err));
@@ -92,12 +95,7 @@ export class MyApp {
     this.platform.ready().then(() => {
       Network.onConnect().subscribe(
         () => {
-          let toast = this._toastCtrl.create({
-            message: 'network connected',
-            duration: 3000,
-            position: 'bottom'
-          });
-          toast.present();
+          this._generateToast('connection establish').present();
         });
 
       StatusBar.styleDefault();
@@ -110,5 +108,13 @@ export class MyApp {
     this.menu.close();
     // navigate to the new page if it is not the current page
     this.nav.setRoot(page.component);
+  }
+
+  private _generateToast(message: string){
+      return this._toastCtrl.create({
+            message: message,
+            duration: 3000,
+            position: 'bottom'
+          });
   }
 }

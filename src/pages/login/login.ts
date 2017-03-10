@@ -42,7 +42,8 @@ export class LoginPage {
   	this._navCtrl.push(ForgetPasswordPage);
   }
 
-  private _goGeneralPage(){
+  private _guestLogin(){
+    this._userService.guestLogin();
     this._navCtrl.setRoot(GeneralPage);
   }
 
@@ -59,11 +60,12 @@ export class LoginPage {
     if(form.valid)
     {
       this._userService.login(form.value).subscribe(
-        data => {
-          this._userService.updateUser(data);
-          this._goGeneralPage();
-        },
-        err => {
+        result => {
+          if(result)
+          {
+            this._navCtrl.setRoot(GeneralPage);  
+          }
+        }, err => {
           this._generateToast(JSON.parse(err._body).message).present();
         });
     }
@@ -78,6 +80,6 @@ export class LoginPage {
         this._generateToast('password should between 8 and 16 characters').present();
       }
     }
-  }
 
+  }
 }

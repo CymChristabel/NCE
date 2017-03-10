@@ -3,6 +3,7 @@ import { Http, Headers, Response } from '@angular/http';
 
 import { StorageService } from './storage.service';
 
+import 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
@@ -70,7 +71,7 @@ export class HttpService{
         return this._http.put(HttpService.BASE_URL + route, JSON.stringify(param), { headers: this._getHeaders(headers) });
     }
 
-    public updateAuthToken(authToken: string){
+    public getAuthToken(authToken: string){
         this._authToken = authToken;
     }
 

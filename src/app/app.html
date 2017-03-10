@@ -2,14 +2,14 @@
 
   <ion-header>
     <ion-toolbar>
-      <ion-row>
+      <ion-row *ngIf = "_userService._userData != undefined">
         <ion-col>
           <ion-avatar class = "avatar">
             <img src="assets/img/temp-avatar.jpg">
           </ion-avatar>
         </ion-col>
         <ion-col>
-          <h2>{{_nickname}}</h2>
+          <h2>{{_userService._userData.user.nickname}}</h2>
         </ion-col>
       </ion-row>
     </ion-toolbar>

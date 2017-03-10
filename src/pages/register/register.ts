@@ -2,6 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 
+import { GeneralPage } from '../general/general';
+
 import { UserService } from '../../providers/user.service';
 
 @Component({
@@ -36,19 +38,18 @@ export class RegisterPage{
 		if(form.valid)
 		{
 			this._userService.signUp(form.value).subscribe(
-				data => {
-					if(data.token = -1)
+				result => {
+					if(result == true)
 					{
-						let toast = this._toastCtrl.create({
+						this._navCtrl.setRoot(GeneralPage);
+					}
+					else if(result == -1)
+					{
+						this._toastCtrl.create({
 							message: 'email already used',
 							duration: 1500,
 							position: 'bottom'
-						})
-						toast.present();
-					}
-					else
-					{
-						this._userService.updateUser(data);
+						}).present();
 					}
 				},err => console.log(err)
 			);
