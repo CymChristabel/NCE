@@ -8,7 +8,6 @@ export class UserService {
 	private _userData;
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
-		this._storageService.clear();
 		this._storageService.get('userData').then(
 			userData => {
 				this._userData = userData;
@@ -74,9 +73,8 @@ export class UserService {
 	}
 
 	public guestLogin(){
-		this._userData.user.nickname = 'John Doe Guest';
-		this._userData.avatar = undefined;
-		this._userData.guest = true;
+		this._userData = { user: { nickname: 'John Doe Guest', avatar: undefined }, guest: true};
+		console.log(this._userData);
 		this._storageService.set('userData', this._userData);
 	}
 }
