@@ -19,11 +19,13 @@ import { RecitationService } from '../providers/recitation.service';
 import { NCEService } from '../providers/nce.service';
 import { UserService } from '../providers/user.service';
 import { StorageService } from '../providers/storage.service';
+import { FileService } from '../providers/file.service';
 
+declare var cordova:any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [ StorageService, RecitationService, NCEService, UserService, TaskService ]
+  providers: [ StorageService, RecitationService, NCEService, UserService, TaskService, FileService ]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -40,7 +42,8 @@ export class MyApp {
     private _userService: UserService,
     private _RecitationService: RecitationService,
     private _nceService: NCEService,
-    private _taskService: TaskService
+    private _taskService: TaskService,
+    private _fileService: FileService
   ) {
     this._storageService.get('isFirst').then(
       isFirst => {
@@ -92,12 +95,14 @@ export class MyApp {
   }
 
   initializeApp() {
+    console.log('nimazhale');
     this.platform.ready().then(() => {
+      //check network
       Network.onConnect().subscribe(
         () => {
           this._generateToast('connection establish').present();
-        });
-
+      });
+      
       StatusBar.styleDefault();
       Splashscreen.hide();
     });
