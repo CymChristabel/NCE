@@ -15,9 +15,9 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 
 export class HttpService{
-    static BASE_URL: string = "http://139.199.195.150:1337";
+    // static BASE_URL: string = "http://139.199.195.150:1337";
 	static BASE_URL: string = "http://localhost:1337";
-    // private _authToken: string;    
+    private _authToken: string;    
 	constructor(private _http: Http, private _storageService: StorageService) {
         this._storageService.get('userData')
             .then(userData => {
