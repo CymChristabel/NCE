@@ -76,6 +76,8 @@ export class RecitationModalPage{
 	}
 
 	private _showWordModal(word: any){
+		console.log(word);
+		//deal with explainnation
 		let temp = _.words(word.explainnation);
 		let mark = -1;
 		for(let i = 0; i < temp.length; i++)
@@ -90,10 +92,20 @@ export class RecitationModalPage{
 				temp[mark] = temp[mark] + ' ' + temp[i];
 			}
 		}
+		//remove Chinese item
 		_.remove(temp, (value) => {
 			return !(value[0].toLowerCase() >= 'a' && value[0].toLowerCase() <= 'z');
 		});
 		word.explainnation = temp;
+		
+		//deal with example
+		temp  =  _.split(word.example, '\n');
+		word.example = [];
+		for(let i = 0; i < temp.length; i = i + 2)
+		{
+			word.example.push({engText: temp[i], chnText: temp[i + 1]});
+		}
+
 		let modal = this._modalCtrl.create(WordModalPage, { word: word });
 
 		modal.present();

@@ -14,4 +14,9 @@
 <ion-content padding>
     <h1 style="text-align:center">{{_word.name}}</h1>
     <p *ngFor='let e of _word.explainnation'>{{e}}</p>
+    <h5>例句</h5>
+    <div *ngFor='let e of _word.example'>
+      <p>{{e.engText}}</p>
+      <p>{{e.chnText}}</p>
+    </div>
 </ion-content>
