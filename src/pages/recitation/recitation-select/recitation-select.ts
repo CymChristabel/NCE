@@ -19,7 +19,6 @@ export class RecitationSelectPage implements OnInit{
 
   	ngOnInit(){
       this._vocabulary = this._recitationService.getVocabularyList();
-      console.log(this._vocabulary);
   	}
 
   private _doRefresh(refresher){

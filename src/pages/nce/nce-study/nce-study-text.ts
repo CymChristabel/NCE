@@ -2,16 +2,9 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { NavController, NavParams, PopoverController, ViewController } from 'ionic-angular';
 import { MediaPlugin } from 'ionic-native';
 
-import { RecitationSlidePage } from '../../recitation/recitation-slide/recitation-slide';
+import { NCEService } from '../../../providers/nce.service';
 
 import * as _ from 'lodash';
-
-/*
-  Generated class for the NCEStudy page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 
 
 @Component({
@@ -100,20 +93,35 @@ export class PopoverMenuPage {
 
 
 @Component({
-	selector: 'page-nce-study',
-	templateUrl: 'nce-study.html'
+	selector: 'page-nce-study-text',
+	templateUrl: 'nce-study-text.html'
 })
 
-export class NCEStudyPage implements OnInit{
+export class NCEStudyTextPage implements OnInit{
 	@ViewChild('popoverContent', { read: ElementRef }) content: ElementRef;
   	@ViewChild('popoverText', { read: ElementRef }) text: ElementRef;
+
   	private _lession;
   	private _showTranslation;
-
-	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController) {
+  	private _favorite;
+  	private _favoriteChanged;
+	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
 		this._lession = this._navParams.get('lession');
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
+		this._favoriteChanged = false;
+		this._nceService.getFavoriteList()
+						.then(
+							favoriteList => {
+								if(_.find(favoriteList, { bookID: this._navParams.get('bookID'), lessionID: this._lession.ID }))
+								{
+									this._favorite = true;
+								}
+								else
+								{
+									this._favorite = false;
+								}
+							}, err => console.log(err));
 
 		this._showTranslation = false;
 
@@ -138,12 +146,7 @@ export class NCEStudyPage implements OnInit{
 		this._showTranslation = !this._showTranslation;
 	}
 
-	private _goRecitationSlidePage(){
-		this._navCtrl.push(RecitationSlidePage, { 
-			wordList: this._lession.word,
-			bookID: this._navParams.get('bookID'),
-			lessionID: this._lession.id,
-			type: 'NCE'
-		});
+	private _changeFavorite(){
+		
 	}
 }

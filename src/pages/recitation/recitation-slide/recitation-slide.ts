@@ -31,19 +31,7 @@ export class RecitationSlidePage{
 		{
 			if(this._navParam.get('type') == "NCE")
 			{
-				let tempWordList = _.remove(_.split(this._navParam.get('wordList'), '\n'), (value) => { return value.length != 0 });
-				for(let i = 0; i < tempWordList.length; i++)
-				{
-					let temp = _.words(tempWordList[i]);
-					tempWordList[i] = {};
-					tempWordList[i].name = temp[0];
-					tempWordList[i].explainnation = '';
-					for(let j = 1; j < temp.length; j++)
-					{
-						tempWordList[i].explainnation = tempWordList[i].explainnation + ' ' + temp[j];
-					}
-				}
-				this._slide = tempWordList;
+				this._slide = this._navParam.get('wordList');
 			}
 			else if(this._navParam.get('type') == 'recitation')
 			{
@@ -59,6 +47,8 @@ export class RecitationSlidePage{
 				}
 			}
 			this._initExplainnation();
+			this._slide.push('temp');
+			this._slider.slideTo(0, 10);
 		}
 		else
 		{
@@ -67,7 +57,7 @@ export class RecitationSlidePage{
 	}
 
 	private _initExplainnation(){
-		for(let i = 0; i < this._slide.length; i++)
+		for(let i = 0; i < this._slide.length && this._slide[i] != 'temp'; i++)
 		{
 			let temp = _.words(this._slide[i].explainnation);
 			let tempWord = undefined;
@@ -93,8 +83,7 @@ export class RecitationSlidePage{
 				}
 			}
 		}
-		this._slide.push('temp');
-		// this._slider.slideTo(0, 10);
+
 	}
 
 	onSlideChanged(){

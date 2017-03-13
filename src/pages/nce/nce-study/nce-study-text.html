@@ -7,11 +7,17 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>NCE-study</ion-title>
+    <ion-title>课文</ion-title>
     <ion-buttons end>
-		<button ion-button icon-only (click)="_presentPopover($event)">
-			<ion-icon name="book"></ion-icon>
-		</button>
+      <button ion-button icon-only (click)="_navParams.get('navCtrl').pop()">
+        <ion-icon name="md-arrow-back"></ion-icon>
+      </button>
+  		<button ion-button icon-only (click)="_presentPopover($event)">
+  			<ion-icon name="book"></ion-icon>
+  		</button>
+      <button ion-button icon-only>
+        <ion-icon name="star"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-navbar>
 
@@ -20,11 +26,24 @@
 
 <ion-content #popoverContent padding class="popover-page">
 	<div #popoverText class="text-to-change">
-    <div align="center">
+
+    <div style = 'text-align:center'>
       <font size="5">
       {{_lession.title}}
       </font>
     </div>
+
+    <!-- <div style = 'text-align:right'>
+      <button ion-button icon-only round (click)='_changeFavorite()' *ngIf="_favorite">
+        <ion-icon name = 'star' isActive = 'true'></ion-icon>
+        Favorite
+      </button>
+      <button ion-button icon-only clear (click)='_changeFavorite()' *ngIf="!_favorite">
+        <ion-icon name = 'star' isActive = 'false'></ion-icon>
+        Favorite
+      </button>
+    </div> -->
+    
     <p></p>
     <div *ngFor = 'let i of _lession.engText'>
       &nbsp;&nbsp;&nbsp;&nbsp;{{i}}
@@ -40,7 +59,7 @@
     <button ion-fab color="light"><ion-icon name="arrow-dropleft"></ion-icon></button>
     <ion-fab-list side="left">
       <button ion-fab (click)="_switch()"><ion-icon name="logo-facebook"></ion-icon></button>
-      <button ion-fab (click)="_goRecitationSlidePage()"><ion-icon name="logo-twitter"></ion-icon></button>
+      <button ion-fab><ion-icon name="logo-twitter"></ion-icon></button>
       <button ion-fab><ion-icon name="logo-vimeo"></ion-icon></button>
       <button ion-fab><ion-icon name="logo-googleplus"></ion-icon></button>
     </ion-fab-list>

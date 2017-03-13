@@ -1,0 +1,40 @@
+<!--
+  Generated template for the Favorite page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+	<ion-navbar>
+		<button ion-button menuToggle>
+			<ion-icon name="menu"></ion-icon>
+		</button>
+		<ion-title>favorite</ion-title>
+	</ion-navbar>
+	<ion-toolbar no-border-top>
+	    <ion-segment [(ngModel)]="_select">
+			<ion-segment-button value="NCE">
+				新概念
+			</ion-segment-button>
+			<ion-segment-button value="word">
+				单词
+			</ion-segment-button>
+	    </ion-segment>
+  	</ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  	<div [ngSwitch]="_select">
+	    <ion-list *ngSwitchCase="'NCE'">
+	      <button ion-item *ngFor = "let i of _nceList" (click)="_goDetailPage(i)">
+	        <h2>{{i.title}}</h2>
+	      </button>
+	    </ion-list>
+
+	    <ion-list *ngSwitchCase="'word'">
+	      <button ion-item *ngFor = "let i of _wordList" (click)="_goDetailPage(i)">
+	        <h2>{{i.name}}</h2>
+	      </button>
+		</ion-list>
+	</div>
+</ion-content>

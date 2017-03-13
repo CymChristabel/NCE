@@ -25,12 +25,15 @@ import { SelectPage } from '../pages/select/select';
 import { SelectDetailPage } from '../pages/select-detail/select-detail';
 import { ModalContentPage } from '../pages/select-detail/modal-content';
 //NCE related
-import { NCEStudyPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study';
+import { NCEStudyTextPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study-text';
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
 import { NCEOverallPage } from '../pages/nce/nce-overall/nce-overall';
 import { NCEModalPage } from '../pages/nce/nce-overall/modal';
+import { NCEStudyMainPage } from '../pages/nce/nce-study/nce-study-main';
+import { NCEStudyWordPage } from '../pages/nce/nce-study/nce-study-word';
 //etc
 import { WordModalPage } from '../pages/word-modal/word-modal';
+import { FavoritePage } from '../pages/favorite/favorite';
 //service related
 import { HttpService } from '../providers/http.service';
 import { StorageService } from '../providers/storage.service';
@@ -55,12 +58,15 @@ import { StorageService } from '../providers/storage.service';
     SelectDetailPage,
     ModalContentPage,
     MainPage,
-    NCEStudyPage,
+    NCEStudyTextPage,
     NCESelectPage,
     NCEOverallPage,
     NCEModalPage,
-    WordModalPage
-
+    WordModalPage,
+    FavoritePage,
+    NCEStudyMainPage,
+    NCEStudyTextPage,
+    NCEStudyWordPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -81,7 +87,7 @@ import { StorageService } from '../providers/storage.service';
     RegisterPage,
     ForgetPasswordPage,
     GeneralPage,
-    NCEStudyPage,
+    NCEStudyTextPage,
     PopoverMenuPage,
     SelectPage,
     SelectDetailPage,
@@ -90,7 +96,11 @@ import { StorageService } from '../providers/storage.service';
     NCESelectPage,
     NCEOverallPage,
     NCEModalPage,
-    WordModalPage
+    WordModalPage,
+    FavoritePage,
+    NCEStudyMainPage,
+    NCEStudyTextPage,
+    NCEStudyWordPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

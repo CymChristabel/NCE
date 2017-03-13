@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, ViewController } from 'ionic-angular';
 
 import { NCEModalPage } from './modal';
-import { NCEStudyPage } from '../nce-study/nce-study';
+import { NCEStudyMainPage } from '../nce-study/nce-study-main';
 
 import { NCEService } from '../../../providers/nce.service';
 
@@ -23,9 +23,9 @@ export class NCEOverallPage {
 		modal.onDidDismiss(param => {
 			if(param.selectedLession)
 			{
-				this._navCtrl.push(NCEStudyPage, { bookID: this._book.id, lession: param.selectedLession });
+				this._navCtrl.push(NCEStudyMainPage, { bookID: this._book.id, lession: param.selectedLession });
 			}
-		})
+		});
 
 		modal.present();
 	}

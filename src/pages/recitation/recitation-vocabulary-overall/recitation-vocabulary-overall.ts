@@ -36,7 +36,11 @@ export class RecitationVocabularyOverallPage {
 	}
 
 	private _showModal(){
-		let modal = this._modalCtrl.create(RecitationModalPage, { word: this._vocabulary.word });
+		let modal = this._modalCtrl.create(RecitationModalPage, { 
+				word: this._vocabulary.word,
+				recitationService: this._recitationService,
+				vocabularyID: this._vocabulary.id
+			});
 		modal.present();
 	}
 

@@ -109,4 +109,27 @@ export class RecitationService{
 		this._storageService.set('vocabularyProgress:' + vocabularyID, _.find(this._vocabularyList, ['id', vocabularyID]).progress);
 	}
 
+	public changeFavorite(vocabularyID: number, wordID: number, name: string, add: boolean){
+		this._storageService.get('word_favorite').then(
+			favoriteList => {
+				if(add == true)
+				{
+					if(favoriteList == undefined)
+					{
+						favoriteList = [];
+					}	
+					favoriteList.push({ vocabularyID: vocabularyID, wordID: wordID, name: name });
+				}
+				else
+				{
+					_.remove(favoriteList, { vocabularyID: vocabularyID, wordID: wordID });
+				}
+				this._storageService.set('word_favorite', favoriteList);
+			}, err => console.log(err));
+	}
+
+	public getFavoriteList(){
+		return this._storageService.get('word_favorite');
+	}
+
 }

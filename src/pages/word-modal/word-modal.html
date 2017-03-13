@@ -13,6 +13,16 @@
 
 <ion-content padding>
     <h1 style="text-align:center">{{_word.name}}</h1>
+    <div style = 'text-align:right'>
+      <button ion-button icon-only round (click)='_changeFavorite()' *ngIf="_favorite">
+        <ion-icon name = 'star' isActive = 'true'></ion-icon>
+        Favorite
+      </button>
+      <button ion-button icon-only clear (click)='_changeFavorite()' *ngIf="!_favorite">
+        <ion-icon name = 'star' isActive = 'false'></ion-icon>
+        Favorite
+      </button>
+    </div>
     <p *ngFor='let e of _word.explainnation'>{{e}}</p>
     <h5>例句</h5>
     <div *ngFor='let e of _word.example'>

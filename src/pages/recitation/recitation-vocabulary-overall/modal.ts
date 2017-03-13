@@ -76,38 +76,7 @@ export class RecitationModalPage{
 	}
 
 	private _showWordModal(word: any){
-		console.log(word);
-		//deal with explainnation
-		let temp = _.words(word.explainnation);
-		let mark = -1;
-		for(let i = 0; i < temp.length; i++)
-		{
-			if(temp[i][0].toLowerCase() >= 'a' && temp[i][0].toLowerCase() <= 'z')
-			{
-				mark = i;
-				temp[i] = temp[i] + '.';
-			}
-			else
-			{
-				temp[mark] = temp[mark] + ' ' + temp[i];
-			}
-		}
-		//remove Chinese item
-		_.remove(temp, (value) => {
-			return !(value[0].toLowerCase() >= 'a' && value[0].toLowerCase() <= 'z');
-		});
-		word.explainnation = temp;
-		
-		//deal with example
-		temp  =  _.split(word.example, '\n');
-		word.example = [];
-		for(let i = 0; i < temp.length; i = i + 2)
-		{
-			word.example.push({engText: temp[i], chnText: temp[i + 1]});
-		}
-
-		let modal = this._modalCtrl.create(WordModalPage, { word: word });
-
+		let modal = this._modalCtrl.create(WordModalPage, { vocabularyID: this._navParams.get('vocabularyID'), word: word, recitationService: this._navParams.get('recitationService') });
 		modal.present();
 	}
 }

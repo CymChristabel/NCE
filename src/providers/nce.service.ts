@@ -30,13 +30,6 @@ export class NCEService {
 		return this._bookList;
 	}
 
-	// public getBook(booklist: number, book: number){
-	// 	if(this._bookList[booklist].lession[book] != undefined)
-	// 	{
-	// 		return this._bookList[booklist].lession[book];
-	// 	}
-	// }
-
 	public getBook(id: number){
 		return _.find(this._bookList, { id: id });
 	}
@@ -50,6 +43,27 @@ export class NCEService {
 
 	public getLocalBookList(){
 		return this._storageService.get('NCE_book_list');
+	}
+
+	public changeFavorite(bookID: number, lessionID: number, title: string){
+		this._storageService.get('NCE_favorite').then(
+			favoriteList => {
+				if(favoriteList == undefined)
+				{
+					favoriteList = [];
+					favoriteList.push({ bookID: bookID, lessionID: lessionID, title: title });
+				}
+				else if(_.remove(favoriteList, { bookID: bookID, lessionID: lessionID, title: title } == undefined))
+				{
+					favoriteList.push({ bookID: bookID, lessionID: lessionID, title: title });
+				}
+				
+				this._storageService.set('NCE_favorite', favoriteList);
+			}, err => console.log(err));
+	}
+
+	public getFavoriteList(){
+		return this._storageService.get('NCE_favorite');
 	}
 
 }

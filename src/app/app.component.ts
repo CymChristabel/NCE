@@ -12,6 +12,8 @@ import { MainPage } from '../pages/main/main';
 import { GeneralPage } from '../pages/general/general';
 import { SelectPage } from '../pages/select/select';
 
+import { FavoritePage } from '../pages/favorite/favorite';
+
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
 
 import { TaskService } from '../providers/task.service';
@@ -90,7 +92,8 @@ export class MyApp {
       { title: 'register', component: RegisterPage },
       { title: 'task', component: GeneralPage },
       { title: 'NCE', component: NCESelectPage },
-      { title: 'select', component: SelectPage }
+      { title: 'select', component: SelectPage },
+      { title: 'favorite', component: FavoritePage }
     ];
   }
 
