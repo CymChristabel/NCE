@@ -10,13 +10,14 @@ import * as _ from 'lodash';
 export class WordModalPage{
 	private _word;
 	private _favorite;
-	private _favoriteChanged;
+	private _lock;
 	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController){
 		this._word = this._navParams.get('word');
-		this._favoriteChanged = false;
+		this._lock = false;
 		//deal with explainnation
 		let temp = _.words(this._word.explainnation);
 		let mark = -1;
+		//check if word is already initialized
 		if(Array.isArray(this._word.example) == false)
 		{
 			for(let i = 0; i < temp.length; i++)
@@ -62,15 +63,44 @@ export class WordModalPage{
 	}
 
 	private _dismiss(){
-		if(this._favoriteChanged)
-		{
-			this._navParams.get('recitationService').changeFavorite(this._navParams.get('vocabularyID'), this._word.id, this._word.name, this._favorite);
-		}
 		this._viewCtrl.dismiss();
 	}
 
-	private _changeFavorite(){
-		this._favorite = !this._favorite;
-		this._favoriteChanged = true;
+	private _addFavorite(){
+		if(this._lock == false)
+		{
+			this._lock = true;
+			this._navParams.get('recitationService')
+							.addFavorite(this._navParams.get('vocabularyID'), this._word.id, this._word.name)
+							.then(
+								result => {
+									if(result)
+									{
+										this._lock = false;
+										this._favorite = !this._favorite;
+									}
+								}, err => {
+									this._lock = false
+								});
+		}
+	}
+
+	private _removeFavorite(){
+		if(this._lock == false)
+		{
+			this._lock = true;
+			this._navParams.get('recitationService')
+							.removeFavorite(this._navParams.get('vocabularyID'), this._word.id)
+							.then(
+								result => {
+									if(result)
+									{
+										this._lock = false;
+										this._favorite = !this._favorite;
+									}
+								}, err => {
+									this._lock = false
+								});
+		}
 	}
 }

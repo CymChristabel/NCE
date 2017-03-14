@@ -104,16 +104,16 @@ export class NCEStudyTextPage implements OnInit{
   	private _lession;
   	private _showTranslation;
   	private _favorite;
-  	private _favoriteChanged;
+  	private _lock;
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
 		this._lession = this._navParams.get('lession');
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
-		this._favoriteChanged = false;
+		this._lock = false;
 		this._nceService.getFavoriteList()
 						.then(
 							favoriteList => {
-								if(_.find(favoriteList, { bookID: this._navParams.get('bookID'), lessionID: this._lession.ID }))
+								if(_.find(favoriteList, { bookID: this._navParams.get('bookID'), lessionID: this._lession.id }))
 								{
 									this._favorite = true;
 								}
@@ -146,7 +146,39 @@ export class NCEStudyTextPage implements OnInit{
 		this._showTranslation = !this._showTranslation;
 	}
 
-	private _changeFavorite(){
-		
+	private _addFavorite(){
+		if(this._lock == false)
+		{
+			this._lock = true;
+			this._nceService.addFavorite(this._navParams.get('bookID'), this._lession.id, this._lession.title)
+							.then(
+								result => {
+									if(result)
+									{
+										this._lock = false;
+										this._favorite = !this._favorite;
+									}
+								}, err => {
+									this._lock = false
+								});
+		}
+	}
+
+	private _removeFavorite(){
+		if(this._lock == false)
+		{
+			this._lock = true;
+			this._nceService.removeFavorite(this._navParams.get('bookID'), this._lession.id)
+							.then(
+								result => {
+									if(result)
+									{
+										this._lock = false;
+										this._favorite = !this._favorite;
+									}
+								}, err => {
+									this._lock = false
+								});
+		}
 	}
 }

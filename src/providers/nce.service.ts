@@ -34,6 +34,10 @@ export class NCEService {
 		return _.find(this._bookList, { id: id });
 	}
 
+	public getLession(bookID: number, lessionID: number){
+		return _.find(_.find(this._bookList, { id: bookID} ).lession, {id: lessionID});
+	}
+
 	public getRemoteBookList(){
 		return this._httpService.get({
 			url: '/nce_book',
@@ -45,20 +49,28 @@ export class NCEService {
 		return this._storageService.get('NCE_book_list');
 	}
 
-	public changeFavorite(bookID: number, lessionID: number, title: string){
-		this._storageService.get('NCE_favorite').then(
+	public addFavorite(bookID: number, lessionID: number, title: string){
+		return this._storageService.get('NCE_favorite').then(
 			favoriteList => {
 				if(favoriteList == undefined)
 				{
-					favoriteList = [];
-					favoriteList.push({ bookID: bookID, lessionID: lessionID, title: title });
+					favoriteList = [];	
 				}
-				else if(_.remove(favoriteList, { bookID: bookID, lessionID: lessionID, title: title } == undefined))
-				{
-					favoriteList.push({ bookID: bookID, lessionID: lessionID, title: title });
-				}
-				
+				favoriteList.push({ bookID: bookID, lessionID: lessionID, title: title });
 				this._storageService.set('NCE_favorite', favoriteList);
+				return true;
+			}, err => {
+				console.log(err);
+				return false;
+			});
+	}
+
+	public removeFavorite(bookID: number, lessionID: number){
+		return this._storageService.get('NCE_favorite').then(
+			favoriteList => {
+				_.remove(favoriteList, { bookID: bookID, lessionID: lessionID });
+				this._storageService.set('NCE_favorite', favoriteList);
+				return favoriteList;
 			}, err => console.log(err));
 	}
 

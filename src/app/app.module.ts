@@ -28,7 +28,7 @@ import { ModalContentPage } from '../pages/select-detail/modal-content';
 import { NCEStudyTextPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study-text';
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
 import { NCEOverallPage } from '../pages/nce/nce-overall/nce-overall';
-import { NCEModalPage } from '../pages/nce/nce-overall/modal';
+import { NCEListPage } from '../pages/nce/nce-overall/nce-list';
 import { NCEStudyMainPage } from '../pages/nce/nce-study/nce-study-main';
 import { NCEStudyWordPage } from '../pages/nce/nce-study/nce-study-word';
 //etc
@@ -61,7 +61,7 @@ import { StorageService } from '../providers/storage.service';
     NCEStudyTextPage,
     NCESelectPage,
     NCEOverallPage,
-    NCEModalPage,
+    NCEListPage,
     WordModalPage,
     FavoritePage,
     NCEStudyMainPage,
@@ -95,7 +95,7 @@ import { StorageService } from '../providers/storage.service';
     MainPage,
     NCESelectPage,
     NCEOverallPage,
-    NCEModalPage,
+    NCEListPage,
     WordModalPage,
     FavoritePage,
     NCEStudyMainPage,

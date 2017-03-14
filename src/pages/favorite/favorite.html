@@ -9,7 +9,7 @@
 		<button ion-button menuToggle>
 			<ion-icon name="menu"></ion-icon>
 		</button>
-		<ion-title>favorite</ion-title>
+		<ion-title>收藏夹</ion-title>
 	</ion-navbar>
 	<ion-toolbar no-border-top>
 	    <ion-segment [(ngModel)]="_select">
@@ -25,16 +25,34 @@
 
 <ion-content padding>
   	<div [ngSwitch]="_select">
+  		
 	    <ion-list *ngSwitchCase="'NCE'">
-	      <button ion-item *ngFor = "let i of _nceList" (click)="_goDetailPage(i)">
-	        <h2>{{i.title}}</h2>
-	      </button>
+	    	<ion-item-sliding *ngFor = "let i of _nceList" (click)="_goNCEStudyPage(i)">
+		      	<button ion-item>
+		        	<h2>{{i.title}}</h2>
+		      	</button>
+		      	<ion-item-options>
+		      		<button ion-button color="danger" (click)="_removeFavorite(i)">
+		      			<ion-icon name="close"></ion-icon>
+		      			删除
+		      		</button>
+		      	</ion-item-options>
+	      </ion-item-sliding>
 	    </ion-list>
 
 	    <ion-list *ngSwitchCase="'word'">
-	      <button ion-item *ngFor = "let i of _wordList" (click)="_goDetailPage(i)">
-	        <h2>{{i.name}}</h2>
-	      </button>
+    	    <ion-item-sliding *ngFor = "let i of _wordList" (click)="_goWordModal(i)">
+				<button ion-item>
+					<h2>{{i.name}}</h2>
+				</button>
+		      	<ion-item-options>
+		      		<button ion-button color="danger" (click)="_removeFavorite(i)">
+		      			<ion-icon name="close"></ion-icon>
+		      			删除
+		      		</button>
+		      	</ion-item-options>
+	      	</ion-item-sliding>
 		</ion-list>
+
 	</div>
 </ion-content>

@@ -11,6 +11,7 @@ export class RecitationService{
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
 		console.log('init vocabulary service....');
+		this._storageService.remove('vocabularyWord:' + 1);
 		this._storageService.get('vocabularyList').then(
 			localVocabularyList => {
 				if(localVocabularyList == undefined)
@@ -39,24 +40,16 @@ export class RecitationService{
 	private _checkDownload(){
 		for(let i = 0; i < this._vocabularyList.length; i++)
 		{
-			this._storageService.get('vocabulary:' + this._vocabularyList[i].id).then(
-				vocabulary => {
-					if(vocabulary == undefined)
+			this._storageService.get('vocabularyProgress:' + this._vocabularyList[i].id).then(
+				progress => {
+					if(progress == undefined)
 					{
 						this._vocabularyList[i].isDownloaded = false;
-						this._vocabularyList[i].progress = 0;
-
 					}
-					else
+					else if(typeof progress === 'number')
 					{
 						this._vocabularyList[i].isDownloaded = true;
-						this._storageService.get('vocabularyProgress:' + this._vocabularyList[i].id).then(
-							progress => {
-								if(typeof progress === 'number')
-								{
-									this._vocabularyList[i].progress = progress;
-								}
-							}, err => console.log(err));
+						this._vocabularyList[i].progress = progress;
 					}
 				}, err => console.log(err));
 		}
@@ -66,7 +59,7 @@ export class RecitationService{
 		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
 		if(_.has(temp, 'word') == false)
 		{
-			this._storageService.get('vocabulary:' + vocabularyID).then(
+			this._storageService.get('vocabularyWord:' + vocabularyID).then(
 				word => {
 					temp.word = word;
 				}, err => console.log(err));
@@ -74,30 +67,50 @@ export class RecitationService{
 		return temp;
 	}
 
-	public downloadVocabulary(vocabularyID: number, loading: any = undefined){
-		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
-		this._httpService.get({
+	public getWord(vocabularyID: number, wordID: number){
+		let temp = _.find(this._vocabularyList, { id: vocabularyID });
+		if(temp.isDownloaded == false)
+		{
+			return new Promise((resolve, reject) => {
+				reject('You have to download vocabulary first');
+			});
+		}
+		else if(_.has(temp, 'word') == false)
+		{
+			return this._storageService.get('vocabularyWord:' + vocabularyID).then(
+				word => {
+					temp.word = word;
+					return  _.find(temp.word, { id: wordID });
+				}, err => console.log(err));
+		}
+		else
+		{
+			return new Promise((resolve, reject) => {
+				resolve(_.find(temp.word, { id: wordID }));
+			});
+		}
+	}
+
+	public downloadVocabulary(vocabularyID: number){
+		return this._httpService.get({
 			url: '/recitationvocabulary',
 			data: {
 				id: vocabularyID
 			}
 		})
-		.map(res => res.json())
-		.subscribe(
-			vocabulary => {
-				this._storageService.set('vocabulary:' + vocabularyID, vocabulary[0].word);
+		.map(res => {
+			if(_.has(res.json(), 'ok') == false)
+			{
+				let temp = _.find(this._vocabularyList, { id: vocabularyID });
+				this._storageService.set('vocabularyWord:' + vocabularyID, res.json()[0].word);
 				this._storageService.set('vocabularyProgress:' + vocabularyID, 0);
+				temp.progress = 0;
 				temp.isDownloaded = true;
-				temp.word = vocabulary[0].word;
-				if(loading)
-				{
-					loading.dismiss();
-				}
-			}, err => {
-				console.log(err);
-				loading.dismiss();
-			});
-		return temp;
+				temp.word = res.json()[0].word;
+				return temp;
+			}
+			return res.json();
+		});
 	}
 
 	public getVocabularyList(){
@@ -109,22 +122,28 @@ export class RecitationService{
 		this._storageService.set('vocabularyProgress:' + vocabularyID, _.find(this._vocabularyList, ['id', vocabularyID]).progress);
 	}
 
-	public changeFavorite(vocabularyID: number, wordID: number, name: string, add: boolean){
-		this._storageService.get('word_favorite').then(
+	public addFavorite(vocabularyID: number, wordID: number, name: string = undefined){
+		return this._storageService.get('word_favorite').then(
 			favoriteList => {
-				if(add == true)
+				if(favoriteList == undefined)
 				{
-					if(favoriteList == undefined)
-					{
-						favoriteList = [];
-					}	
-					favoriteList.push({ vocabularyID: vocabularyID, wordID: wordID, name: name });
-				}
-				else
-				{
-					_.remove(favoriteList, { vocabularyID: vocabularyID, wordID: wordID });
-				}
+					favoriteList = [];
+				}	
+				favoriteList.push({ vocabularyID: vocabularyID, wordID: wordID, name: name });
 				this._storageService.set('word_favorite', favoriteList);
+				return true;
+			}, err => {
+				console.log(err);
+				return false;
+			});
+	}
+
+	public removeFavorite(vocabularyID: number, wordID: number){
+		return this._storageService.get('word_favorite').then(
+			favoriteList => {
+				_.remove(favoriteList, { vocabularyID: vocabularyID, wordID: wordID });
+				this._storageService.set('word_favorite', favoriteList);
+				return favoriteList;
 			}, err => console.log(err));
 	}
 

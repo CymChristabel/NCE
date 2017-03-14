@@ -7,22 +7,20 @@
         <ion-icon name="md-close" showWhen="android, windows"></ion-icon>
       </button>
     </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="_removeFavorite()" *ngIf="_favorite">
+        <ion-icon name="star"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="_addFavorite()" *ngIf="!_favorite">
+        <ion-icon name="star-outline"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding>
     <h1 style="text-align:center">{{_word.name}}</h1>
-    <div style = 'text-align:right'>
-      <button ion-button icon-only round (click)='_changeFavorite()' *ngIf="_favorite">
-        <ion-icon name = 'star' isActive = 'true'></ion-icon>
-        Favorite
-      </button>
-      <button ion-button icon-only clear (click)='_changeFavorite()' *ngIf="!_favorite">
-        <ion-icon name = 'star' isActive = 'false'></ion-icon>
-        Favorite
-      </button>
-    </div>
     <p *ngFor='let e of _word.explainnation'>{{e}}</p>
     <h5>例句</h5>
     <div *ngFor='let e of _word.example'>

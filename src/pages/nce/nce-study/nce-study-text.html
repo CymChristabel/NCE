@@ -15,8 +15,11 @@
   		<button ion-button icon-only (click)="_presentPopover($event)">
   			<ion-icon name="book"></ion-icon>
   		</button>
-      <button ion-button icon-only>
+      <button ion-button icon-only (click)="_removeFavorite()" *ngIf="_favorite">
         <ion-icon name="star"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="_addFavorite()" *ngIf="!_favorite">
+        <ion-icon name="star-outline"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -32,18 +35,6 @@
       {{_lession.title}}
       </font>
     </div>
-
-    <!-- <div style = 'text-align:right'>
-      <button ion-button icon-only round (click)='_changeFavorite()' *ngIf="_favorite">
-        <ion-icon name = 'star' isActive = 'true'></ion-icon>
-        Favorite
-      </button>
-      <button ion-button icon-only clear (click)='_changeFavorite()' *ngIf="!_favorite">
-        <ion-icon name = 'star' isActive = 'false'></ion-icon>
-        Favorite
-      </button>
-    </div> -->
-    
     <p></p>
     <div *ngFor = 'let i of _lession.engText'>
       &nbsp;&nbsp;&nbsp;&nbsp;{{i}}
@@ -55,13 +46,4 @@
       </div>
     </div>
   </div>
-    <ion-fab right bottom>
-    <button ion-fab color="light"><ion-icon name="arrow-dropleft"></ion-icon></button>
-    <ion-fab-list side="left">
-      <button ion-fab (click)="_switch()"><ion-icon name="logo-facebook"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-twitter"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-vimeo"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-googleplus"></ion-icon></button>
-    </ion-fab-list>
-  </ion-fab>
 </ion-content>

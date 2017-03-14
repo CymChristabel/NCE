@@ -1,0 +1,15 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>课文表</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <button ion-item *ngFor="let l of _lession" (click) = "_goNCEStudyPage(l)">
+      {{ l.title }}
+    </button>
+  </ion-list>
+</ion-content>

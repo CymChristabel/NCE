@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ViewController, ModalController, AlertController } from 'ionic-angular';
+
+import { NCEStudyMainPage } from '../nce/nce-study/nce-study-main';
+import { WordModalPage } from '../word-modal/word-modal';
 
 import { RecitationService } from '../../providers/recitation.service';
 import { NCEService } from '../../providers/nce.service';
+
+import * as _ from 'lodash';
 
 @Component({
   selector: 'page-favorite',
@@ -14,20 +19,61 @@ export class FavoritePage {
   	private _nceList;
   	private _wordList;
 
-	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _recitationService: RecitationService, private _nceService: NCEService) {
+	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _viewCtrl: ViewController, private _alertCtrl: AlertController, private _modalCtrl: ModalController, private _recitationService: RecitationService, private _nceService: NCEService) {
+		
+	}
+
+	ionViewWillEnter(){
 		this._select = 'NCE';
 
 		this._recitationService.getFavoriteList().then(
-			favoriteList => {
-				this._wordList = favoriteList;
-			}, err => console.log(err));
+						favoriteList => {
+							this._wordList = favoriteList;
+						}, err => console.log(err));
+
 		this._nceService.getFavoriteList().then(
 			favoriteList => {
 				this._nceList = favoriteList;
 			}, err => console.log(err));
 	}
 
-	private _goDetailPage(object: any){
-		// this._navCtrl.push(SelectDetailPage, {'detail': object, 'type': this._select});
+	private _goNCEStudyPage(item: any){
+		this._navCtrl.push(NCEStudyMainPage, { bookID: item.bookID, lession: this._nceService.getLession(item.bookID, item.lessionID) });
+	}
+
+	private _goWordModal(item: any){
+		this._recitationService.getWord(item.vocabularyID, item.wordID).then(
+			word => {
+				let modal = this._modalCtrl.create(WordModalPage, { vocabularyID: item.vocabularyID, word: word, recitationService: this._recitationService });
+				modal.onWillDismiss(data => {
+					this._recitationService.getFavoriteList().then(
+						favoriteList => {
+							this._wordList = favoriteList;
+						}, err => {
+							let alert = this._alertCtrl.create({
+								title: '单词本未下载',
+								subTitle: '请去单词列表下载单词本',
+								buttons: ['ok']
+							});
+							alert.present();
+						});
+				});
+				modal.present();
+			}, err => console.log(err));
+	}
+
+	private _removeFavorite(item: any){
+		if(this._select == 'NCE')
+		{
+			this._nceService.removeFavorite(item.bookID, item.lessionID).then(favoriteList => {
+				this._nceList = favoriteList;
+				}, err => console.log(err));
+		}
+		else
+		{
+			this._recitationService.removeFavorite(item.vocabularyID, item.wordID).then(favoriteList => {
+				this._wordList = favoriteList;
+				}, err => console.log(err));
+		}
 	}
 }
