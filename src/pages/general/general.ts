@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, MenuController } from 'ionic-angular';
 
-import { SelectPage } from '../select/select';
+import { TaskSelectPage } from '../task-select/task-select';
  
 import { TaskService } from '../../providers/task.service';
 
@@ -57,7 +57,7 @@ export class GeneralPage {
     }, 2500);
   }
 
-  private _goSelectPage(){
-    this._navCtrl.push(SelectPage);
+  private _goTaskSelectPage(){
+    this._navCtrl.push(TaskSelectPage);
   }
 }

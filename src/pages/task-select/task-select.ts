@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { SelectDetailPage } from '../select-detail/select-detail';
+import { TaskCreatePage } from '../task-create/task-create';
 
 import { RecitationService } from '../../providers/recitation.service';
 import { NCEService } from '../../providers/nce.service';
@@ -12,10 +12,10 @@ import { NCEService } from '../../providers/nce.service';
   Ionic pages and navigation.
 */
 @Component({
-  selector: 'page-select',
-  templateUrl: 'select.html'
+  selector: 'page-task-select',
+  templateUrl: 'task-select.html'
 })
-export class SelectPage {
+export class TaskSelectPage {
 	private _select;
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _recitationService: RecitationService, private _nceService: NCEService) {
 		this._select = 'NCE';
@@ -26,7 +26,7 @@ export class SelectPage {
 	}
 
 	private _goDetailPage(object: any){
-		this._navCtrl.push(SelectDetailPage, {'detail': object, 'type': this._select});
+
 	}
 
 }

@@ -25,7 +25,6 @@ export class TaskService {
 				{
 					this._taskList = task;
 				}
-				console.log(this._taskList);
 			}, err => console.log(err));
 	}
 

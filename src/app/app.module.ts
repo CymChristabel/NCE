@@ -21,9 +21,8 @@ import { RegisterPage } from '../pages/register/register';
 import { ForgetPasswordPage } from '../pages/forget-password/forget-password';
 //task manager related
 import { GeneralPage } from '../pages/general/general';
-import { SelectPage } from '../pages/select/select';
-import { SelectDetailPage } from '../pages/select-detail/select-detail';
-import { ModalContentPage } from '../pages/select-detail/modal-content';
+import { TaskSelectPage } from '../pages/task-select/task-select';
+import { TaskCreatePage } from '../pages/task-create/task-create';
 //NCE related
 import { NCEStudyTextPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study-text';
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
@@ -54,9 +53,7 @@ import { StorageService } from '../providers/storage.service';
     ForgetPasswordPage,
     GeneralPage,
     PopoverMenuPage,
-    SelectPage,
-    SelectDetailPage,
-    ModalContentPage,
+    TaskSelectPage,
     MainPage,
     NCEStudyTextPage,
     NCESelectPage,
@@ -89,9 +86,7 @@ import { StorageService } from '../providers/storage.service';
     GeneralPage,
     NCEStudyTextPage,
     PopoverMenuPage,
-    SelectPage,
-    SelectDetailPage,
-    ModalContentPage,
+    TaskSelectPage,
     MainPage,
     NCESelectPage,
     NCEOverallPage,
