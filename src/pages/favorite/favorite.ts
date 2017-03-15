@@ -49,17 +49,17 @@ export class FavoritePage {
 					this._recitationService.getFavoriteList().then(
 						favoriteList => {
 							this._wordList = favoriteList;
-						}, err => {
-							let alert = this._alertCtrl.create({
-								title: '单词本未下载',
-								subTitle: '请去单词列表下载单词本',
-								buttons: ['ok']
-							});
-							alert.present();
-						});
+						}, err => console.log(err));
 				});
 				modal.present();
-			}, err => console.log(err));
+			}, err => {
+				let alert = this._alertCtrl.create({
+					title: '单词本未下载',
+					subTitle: '请去单词列表下载单词本',
+					buttons: ['ok']
+				});
+				alert.present();
+			});
 	}
 
 	private _removeFavorite(item: any){

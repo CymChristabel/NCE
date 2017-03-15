@@ -11,7 +11,9 @@ export class RecitationService{
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService) {
 		console.log('init vocabulary service....');
-		this._storageService.remove('vocabularyWord:' + 1);
+		//test favorite
+		// this._storageService.remove('vocabularyWord:' + 1);
+		// this._storageService.remove('vocabularyProgress:' + 1);
 		this._storageService.get('vocabularyList').then(
 			localVocabularyList => {
 				if(localVocabularyList == undefined)
