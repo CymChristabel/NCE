@@ -19,10 +19,11 @@ import { LandingPage } from '../pages/landing/landing';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { ForgetPasswordPage } from '../pages/forget-password/forget-password';
-//task manager related
+//task manager and statistics related
 import { GeneralPage } from '../pages/general/general';
 import { TaskSelectPage } from '../pages/task-select/task-select';
 import { TaskCreatePage } from '../pages/task-create/task-create';
+import { StatisticsPage } from '../pages/statistics/statistics';
 //NCE related
 import { NCEStudyTextPage, PopoverMenuPage } from '../pages/nce/nce-study/nce-study-text';
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
@@ -40,6 +41,7 @@ import { StorageService } from '../providers/storage.service';
 @NgModule({
   declarations: [
     MyApp,
+
     RecitationSelectPage,
     RecitationVocabularyOverallPage,
     RecitationSlidePage,
@@ -47,23 +49,29 @@ import { StorageService } from '../providers/storage.service';
     RecitationTestPage,
     RecitationModalPage,
     RecitationResultPage,
+
     LandingPage,
     LoginPage,
     RegisterPage,
     ForgetPasswordPage,
+
     GeneralPage,
-    PopoverMenuPage,
     TaskSelectPage,
     MainPage,
+    StatisticsPage,
+
     NCEStudyTextPage,
     NCESelectPage,
     NCEOverallPage,
     NCEListPage,
-    WordModalPage,
-    FavoritePage,
     NCEStudyMainPage,
     NCEStudyTextPage,
-    NCEStudyWordPage
+    NCEStudyWordPage,
+    PopoverMenuPage,
+
+    WordModalPage,
+
+    FavoritePage,
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -72,6 +80,7 @@ import { StorageService } from '../providers/storage.service';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    
     RecitationSelectPage,
     RecitationVocabularyOverallPage,
     RecitationSlidePage,
@@ -79,23 +88,29 @@ import { StorageService } from '../providers/storage.service';
     RecitationTestPage,
     RecitationModalPage,
     RecitationResultPage,
+
     LandingPage,
     LoginPage,
     RegisterPage,
     ForgetPasswordPage,
+
     GeneralPage,
-    NCEStudyTextPage,
-    PopoverMenuPage,
     TaskSelectPage,
     MainPage,
+    StatisticsPage,
+
+    NCEStudyTextPage,
     NCESelectPage,
     NCEOverallPage,
     NCEListPage,
-    WordModalPage,
-    FavoritePage,
     NCEStudyMainPage,
     NCEStudyTextPage,
-    NCEStudyWordPage
+    NCEStudyWordPage,
+    PopoverMenuPage,
+
+    WordModalPage,
+
+    FavoritePage,
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
