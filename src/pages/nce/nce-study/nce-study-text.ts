@@ -129,6 +129,11 @@ export class NCEStudyTextPage implements OnInit{
 
 	ngOnInit(){
 		this.text.nativeElement.style.fontSize = 'medium';
+		// this._statisticsService.startTimeCount('NCE');
+	}
+
+	ionViewWillLeave(){
+		
 	}
 
 	private _presentPopover(myEvent){

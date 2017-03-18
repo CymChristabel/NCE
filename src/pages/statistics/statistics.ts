@@ -11,29 +11,38 @@ import * as moment from 'moment';
   selector: 'page-statistics',
   templateUrl: 'statistics.html'
 })
-export class StatisticsPage {
-	private _timeCountPieChart;
-	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _statisticsService: StatisticsService) {
 
+export class StatisticsPage {
+	private _select;
+	private _timeCountPieChart;
+	private _date;
+	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _statisticsService: StatisticsService) {
+		this._select = 'overall';
+		this._timeCountPieChart = true;
 	}
 
 	ionViewDidLoad() {
 		this._generateTimeCountPieChart();
-		let m = moment().second(1000);
-		console.log(m.subtract(moment()).format('h,m,s'));
+		this._updateDate();
+	}
+
+	private _updateDate(){
+		this._date = moment();
 	}
 
 	private _generateTimeCountPieChart(){
-		let date = moment();
-		this._statisticsService.getTimeCount(date.format("YYYY-MM-DD").toString()).then(
+
+		this._statisticsService.getTimeCount().then(
 			timeCount => {
-				if(timeCount)
+				console.log(timeCount);
+				if(timeCount.statistics[this._date.format('YYYY-MM-DD')])
 				{
-					//if user do call updated data before
+					let temp = timeCount.statistics;
 					this._timeCountPieChart = c3.generate({
 										data: {
 											columns: [
-												['temp', 0]
+											 	[ '新概念', 0.1 ],
+												[ '背诵单词', 0.1 ]
 											],
 											type: 'pie',
 										 	onclick: (d, i) => { console.log("onclick", d, i); }
@@ -44,13 +53,13 @@ export class StatisticsPage {
 							          		width: 250
 								        },
 									});
-					
+
 					if(timeCount.hasCalled)
 					{
 						this._timeCountPieChart.load({
 								columns: [
-									timeCount.NCE,
-									timeCount.recitation
+									temp.nceTime,
+									temp.recitationTime
 								]
 							});
 					}
@@ -58,22 +67,22 @@ export class StatisticsPage {
 					{
 						this._timeCountPieChart.load({
 								columns: [
-									_.take(timeCount.NCE, timeCount.NCE.length - 1),
-									_.take(timeCount.recitation, timeCount.NCE.length - 1)
+									_.take(temp.nceTime, temp.nceTime.length - 1),
+									_.take(temp.recitationTime, temp.recitationTime.length - 1)
 								]
 							});
 
 						setTimeout(() => {
 							this._timeCountPieChart.load({
 								columns: [
-									timeCount.NCE,
-									timeCount.recitation
+									temp.nceTime,
+									temp.recitationTime
 								]
 							});
-						}, 1500);
+						}, 2000);
 
 						timeCount.hasCalled = true;
-						this._statisticsService.resetCalled('time_count:' + date.format("YYYY-MM-DD"), timeCount);
+						this._statisticsService.resetCalled('time_count', timeCount);
 					}
 				}
 				else

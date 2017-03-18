@@ -50,7 +50,6 @@ export class WordModalPage{
 		this._navParams.get('recitationService')
 						.getFavoriteList()
 						.then(favoriteList => {
-							console.log(favoriteList);
 							if(_.find(favoriteList, { vocabularyID: this._navParams.get('vocabularyID'), wordID: this._word.id}))
 							{
 								this._favorite = true;

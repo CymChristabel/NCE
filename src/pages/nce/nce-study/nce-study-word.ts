@@ -28,7 +28,6 @@ export class NCEStudyWordPage {
 				}
 			}
 			this._wordList= tempWordList;
-			console.log(1);
 		}
 	}
 

@@ -7,12 +7,8 @@ import { TaskService } from '../../providers/task.service';
 
 import * as c3 from 'c3';
 import * as _ from 'lodash';
-/*
-  Generated class for the General page.
+import * as moment from 'moment';
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-general',
   templateUrl: 'general.html'

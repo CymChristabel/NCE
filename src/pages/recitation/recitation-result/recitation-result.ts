@@ -5,6 +5,7 @@ import { WordModalPage } from '../../word-modal/word-modal';
 import { RecitationSlidePage } from '../recitation-slide/recitation-slide';
 
 import { RecitationService } from '../../../providers/recitation.service';
+import { StatisticsService } from '../../../providers/statistics.service';
 
 import * as _ from 'lodash';
 

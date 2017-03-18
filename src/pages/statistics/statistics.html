@@ -6,21 +6,56 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>学习统计</ion-title>
-  </ion-navbar>
+  	<ion-navbar>
+	  	<button ion-button menuToggle>
+			<ion-icon name="menu"></ion-icon>
+		</button>
+	    <ion-title>学习统计</ion-title>
+	</ion-navbar>
+    <ion-toolbar no-border-top>
+	    <ion-segment [(ngModel)]="_select">
+	    	<ion-segment-button value="overall" (click)="_generateTimeCountPieChart()">
+				总览
+			</ion-segment-button>
+			<ion-segment-button value="NCE">
+				新概念
+			</ion-segment-button>
+			<ion-segment-button value="recitation">
+				背诵单词
+			</ion-segment-button>
+	    </ion-segment>
+  	</ion-toolbar>
 
 </ion-header>
 
 
 <ion-content padding>
-	<ion-card>
-		<ion-card-header>
-			今日学习时间分配情况
-		</ion-card-header>
-		<ion-card-content>
-			<div id='timeCountPieChart'></div>
-        </ion-card-content>
-	</ion-card>
-	
+	<div [ngSwitch]="_select">
+
+		<div *ngSwitchCase="'overall'">
+			<div>
+				<ion-card>
+					<ion-card-header>
+						<h2>今日学习时间分配情况</h2>
+					</ion-card-header>
+					<ion-card-content *ngIf='_timeCountPieChart'>
+						<div id='timeCountPieChart'></div>
+			        </ion-card-content>
+			        <ion-card-content *ngIf='!_timeCountPieChart'>
+			        	<img src="assets/img/oops.jpg">
+						<h4 style="text-align: center">你今天还没开始学习呢</h4>
+						<h6>快去学习吧，当你学习的时候你所花的时间会被记录下来</h6>
+			        </ion-card-content>
+				</ion-card>
+			</div>
+
+		</div>
+		<div *ngSwitchCase="'NCE'">
+
+		</div>
+		<div *ngSwitchCase="'recitation'">
+
+		</div>
+
+	</div>
 </ion-content>
