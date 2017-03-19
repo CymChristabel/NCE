@@ -10,70 +10,55 @@ import * as moment from 'moment';
 @Injectable()
 export class StatisticsService {
 	private _timeCount;
-	
+	private _hasStudyTimeSynchronized;
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
 		this._timeCount = {};
+		this._hasStudyTimeSynchronized = true;
+		this._createTestData();
 	}
 
 	private _createTestData(){
-		var temp = this._generateStatisticsStorageJSON(moment());
-		temp.statistics = { NCE: [ '新概念', 0.1, 0.1, 0.3 ], recitation: [ '背诵单词', 0.1, 0.1, 0.5 ] };
-		this._storageService.set('time_count', temp);
+		var temp = {};
+		temp['2016-01-01'] = { nceTime: 11, recitationTime: 12 };
+		temp['2016-01-02'] = { nceTime: 11, recitationTime: 12};
+		temp[moment().format('YYYY-MM-DD')] = { nceTime: 15, recitationTime: 15};
+		this._storageService.set('time_count', temp).then(() => this.syncStatistics());
 	}
 
 	private _deleteTestData(){
 		this._storageService.remove('time_count');
 	}
 
-
-	private _getDate(){
-		return moment().format("YYYY-MM-DD");
+	//get date in YYYY-MM-DD format, no parameter will return current date
+	private _getDate(date: any = undefined){
+		return moment(date).format("YYYY-MM-DD");
 	}
 
-	private _compareAndUpdateRemoteStatistics(){
+	public syncStatistics(){
 		let userID = this._userService.getUser().user.id;
 
 		if(userID)
 		{
+			let tempDate = moment().format('YYYY-MM-DD');
+			//sync time count statistics
+
 			this.getTimeCount().then(
 				localData => {
-					if(localData && localData.date == moment().format('YYYY-MM-DD'))
+					if(localData && _.keys(_.omit(localData, tempDate)).length > 0)
 					{
-						this._httpService.get('/studytimestatistics', {
-							user: userID,
-							date: moment().format('YYYY-MM-DD')
-						}).map(res => res.json())
-						.subscribe(
-							remoteData => {
-								let updateRemote = false;
-								if(remoteData[0].nceTime > localData.statistics.nceTime[3] || remoteData[0].recitationTime > localData.statistics.recitationTime[3])
-								{
-									localData.statistics.nceTime[3] = remoteData[0].nceTime;
-									localData.statistics.recitationTime[3] = remoteData[0].recitationTime;
-									this._storageService.set('time_count', localData);
-								}
-								else if(remoteData[0].nceTime < localData.statistics.nceTime[3] || remoteData[0].recitationTime < localData.statistics.recitationTime[3])
-								{
-									remoteData[0].nceTime = localData.statistics.nceTime[3];
-									remoteData[0].recitationTime = localData.statistics.recitationTime[3];
-									this._httpService.post('/studytimestatistics/createOrUpdate', remoteData[0])
-										.map(res => res.json())
-										.subscribe((complete) => console.log(complete), err => console.log(err));
-								}
-						});
+						this._httpService.post('/studytimestatistics/synchronize', {
+								user: userID,
+								data: _.omit(localData, tempDate)
+							}).map(res => res.json())
+							.subscribe(
+								complete => {
+										this._storageService.set('time_count', _.pick(localData, tempDate));
+								}, err => console.log(err));
 					}
+					
 				});
 		}
-		
-	}
-
-	private _generateStatisticsStorageJSON(data: any = undefined){
-		if(data == undefined)
-		{
-			data = { statistics: {}, hasCalled: false };
-		}
-		return data;
 		
 	}
 
@@ -88,32 +73,50 @@ export class StatisticsService {
 
 		this.getTimeCount().then(
 			timeCountStatistics => {
-				timeCountStatistics = this._generateStatisticsStorageJSON(timeCountStatistics);
-				//first call
-				if(timeCountStatistics.statistics.nceTime == undefined)
+				if(timeCountStatistics == undefined)
 				{
-					timeCountStatistics.statistics.nceTime = ['新概念', 0.1, 0.1, 0 ] ;
-					timeCountStatistics.statistics.recitationTime = ['背诵单词', 0.1, 0.1, 0 ];
+					timeCountStatistics = {}
+				}
+				let tempTime = this._timeCount.count.format('YYYY-MM-DD');
+				if(timeCountStatistics[tempTime] == undefined)
+				{
+					timeCountStatistics[tempTime] = {};
+					timeCountStatistics[tempTime].nceTime = ['新概念', 0.1, 0, 0 ] ;  //third value stands for old data, forth for new data
+					timeCountStatistics[tempTime].recitationTime = ['背诵单词', 0.1, 0, 0 ];
 				}
 
 				this._timeCount.type == 'NCE'
-					? timeCountStatistics.statistics.nceTime[3] = timeCountStatistics.statistics.nceTime[3] + timeDuration
-					: timeCountStatistics.statistics.recitationTime[3] = timeCountStatistics.statistics.recitationTime[3] + timeDuration;
-
-				timeCountStatistics.date = this._timeCount.count.format('YYYY-MM-DD');
-				timeCountStatistics.hasCalled = false;
+					? timeCountStatistics[tempTime].nceTime[3] = timeCountStatistics[tempTime].nceTime[3] + timeDuration
+					: timeCountStatistics[tempTime].recitationTime[3] = timeCountStatistics[tempTime].recitationTime[3] + timeDuration;
 
 				// post or put to remote server
-				this._httpService.post('/studytimestatistics/createOrUpdate', {
-					date: this._timeCount.count.format('YYYY-MM-DD'),
-					nceTime: timeCountStatistics.statistics.nceTime[3],
-					recitationTime: timeCountStatistics.statistics.recitationTime[3],
-					user: this._userService.getUser().user.id
-				})
-				.map(res => res.json())
-				.subscribe((complete) => console.log(complete), err => console.log(err));
+				let userID = this._userService.getUser().user.id;
 
-				this._storageService.set('time_count', timeCountStatistics);
+				this._httpService.post('/studytimestatistics/createOrUpdate', {
+					hasSynchronized: this._hasStudyTimeSynchronized, 
+					data: 
+					{
+						date: tempTime,
+						nceTime: timeCountStatistics[tempTime].nceTime[2] + timeCountStatistics[tempTime].nceTime[3],
+						recitationTime: timeCountStatistics[tempTime].recitationTime[2] + timeCountStatistics[tempTime].recitationTime[3],
+						user: userID
+					}
+				}).map(res => res.json())
+				.subscribe(
+					result => {
+						if(this._hasStudyTimeSynchronized == false)
+						{
+							timeCountStatistics[tempTime].nceTime[2] = result[0].nceTime;
+							timeCountStatistics[tempTime].recitationTime[2] = result[0].recitationTime;
+							timeCountStatistics[tempTime].nceTime[3] = 0;
+							timeCountStatistics[tempTime].recitationTime[3] = 0;
+							this._hasStudyTimeSynchronized = true;
+						}
+						this._storageService.set('time_count', timeCountStatistics);
+					}, err =>{
+						console.log(err);
+						this._storageService.set('time_count', timeCountStatistics);
+					});
 			}, err => console.log(err));
 	}
 

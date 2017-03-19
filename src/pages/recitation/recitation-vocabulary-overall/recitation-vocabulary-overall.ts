@@ -6,6 +6,8 @@ import { RecitationModalPage } from './modal';
 import { RecitationSlidePage } from '../recitation-slide/recitation-slide';
 
 import { RecitationService } from '../../../providers/recitation.service';
+import { StatisticsService } from '../../../providers/statistics.service';
+
 
 import { CHART_DIRECTIVES } from '../../../ng2-charts';
 
@@ -22,9 +24,18 @@ import * as _ from 'lodash';
 export class RecitationVocabularyOverallPage {
 	private _vocabulary;
 	private _progressBar = 0;
-	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
+	private _startTimeCount;
+	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _statisticsService: StatisticsService, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
 		this._vocabulary = this._recitationService.getVocabulary(this._navParam.get('id'));
-		console.log(this._vocabulary);
+		this._startTimeCount = false;
+	}
+
+	ionViewWillUnload(){
+		if(this._startTimeCount)
+		{
+			this._statisticsService.endTimeCount();
+			this._startTimeCount = false;
+		}
 	}
 
 	private _downloadPress(){
@@ -49,6 +60,9 @@ export class RecitationVocabularyOverallPage {
 	}
 
 	private _goRecitationSlidePage(){
+		this._statisticsService.startTimeCount('recitation');
+		this._startTimeCount = true;
+		
 		this._navCtrl.push(RecitationSlidePage, {
 			vocabularyID: this._vocabulary.id,
 			type: 'recitation'

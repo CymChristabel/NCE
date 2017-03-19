@@ -19,11 +19,12 @@ export class StatisticsPage {
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _statisticsService: StatisticsService) {
 		this._select = 'overall';
 		this._timeCountPieChart = true;
+		this._updateDate();
 	}
 
 	ionViewDidLoad() {
 		this._generateTimeCountPieChart();
-		this._updateDate();
+		
 	}
 
 	private _updateDate(){
@@ -33,16 +34,15 @@ export class StatisticsPage {
 	private _generateTimeCountPieChart(){
 
 		this._statisticsService.getTimeCount().then(
-			timeCount => {
-				console.log(timeCount);
-				if(timeCount.statistics[this._date.format('YYYY-MM-DD')])
+			statistics => {
+				if(statistics && statistics[this._date.format('YYYY-MM-DD')])
 				{
-					let temp = timeCount.statistics;
+					let temp = statistics[this._date.format('YYYY-MM-DD')];
 					this._timeCountPieChart = c3.generate({
 										data: {
 											columns: [
-											 	[ '新概念', 0.1 ],
-												[ '背诵单词', 0.1 ]
+											 	_.take(temp.nceTime, temp.nceTime.length - 1),
+												_.take(temp.recitationTime, temp.recitationTime.length - 1)
 											],
 											type: 'pie',
 										 	onclick: (d, i) => { console.log("onclick", d, i); }
@@ -54,24 +54,8 @@ export class StatisticsPage {
 								        },
 									});
 
-					if(timeCount.hasCalled)
+					if(temp.nceTime[3] != 0 || temp.recitationTime[3] != 0)
 					{
-						this._timeCountPieChart.load({
-								columns: [
-									temp.nceTime,
-									temp.recitationTime
-								]
-							});
-					}
-					else
-					{
-						this._timeCountPieChart.load({
-								columns: [
-									_.take(temp.nceTime, temp.nceTime.length - 1),
-									_.take(temp.recitationTime, temp.recitationTime.length - 1)
-								]
-							});
-
 						setTimeout(() => {
 							this._timeCountPieChart.load({
 								columns: [
@@ -79,10 +63,14 @@ export class StatisticsPage {
 									temp.recitationTime
 								]
 							});
-						}, 2000);
 
-						timeCount.hasCalled = true;
-						this._statisticsService.resetCalled('time_count', timeCount);
+							temp.nceTime[2] = temp.nceTime[2] + temp.nceTime[3];
+							temp.recitationTime[2] = temp.recitationTime[2] + temp.recitationTime[3];
+							temp.nceTime[3] = 0;
+							temp.recitationTime[3] = 0;
+
+							this._statisticsService.resetCalled('time_count', statistics);
+						}, 2000);
 					}
 				}
 				else
