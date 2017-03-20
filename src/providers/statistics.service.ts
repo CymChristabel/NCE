@@ -15,7 +15,6 @@ export class StatisticsService {
 	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
 		this._timeCount = {};
 		this._hasStudyTimeSynchronized = true;
-		this._createTestData();
 	}
 
 	private _createTestData(){
@@ -61,7 +60,6 @@ export class StatisticsService {
 		}
 		
 	}
-
 
 	public startTimeCount(type: string){
 		this._timeCount.count = moment();
@@ -122,6 +120,15 @@ export class StatisticsService {
 
 	public getTimeCount(){
 		return this._storageService.get('time_count');
+	}
+
+	public getHistoryTimeCount(){
+		return this._httpService.get({
+			url: '/studytimestatistics',
+			data: {
+				user: this._userService.getUser().user.id
+			}
+		}).map(res => res.json());
 	}
 
 	public resetCalled(key: string, data: any){

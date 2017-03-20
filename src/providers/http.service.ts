@@ -56,7 +56,8 @@ export class HttpService{
     	}
     	return parameter;
     }
-
+    
+    //http get must have a url key
     public get(param: Object, headers?: Object){
 		return this._http.get(HttpService.BASE_URL + this._parseParameter(param), { headers: this._getHeaders(headers) });
     }

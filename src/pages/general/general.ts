@@ -15,13 +15,15 @@ import * as moment from 'moment';
 })
 export class GeneralPage {
 	private _taskList;
+
 	constructor(private _navCtrl: NavController, private _menu: MenuController, private _taskService: TaskService) {
-  		this._menu.swipeEnable(true, 'left');
+  		
   		this._taskList = this._taskService.get();
-  	}
+	}
 
 
   ionViewDidEnter() {
+    this._menu.swipeEnable(true, 'left');
    var chart = c3.generate({
         data: {
             columns: [
