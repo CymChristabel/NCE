@@ -1,5 +1,14 @@
+/*
+	****storage variable declare****
+
+	NCE_book_list: nce book list, include every book lession
+	NCE_favorite:  nce favorite list
+	favorite_sync: has favorite list synchronized, can only be true in successful synchronize function
+*/
+
 import { HttpService } from './http.service';
 import { StorageService } from './storage.service';
+import { UserService } from './user.service';
 import { Injectable } from '@angular/core';
 
 import * as _ from 'lodash';
@@ -7,7 +16,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class NCEService {
 	private _bookList;
-  	constructor(private _httpService: HttpService, private _storageService: StorageService) {
+  	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
   		console.log('init book service...');
 		this.getLocalBookList().then(
 			localBookList => {
@@ -24,6 +33,8 @@ export class NCEService {
 					this._bookList = localBookList;
 				}
 			}, err => console.log(err));
+		this._storageService.remove('NCE_favorite');
+		this._storageService.remove('favorite_sync');
 	}
 
 	public getBookList(){
@@ -49,29 +60,68 @@ export class NCEService {
 		return this._storageService.get('NCE_book_list');
 	}
 
-	public addFavorite(bookID: number, lessionID: number, title: string){
-		return this._storageService.get('NCE_favorite').then(
+	public synchronizeFavorite(){
+		this.getFavoriteList().then(
 			favoriteList => {
-				if(favoriteList == undefined)
-				{
-					favoriteList = [];	
-				}
-				favoriteList.push({ bookID: bookID, lessionID: lessionID, title: title });
-				this._storageService.set('NCE_favorite', favoriteList);
-				return true;
-			}, err => {
-				console.log(err);
-				return false;
-			});
+				console.log(favoriteList);
+				this._httpService.post('/nce_favorite/synchronize', {
+					favoriteList: favoriteList,
+					userID: this._userService.getUser().user.id
+				}).map(res => res.json()).subscribe(data => console.log(1), err => console.log(err));
+			}, err => console.log(err));
 	}
 
-	public removeFavorite(bookID: number, lessionID: number){
+	public addFavorite(bookID: number, lessionID: number, title: string){
+		return this._httpService.post('/nce_favorite/add', {
+			bookID: bookID,
+			lessionID: lessionID,
+			userID: this._userService.getUser().user.id
+		}).map(res => {
+			this.getFavoriteList().then(
+				favoriteList => {
+					console.log('favo', favoriteList);
+					if(favoriteList == undefined)
+					{
+						favoriteList = [];
+					}
+					let id = -1;
+					if(res.ok == true)
+					{
+						id = res.json();
+					}
+					else //http error occur
+					{
+						this._storageService.set('favorite_sync', false);
+					}
+					favoriteList.push({
+						id: id,
+						bookID: bookID,
+						lessionID: lessionID,
+						title: title
+					});
+					this._storageService.set('NCE_favorite', favoriteList);
+				});
+			return res.json();
+		});
+	}
+
+	public removeFavorite(bookID: number, lessionID: number, favoriteID: number){
+		if(favoriteID != -1) // do exist on server
+		{
+			this._httpService.post('/nce_favorite/remove', {
+				id: favoriteID
+			}).map(res => res).subscribe(success => console.log(success), err => {
+				console.log('server', err);
+				this._storageService.set('favorite_sync', false);
+			});
+		}
 		return this._storageService.get('NCE_favorite').then(
 			favoriteList => {
 				_.remove(favoriteList, { bookID: bookID, lessionID: lessionID });
 				this._storageService.set('NCE_favorite', favoriteList);
 				return favoriteList;
-			}, err => console.log(err));
+			});
+
 	}
 
 	public getFavoriteList(){

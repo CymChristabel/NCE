@@ -105,16 +105,19 @@ export class NCEStudyTextPage implements OnInit{
   	private _showTranslation;
   	private _favorite;
   	private _lock;
+  	private _favoriteID;
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
 		this._lession = this._navParams.get('lession');
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
 		this._lock = false;
+
 		this._nceService.getFavoriteList()
 						.then(
 							favoriteList => {
 								if(_.find(favoriteList, { bookID: this._navParams.get('bookID'), lessionID: this._lession.id }))
 								{
+									this._favoriteID = _.find(favoriteList, { bookID: this._navParams.get('bookID'), lessionID: this._lession.id }).id;
 									this._favorite = true;
 								}
 								else
@@ -129,7 +132,6 @@ export class NCEStudyTextPage implements OnInit{
 
 	ngOnInit(){
 		this.text.nativeElement.style.fontSize = 'medium';
-		// this._statisticsService.startTimeCount('NCE');
 	}
 
 	ionViewWillLeave(){
@@ -156,15 +158,12 @@ export class NCEStudyTextPage implements OnInit{
 		{
 			this._lock = true;
 			this._nceService.addFavorite(this._navParams.get('bookID'), this._lession.id, this._lession.title)
-							.then(
-								result => {
-									if(result)
-									{
-										this._lock = false;
-										this._favorite = !this._favorite;
-									}
-								}, err => {
-									this._lock = false
+							.subscribe(
+								id => {
+									this._lock = false;
+									this._favorite = !this._favorite;
+									this._favoriteID = id;
+									console.log(this._favoriteID);
 								});
 		}
 	}
@@ -173,16 +172,11 @@ export class NCEStudyTextPage implements OnInit{
 		if(this._lock == false)
 		{
 			this._lock = true;
-			this._nceService.removeFavorite(this._navParams.get('bookID'), this._lession.id)
+			this._nceService.removeFavorite(this._navParams.get('bookID'), this._lession.id, this._favoriteID)
 							.then(
 								result => {
-									if(result)
-									{
-										this._lock = false;
-										this._favorite = !this._favorite;
-									}
-								}, err => {
-									this._lock = false
+									this._lock = false;
+									this._favorite = !this._favorite;
 								});
 		}
 	}
