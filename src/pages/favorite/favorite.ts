@@ -65,7 +65,7 @@ export class FavoritePage {
 	private _removeFavorite(item: any){
 		if(this._select == 'NCE')
 		{
-			this._nceService.removeFavorite(item.bookID, item.lessionID).then(favoriteList => {
+			this._nceService.removeFavorite(item.bookID, item.lessionID, item.id).then(favoriteList => {
 				this._nceList = favoriteList;
 				}, err => console.log(err));
 		}
@@ -75,5 +75,11 @@ export class FavoritePage {
 				this._wordList = favoriteList;
 				}, err => console.log(err));
 		}
+	}
+
+	private _synchronize(refresher){
+    	console.log(this._nceList);
+    	console.log(this._wordList);
+    	refresher.complete();
 	}
 }

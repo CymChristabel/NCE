@@ -24,15 +24,25 @@
 </ion-header>
 
 <ion-content padding>
+
+	<ion-refresher (ionRefresh)="_synchronize($event)">
+		<ion-refresher-content
+		  pullingIcon="arrow-dropdown"
+		  pullingText="Pull to refresh"
+		  refreshingSpinner="circles"
+		  refreshingText="Refreshing...">
+		</ion-refresher-content>
+	</ion-refresher>
+
   	<div [ngSwitch]="_select">
   		
 	    <ion-list *ngSwitchCase="'NCE'">
-	    	<ion-item-sliding *ngFor = "let i of _nceList" (click)="_goNCEStudyPage(i)">
-		      	<button ion-item>
+	    	<ion-item-sliding *ngFor = "let i of _nceList">
+		      	<button ion-item (click)="_goNCEStudyPage(i)">
 		        	<h2>{{i.title}}</h2>
 		      	</button>
 		      	<ion-item-options>
-		      		<button ion-button color="danger" (click)="_removeFavorite(i)">
+		      		<button ion-button color="danger" (click)="_removeFavorite(i)" class='remove'>
 		      			<ion-icon name="close"></ion-icon>
 		      			删除
 		      		</button>
@@ -41,12 +51,12 @@
 	    </ion-list>
 
 	    <ion-list *ngSwitchCase="'word'">
-    	    <ion-item-sliding *ngFor = "let i of _wordList" (click)="_goWordModal(i)">
-				<button ion-item>
+    	    <ion-item-sliding *ngFor = "let i of _wordList">
+				<button ion-item (click)="_goWordModal(i)">
 					<h2>{{i.name}}</h2>
 				</button>
 		      	<ion-item-options>
-		      		<button ion-button color="danger" (click)="_removeFavorite(i)">
+		      		<button ion-button color="danger" (click)="_removeFavorite(i)" class='remove'>
 		      			<ion-icon name="close"></ion-icon>
 		      			删除
 		      		</button>
