@@ -163,7 +163,6 @@ export class NCEStudyTextPage implements OnInit{
 									this._lock = false;
 									this._favorite = !this._favorite;
 									this._favoriteID = id;
-									console.log(this._favoriteID);
 								});
 		}
 	}

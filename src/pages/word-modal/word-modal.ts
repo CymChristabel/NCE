@@ -11,6 +11,8 @@ export class WordModalPage{
 	private _word;
 	private _favorite;
 	private _lock;
+	private _favoriteID;
+
 	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController){
 		this._word = this._navParams.get('word');
 		this._lock = false;
@@ -71,14 +73,13 @@ export class WordModalPage{
 			this._lock = true;
 			this._navParams.get('recitationService')
 							.addFavorite(this._navParams.get('vocabularyID'), this._word.id, this._word.name)
-							.then(
-								result => {
-									if(result)
-									{
+							.subscribe(
+								id => {
 										this._lock = false;
 										this._favorite = !this._favorite;
-									}
+										this._favoriteID = id;
 								}, err => {
+									console.log(err);
 									this._lock = false
 								});
 		}
@@ -89,16 +90,11 @@ export class WordModalPage{
 		{
 			this._lock = true;
 			this._navParams.get('recitationService')
-							.removeFavorite(this._navParams.get('vocabularyID'), this._word.id)
+							.removeFavorite(this._navParams.get('vocabularyID'), this._word.id, this._favoriteID)
 							.then(
 								result => {
-									if(result)
-									{
-										this._lock = false;
-										this._favorite = !this._favorite;
-									}
-								}, err => {
-									this._lock = false
+									this._lock = false;
+									this._favorite = !this._favorite;
 								});
 		}
 	}

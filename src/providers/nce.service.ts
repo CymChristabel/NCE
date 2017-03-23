@@ -3,7 +3,7 @@
 
 	NCE_book_list: nce book list, include every book lession
 	NCE_favorite:  nce favorite list
-	favorite_sync: has favorite list synchronized, can only be true in successful synchronize function
+	nce_favorite_sync: has favorite list synchronized, can only be true in successful synchronize function
 */
 
 import { HttpService } from './http.service';
@@ -33,8 +33,6 @@ export class NCEService {
 					this._bookList = localBookList;
 				}
 			}, err => console.log(err));
-		this._storageService.remove('NCE_favorite');
-		this._storageService.remove('favorite_sync');
 	}
 
 	public getBookList(){
@@ -79,7 +77,6 @@ export class NCEService {
 		}).map(res => {
 			this.getFavoriteList().then(
 				favoriteList => {
-					console.log('favo', favoriteList);
 					if(favoriteList == undefined)
 					{
 						favoriteList = [];
@@ -91,7 +88,7 @@ export class NCEService {
 					}
 					else //http error occur
 					{
-						this._storageService.set('favorite_sync', false);
+						this._storageService.set('nce_favorite_sync', false);
 					}
 					favoriteList.push({
 						id: id,
@@ -112,7 +109,7 @@ export class NCEService {
 				id: favoriteID
 			}).map(res => res).subscribe(success => console.log(success), err => {
 				console.log('server', err);
-				this._storageService.set('favorite_sync', false);
+				this._storageService.set('nce_favorite_sync', false);
 			});
 		}
 		return this._storageService.get('NCE_favorite').then(

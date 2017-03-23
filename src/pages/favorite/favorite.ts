@@ -29,6 +29,7 @@ export class FavoritePage {
 		this._recitationService.getFavoriteList().then(
 						favoriteList => {
 							this._wordList = favoriteList;
+							console.log(this._wordList);
 						}, err => console.log(err));
 
 		this._nceService.getFavoriteList().then(
@@ -71,7 +72,7 @@ export class FavoritePage {
 		}
 		else
 		{
-			this._recitationService.removeFavorite(item.vocabularyID, item.wordID).then(favoriteList => {
+			this._recitationService.removeFavorite(item.vocabularyID, item.wordID, item.id).then(favoriteList => {
 				this._wordList = favoriteList;
 				}, err => console.log(err));
 		}

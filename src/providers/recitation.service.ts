@@ -1,5 +1,7 @@
 import { HttpService } from './http.service';
 import { StorageService } from './storage.service';
+import { UserService } from './user.service';
+
 import { Injectable } from '@angular/core';
 
 import * as _ from 'lodash';
@@ -9,7 +11,7 @@ import * as _ from 'lodash';
 export class RecitationService{
 	private _vocabularyList;
 
-	constructor(private _httpService: HttpService, private _storageService: StorageService) {
+	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
 		console.log('init vocabulary service....');
 		//test favorite
 		// this._storageService.remove('vocabularyWord:' + 1);
@@ -125,28 +127,51 @@ export class RecitationService{
 	}
 
 	public addFavorite(vocabularyID: number, wordID: number, name: string = undefined){
-		return this._storageService.get('word_favorite').then(
-			favoriteList => {
-				if(favoriteList == undefined)
-				{
-					favoriteList = [];
-				}	
-				favoriteList.push({ vocabularyID: vocabularyID, wordID: wordID, name: name });
-				this._storageService.set('word_favorite', favoriteList);
-				return true;
-			}, err => {
-				console.log(err);
-				return false;
+		return this._httpService.post('/wordfavorite/add', {
+			vocabularyID: vocabularyID,
+			wordID: wordID,
+			userID: this._userService.getUser().user.id
+		}).map(res => {
+			this.getFavoriteList().then(
+				favoriteList => {
+					if(favoriteList == undefined)
+					{
+						favoriteList = [];
+					}
+					let id = -1;
+					if(res.ok == true)
+					{
+						id = res.json();
+					}
+					else
+					{
+						this._storageService.set('word_favorite_sync', false);
+					}
+					favoriteList.push({
+						id: id,
+						vocabularyID: vocabularyID,
+						wordID: wordID,
+						name: name
+					});
+					this._storageService.set('word_favorite', favoriteList);
 			});
+			return res.json();
+		});
 	}
 
-	public removeFavorite(vocabularyID: number, wordID: number){
+	public removeFavorite(vocabularyID: number, wordID: number, favoriteID: number){
+		if(favoriteID != -1)
+		{
+			this._httpService.put('/wordfavorite/remove', {
+				id: favoriteID
+			}).map(res => res).subscribe(success => {}, err => console.log(err));
+		}
 		return this._storageService.get('word_favorite').then(
 			favoriteList => {
 				_.remove(favoriteList, { vocabularyID: vocabularyID, wordID: wordID });
 				this._storageService.set('word_favorite', favoriteList);
 				return favoriteList;
-			}, err => console.log(err));
+			});
 	}
 
 	public getFavoriteList(){
