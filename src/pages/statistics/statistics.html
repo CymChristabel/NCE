@@ -35,17 +35,16 @@
 		<div *ngSwitchCase="'overall'">
 
 			<h2 style="text-align: center">学习时间分配</h2>
-			<div #pinch *ngIf='_timeCount'>
-				<div id='timeCountChart' (swipe)='_timeCountSwipeEvent($event)'></div>
-				<button ion-button (click)='_presentActionSheet()' block>change type</button>
+			<div *ngIf='_display'>
+				<div id='timeCountChart'></div>
 			</div>
-			<div *ngIf='!_timeCount'>
+			<div *ngIf='!_display'>
 				<img src="assets/img/oops.jpg">
 				<h4 style="text-align: center">你今天还没开始学习呢</h4>
 				<h6>快去学习吧，当你学习的时候你所花的时间会被记录下来</h6>
 			</div>
-			<!-- <button ion-button full (click)="_viewHistoryTimeCountx()">查看历史记录</button> -->
-
+			<button ion-button full (click)="_viewHistoryTimeCountChart()">查看历史记录</button>
+			<button ion-button full (click)="_transformTimeCountChartType()">Transform</button>
 		</div>
 		<div *ngSwitchCase="'NCE'">
 			
