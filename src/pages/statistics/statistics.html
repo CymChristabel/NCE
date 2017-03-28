@@ -43,8 +43,8 @@
 				<h4 style="text-align: center">你今天还没开始学习呢</h4>
 				<h6>快去学习吧，当你学习的时候你所花的时间会被记录下来</h6>
 			</div>
-			<button ion-button full (click)="_viewHistoryTimeCountChart()">查看历史记录</button>
-			<button ion-button full (click)="_transformTimeCountChartType()">Transform</button>
+			<button ion-button full (click)="_viewHistoryTimeCountChart()">查看上一层记录</button>
+			<button ion-button full (click)="_transformTimeCountChartType()" *ngIf='_display'>Transform</button>
 		</div>
 		<div *ngSwitchCase="'NCE'">
 			

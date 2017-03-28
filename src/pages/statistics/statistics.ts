@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 /*
-	For time count bar/line chart:
+	For time count bar/line chart level:
 		1: year;
 		2: month;
 		3: day;
@@ -43,17 +43,8 @@ export class StatisticsPage {
 
 	private _transformTimeCountChartType(){
 
-		if(this._timeCount.chartType == 'spec_day_pie')
-		{
-			this._timeCount.chartType = 'spec_day_bar';
-			this._timeCount.chartCtrl.transform('bar');
-		}
-		else if(this._timeCount.chartType == 'spec_day_bar')
-		{
-			this._timeCount.chartType = 'spec_day_pie';
-			this._timeCount.chartCtrl.transform('pie');
-		}
-		else
+
+		if(this._timeCount.chartLevel != 4)
 		{
 			let actionSheet = this._actionSheetCtrl.create({
 			title: '改变图表类型',
@@ -99,6 +90,19 @@ export class StatisticsPage {
 
 			actionSheet.present();
 		}
+		else
+		{
+			if(this._timeCount.chartType == 'spec_day_pie')
+			{
+				this._timeCount.chartType = 'spec_day_bar';
+				this._timeCount.chartCtrl.transform('bar');
+			}
+			else if(this._timeCount.chartType == 'spec_day_bar')
+			{
+				this._timeCount.chartType = 'spec_day_pie';
+				this._timeCount.chartCtrl.transform('pie');
+			}
+		}
 		
 	}
 
@@ -107,12 +111,15 @@ export class StatisticsPage {
 	}
 
 	private _viewHistoryTimeCountChart(){
+		if(!this._timeCount.rowData)
+		{
 			this._statisticsService.getHistoryTimeCount().subscribe(
 				data => {
 					if(data.length >= 1)
 					{
 						this._display = true;
 						this._timeCount.rowData = { date: [], nceTime: [], recitationTime: [] };
+						this._timeCount.chartLevel = 3;
 						for(let i = 0; i < data.length; i++)
 						{
 							this._timeCount.rowData.date.push(data[i].date);
@@ -120,15 +127,46 @@ export class StatisticsPage {
 							this._timeCount.rowData.recitationTime.push(data[i].recitationTime);
 						}
 						setTimeout(() => {
-							this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByYear();
+							this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByDay(moment().format('YYYY-MM'));
 						}, 1);
 						
 					}
 					else
 					{
 						this._display = false;
+						let alert = this._toastCtrl.create({
+							message: '没有足够的数据',
+							duration: 1500,
+							position: 'bottom'
+						});
+						alert.present();
 					}
 			}, err => console.log(err));
+		}
+		else
+		{
+			if(this._timeCount.chartLevel == 1)
+			{
+				let alert = this._toastCtrl.create({
+					message: '已到最顶层',
+					duration: 1500,
+					position: 'bottom'
+				});
+				alert.present();
+			}
+			else if(this._timeCount.chartLevel == 2)
+			{
+				this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByYear();
+			}
+			else if(this._timeCount.chartLevel == 3)
+			{
+				this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByMonth(this._timeCount.chartDate);
+			}
+			else
+			{
+				this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByDay(this._timeCount.chartDate);
+			}
+		}
 		
 	}
 
@@ -136,6 +174,8 @@ export class StatisticsPage {
 	private _generateHistoryTimeCountChartByYear(){
 		let x = [], nceTime = [], recitationTime = [];
 		this._timeCount.chartType = 'bar';
+		this._timeCount.chartLevel = 1;
+		this._timeCount.chartDate = this._timeCount.rowData.date[0];
 
 		x.push(this._timeCount.rowData.date[0]);
 		nceTime.push(this._timeCount.rowData.nceTime[0]);
@@ -150,7 +190,6 @@ export class StatisticsPage {
 			}
 			else
 			{
-
 				x.push(this._timeCount.rowData.date[i]);
 				nceTime.push(this._timeCount.rowData.nceTime[i]);
 				recitationTime.push(this._timeCount.rowData.recitationTime[i]);
@@ -159,8 +198,8 @@ export class StatisticsPage {
 
 		for(let i = 0; i < x.length; i++)
 		{
-			nceTime[i] = moment.duration(nceTime[i] * 1000).asDays();
-			recitationTime[i] = moment.duration(recitationTime[i] * 1000).asDays();
+			nceTime[i] = moment.duration(nceTime[i] * 1000).asDays().toFixed(2);
+			recitationTime[i] = moment.duration(recitationTime[i] * 1000).asDays().toFixed(2);
 		}
 
 		return c3.generate({
@@ -171,7 +210,7 @@ export class StatisticsPage {
 		            ['新概念'].concat(nceTime),
 		            ['背诵单词'].concat(_.slice(recitationTime))
 				],
-				type: 'bar',
+				type: 'line',
 				group: [
 					['新概念','背诵单词']
 				],
@@ -203,9 +242,11 @@ export class StatisticsPage {
 	private _generateHistoryTimeCountChartByMonth(d: string){
 		let date = moment(d);
 		let x = [], nceTime = [], recitationTime = [];
+		this._timeCount.chartLevel = 2;
+
 		for(let i = 0; i < 12; i++)
 		{
-			x.push(moment(date.format('YYYY-MM')).add(i, 'months').format('YYYY-MM-DD'));
+			x.push(moment(moment(date).format('YYYY').concat('-01-01')).add(i, 'months').format('YYYY-MM-DD'));
 			nceTime.push(0);
 			recitationTime.push(0);
 		}
@@ -214,6 +255,7 @@ export class StatisticsPage {
 		{
 			if(moment(this._timeCount.rowData.date[i]).year() == date.year())
 			{
+				this._timeCount.chartDate = this._timeCount.rowData.date[i];
 				for(let j = i; j < this._timeCount.rowData.date.length && moment(this._timeCount.rowData.date[j]).year() == date.year(); j++)
 				{
 					nceTime[moment(this._timeCount.rowData.date[j]).month()] = nceTime[moment(this._timeCount.rowData.date[j]).month()] + this._timeCount.rowData.nceTime[j];
@@ -225,8 +267,8 @@ export class StatisticsPage {
 
 		for(let i = 0; i < x.length; i++)
 		{
-			nceTime[i] = moment.duration(nceTime[i] * 1000).asHours();
-			recitationTime[i] = moment.duration(recitationTime[i] * 1000).asHours();
+			nceTime[i] = moment.duration(nceTime[i] * 1000).asMinutes().toFixed(2);
+			recitationTime[i] = moment.duration(recitationTime[i] * 1000).asMinutes().toFixed(2);
 		}
 
 		return c3.generate({
@@ -237,7 +279,7 @@ export class StatisticsPage {
 		            ['新概念'].concat(nceTime),
 		            ['背诵单词'].concat(_.slice(recitationTime))
 				],
-				type: 'bar',
+				type: 'line',
 				group: [
 					['新概念','背诵单词']
 				],
@@ -272,31 +314,32 @@ export class StatisticsPage {
 	private _generateHistoryTimeCountChartByDay(d: string){
 		let date = moment(d);
 		let x = [], nceTime = [], recitationTime = [];
+		this._timeCount.chartLevel = 3;
 
 		for(let i = 0; i < date.daysInMonth(); i++)
 		{
-			x.push(moment(date).add(i, 'days').format('YYYY-MM-DD'));
+			x.push(moment(moment(date).format('YYYY-MM').concat('-01')).add(i, 'days').format('YYYY-MM-DD'));
 			nceTime.push(0);
 			recitationTime.push(0);
 		}
-
 		for(let i = 0; i < this._timeCount.rowData.date.length; i++)
 		{
 			if(moment(this._timeCount.rowData.date[i]).format('YYYY-MM') == date.format('YYYY-MM'))
 			{
-				for(let j = i; moment(this._timeCount.rowData.date[j]).month() == date.month(); j++)
+				this._timeCount.chartDate = this._timeCount.rowData.date[i];
+				for(let j = i; moment(this._timeCount.rowData.date[j]).month() == date.month() && j < this._timeCount.rowData.date.length; j++)
 				{
 					nceTime[moment(this._timeCount.rowData.date[j]).date() - 1] = nceTime[moment(this._timeCount.rowData.date[j]).date() - 1] + this._timeCount.rowData.nceTime[j];
 					recitationTime[moment(this._timeCount.rowData.date[j]).date() - 1] = recitationTime[moment(this._timeCount.rowData.date[j]).date() - 1] + this._timeCount.rowData.recitationTime[j];
 				}
+				break;
 			}
 		}
 
-
 		for(let i = 0; i < x.length; i++)
 		{
-			nceTime[i] = moment.duration(nceTime[i] * 1000).asMinutes();
-			recitationTime[i] = moment.duration(recitationTime[i] * 1000).asMinutes();
+			nceTime[i] = moment.duration(nceTime[i] * 1000).asMinutes().toFixed(2);
+			recitationTime[i] = moment.duration(recitationTime[i] * 1000).asMinutes().toFixed(2);
 		}
 
 		return c3.generate({
@@ -307,7 +350,7 @@ export class StatisticsPage {
 		            ['新概念'].concat(nceTime),
 		            ['背诵单词'].concat(_.slice(recitationTime))
 				],
-				type: 'bar',
+				type: 'line',
 				group: [
 					['新概念','背诵单词']
 				],
@@ -342,8 +385,11 @@ export class StatisticsPage {
 
 	private _generateHistoryTimeCountChartBySpecDay(d: string, nceTime: any, recitationTime: any){
 		this._timeCount.chartType = 'spec_day_pie';
-		nceTime = moment.duration(nceTime * 1000).asMinutes();
-		recitationTime = moment.duration(recitationTime * 1000).asMinutes();
+		this._timeCount.chartLevel = 4;
+		this._timeCount.chartDate = moment(d).format('YYYY-MM-DD');
+
+		nceTime = moment.duration(nceTime * 1000).asMinutes().toFixed(2);
+		recitationTime = moment.duration(recitationTime * 1000).asMinutes().toFixed(2);
 
 		return c3.generate({
 			data: {
@@ -366,11 +412,13 @@ export class StatisticsPage {
 	}
 
 	private _generateTodayTimeCountChart(){
+		this._timeCount.chartLevel = 4;
 		this._statisticsService.getTimeCount().then(
 			statistics => {
 				if(statistics && statistics[this._date.format('YYYY-MM-DD')])
 				{
 					let temp = statistics[this._date.format('YYYY-MM-DD')];
+					this._timeCount.chartDate = this._date.format('YYYY-MM-DD');
 					this._timeCount.chartType = 'spec_day_pie';
 					setTimeout(() => {
 						this._timeCount.chartCtrl = c3.generate({
@@ -427,7 +475,7 @@ export class StatisticsPage {
 			            ['正确', 200, 130, 90, 240, 130, 220, 100],
 			            ['total', 230, 150, 140, 280, 190, 270, 190],
 			        ],
-			        type: 'bar',
+			        type: 'line',
 			        types: {
 			            total: 'spline'
 			        },

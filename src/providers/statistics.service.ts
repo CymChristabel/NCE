@@ -17,14 +17,6 @@ export class StatisticsService {
 		this._hasStudyTimeSynchronized = true;
 	}
 
-	private _createTestData(){
-		var temp = {};
-		temp['2016-01-01'] = { nceTime: 11, recitationTime: 12 };
-		temp['2016-01-02'] = { nceTime: 11, recitationTime: 12};
-		temp[moment().format('YYYY-MM-DD')] = { nceTime: 15, recitationTime: 15};
-		this._storageService.set('time_count', temp).then(() => this.syncStatistics());
-	}
-
 	private _deleteTestData(){
 		this._storageService.remove('time_count');
 	}
@@ -97,7 +89,7 @@ export class StatisticsService {
 						date: tempTime,
 						nceTime: timeCountStatistics[tempTime].nceTime[2] + timeCountStatistics[tempTime].nceTime[3],
 						recitationTime: timeCountStatistics[tempTime].recitationTime[2] + timeCountStatistics[tempTime].recitationTime[3],
-						user: userID
+						userID: userID
 					}
 				}).map(res => res.json())
 				.subscribe(
@@ -126,7 +118,7 @@ export class StatisticsService {
 		return this._httpService.get({
 			url: '/studytimestatistics',
 			data: {
-				user: this._userService.getUser().user.id
+				userID: this._userService.getUser().user.id
 			}
 		}).map(res => res.json());
 	}
@@ -135,7 +127,12 @@ export class StatisticsService {
 		this._storageService.set(key, data);
 	}
 
-	public setNCEStatistics(bookID: number, lessionID: number, correct: number, incorrect: number){
+	public setRecitationStatistics(correct: number, incorrect: number, vocabularyID: number){
+		return this._httpService.post('/recitationstatistics/createOrUpdate', {
+			userID: this._userService.getUser().user.id,
 
+		})
 	}
+
+
 }

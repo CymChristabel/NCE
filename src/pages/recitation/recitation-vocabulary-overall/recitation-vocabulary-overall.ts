@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
@@ -21,13 +21,17 @@ import * as _ from 'lodash';
 })
 
 
-export class RecitationVocabularyOverallPage {
+export class RecitationVocabularyOverallPage{
 	private _vocabulary;
 	private _progressBar = 0;
 	private _startTimeCount;
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _statisticsService: StatisticsService, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
 		this._vocabulary = this._recitationService.getVocabulary(this._navParam.get('id'));
 		this._startTimeCount = false;
+	}
+
+	ionViewWillEnter(){
+
 	}
 
 	ionViewWillUnload(){
