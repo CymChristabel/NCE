@@ -109,6 +109,50 @@ export class StatisticsService {
 							}, err => console.log(err));
 					}
 			});
+			//synchronize nce_statistics
+			this._storageService.get('NCE_statistics').then(
+				nceStatistics => {
+					if(nceStatistics == undefined)
+					{
+						nceStatistics = { data: [], unSubscribe: [] };
+					}
+					// test data
+					// nceStatistics.unSubscribe = [
+					// 	{ lession: 1, date: '2016-03-03 19:32:02'}, 
+					// 	{ lession: 1, date: '2015-03-03 19:32:02'}, 
+					// 	{ lession: 2, date: '2017-03-03 19:32:02'}, 
+					// 	{ lession: 3, date: '2015-03-03 19:32:02'}, 
+					// 	{ lession: 2, date: '2016-03-03 19:32:02'}
+					// ];
+					if(nceStatistics.unSubscribe.length == 0)
+					{
+						this._httpService.get({
+							url: '/nce_statistics',
+							data: {
+								userID: userID
+							}
+						}).map(res => res.json())
+						.subscribe(
+							data => {
+								nceStatistics.data = data;
+								this._storageService.set('NCE_statistics', nceStatistics);
+							}, err => console.log(err));
+					}
+					else
+					{
+						this._httpService.post('/nce_statistics/synchronize', {
+							userID: userID,
+							data: nceStatistics.unSubscribe
+						}).map(res => res.json())
+						.subscribe(
+							data => {
+								console.log(data);
+								nceStatistics.data = _.sortBy(data, ['lession', 'date']);
+								nceStatistics.unSubscribe = [];
+								this._storageService.set('NCE_statistics', nceStatistics);
+							}, err => console.log(err));
+					}
+				});
 		}
 		
 	}
@@ -258,5 +302,40 @@ export class StatisticsService {
 
 	public getRecitationStatistics(){
 		return this._storageService.get('recitation_statistics');
+	}
+
+	public setNCEStatistics(lessionID: number, bookID: number, correct: number, incorrect: number){
+		let date = moment();
+		this._storageService.get('NCE_statistics').then(
+			nceStatistics => {
+				if(nceStatistics == undefined)
+				{
+					nceStatistics = { data: [], unSubscribe: [] };
+				}
+				nceStatistics.data.push({
+					lession: lessionID,
+					bookID: bookID,
+					correct: correct,
+					incorrect: incorrect,
+					date: date.format('YYYY-MM-DD HH:mm:ss')
+				});
+				nceStatistics.data = _.sortBy(nceStatistics.data, ['lession', 'date']);
+				this._httpService.post('/nce_statistics', {
+					lessionID: lessionID,
+					bookID: bookID,
+					userID: this._userService.getUser().user.id,
+					correct: correct,
+					incorrect: incorrect,
+					date: date.format('YYYY-MM-DD HH:mm:ss')
+				}).map(res => res)
+				.subscribe(
+					ok => {
+						this._storageService.set('NCE_statistics', nceStatistics);
+					}, err => {
+						console.log(err);
+						nceStatistics.unSubscribe.push(nceStatistics.data[nceStatistics.data - 1]);
+						this._storageService.set('NCE_statistics', nceStatistics);
+					});
+			});
 	}
 }
