@@ -35,7 +35,7 @@ export class RecitationService{
 					this._checkDownloadAndProgress();
 				}
 			}
-		).then(r => {console.log(this._vocabularyList)})
+		);
 	}
 
 	private _checkDownloadAndProgress(){
@@ -57,12 +57,14 @@ export class RecitationService{
 							if(this._vocabularyList[i].id == progress[j].id)
 							{
 								this._vocabularyList[i].progress = progress[j].progress;
+								this._vocabularyList[i].time = progress[j].time;
 								break;
 							}
 							if(j == progress.length - 1)
 							{
-								this._vocabularyList[j].progress = 0;
-								progress.push({ id: this._vocabularyList[i].id, progress: 0 });
+								this._vocabularyList[i].progress = 0;
+								this._vocabularyList[i].time = 1;
+								progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
 							}
 						}		
 					}
@@ -72,7 +74,9 @@ export class RecitationService{
 					progress = [];
 					for(let i = 0; i < this._vocabularyList.length; i++)
 					{
-						progress.push({ id: this._vocabularyList[i].id, progress: 0 });
+						this._vocabularyList[i].progress = 0;
+						this._vocabularyList[i].time = 1;
+						progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
 					}
 				}
 				this._storageService.set('vocabularyProgress', progress);
@@ -94,20 +98,31 @@ export class RecitationService{
 	}
 
 	public updateProgress(vocabularyID: number, value: number){
+		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
+		temp.progress = temp.progress + value;
 		this._storageService.get('vocabularyProgress').then(progress => {
 			for(let i = 0; i < progress.length; i++)
 			{
 				if(progress[i].id == vocabularyID)
 				{
 					progress[i].progress = progress[i].progress + value;
+					if(temp.progress == temp.word.length)
+					{
+						progress[i].time = progress[i].time + 1;
+					}
 					this._storageService.set('vocabularyProgress', progress);
-					//need to add server update
 					break;
 				}
 			}
 		});
-		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
-		temp.progress = temp.progress + value;	
+
+		this._httpService.post('/recitationprogress/createOrUpdate', {
+			userID: this._userService.getUser().user.id,
+			vocabularyID: vocabularyID,
+			progress: temp.progress,
+			time: temp.time
+		}).map(res => res)
+		.subscribe(ok => true, err => console.log(err));
 	}
 
 	public getWord(vocabularyID: number, wordID: number){

@@ -12,46 +12,20 @@
 		</button>
 	    <ion-title>学习统计</ion-title>
 	</ion-navbar>
-    <ion-toolbar no-border-top>
-	    <ion-segment [(ngModel)]="_select">
-	    	<ion-segment-button value="overall" (click)="_generateTimeCountChart()">
-				总览
-			</ion-segment-button>
-			<ion-segment-button value="NCE">
-				新概念
-			</ion-segment-button>
-			<ion-segment-button value="recitation" (click)="_generateRecitationChart()">
-				背诵单词
-			</ion-segment-button>
-	    </ion-segment>
-  	</ion-toolbar>
 
 </ion-header>
 
 
 <ion-content padding>
-	<div [ngSwitch]="_select">
-
-		<div *ngSwitchCase="'overall'">
 
 			<h2 style="text-align: center">学习时间分配</h2>
-			<div *ngIf='_display'>
 				<div id='timeCountChart'></div>
-			</div>
-			<div *ngIf='!_display'>
-				<img src="assets/img/oops.jpg">
-				<h4 style="text-align: center">你今天还没开始学习呢</h4>
-				<h6>快去学习吧，当你学习的时候你所花的时间会被记录下来</h6>
-			</div>
 			<button ion-button full (click)="_viewHistoryTimeCountChart()">查看上一层记录</button>
 			<button ion-button full (click)="_transformTimeCountChartType()" *ngIf='_display'>Transform</button>
-		</div>
-		<div *ngSwitchCase="'NCE'">
-			
-		</div>
-		<div *ngSwitchCase="'recitation'">
-			<div id='recitationChart'></div>
-		</div>
 
-	</div>
+			<h2 style="text-align: center">单词背诵正误比</h2>
+			<div id='recitationChart' *ngIf='_recitationStatistics.chartCtrl'></div>
+			<button ion-button full>查看上一层记录</button>
+			<button ion-button full *ngIf='_recitationStatistics.chartCtrl'>Transform</button>
+
 </ion-content>

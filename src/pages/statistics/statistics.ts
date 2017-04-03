@@ -21,29 +21,39 @@ import * as moment from 'moment';
 })
 
 export class StatisticsPage {
-	private _select;
 	private _date;
 	private _display;
-
+	private _loadingList;
 	//time chart related
 	private _timeCount;
-	private _recitation;
+	private _recitationStatistics;
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _loadingCtrl: LoadingController, private _menuCtrl: MenuController, private _actionSheetCtrl: ActionSheetController, private _toastCtrl: ToastController, private _statisticsService: StatisticsService) {
-		this._select = 'overall';
-		this._timeCount = { chartCtrl: true };
+		this._menuCtrl.swipeEnable(false);
+		this._timeCount = { chartCtrl: false };
 		this._display = true;
-		this._recitation = {};
-		this._updateDate();
+		this._recitationStatistics = { chartCtrl: false };
+		this._loadingList = { loading: {}, List: [] };
 	}
 
-	ionViewWillLoad() {
-		this._menuCtrl.swipeEnable(false);
-		this._generateTodayTimeCountChart();
+	ionViewDidLoad() {
+		this._loadingList.loading = this._loadingCtrl.create({
+			content: 'init chart...'
+		});
+		this._loadingList.loading.present();
+
+		this._generateTimeCountChart();
+		this._generateRecitationStatisticsChart();
+	}
+
+	private _resolveChartLoading(){
+		this._loadingList.list.push(true);
+		if(this._loadingList.list.length == 2)
+		{
+			this._loadingList.loading.dismiss();
+		}
 	}
 
 	private _transformTimeCountChartType(){
-
-
 		if(this._timeCount.chartLevel != 4)
 		{
 			let actionSheet = this._actionSheetCtrl.create({
@@ -106,45 +116,58 @@ export class StatisticsPage {
 		
 	}
 
-	private _updateDate(){
-		this._date = moment();
-	}
-
 	private _viewHistoryTimeCountChart(){
-		if(!this._timeCount.rowData)
-		{
-			this._statisticsService.getHistoryTimeCount().subscribe(
-				data => {
-					if(data.length >= 1)
-					{
-						this._display = true;
-						this._timeCount.rowData = { date: [], nceTime: [], recitationTime: [] };
-						this._timeCount.chartLevel = 3;
-						for(let i = 0; i < data.length; i++)
-						{
-							this._timeCount.rowData.date.push(data[i].date);
-							this._timeCount.rowData.nceTime.push(data[i].nceTime);
-							this._timeCount.rowData.recitationTime.push(data[i].recitationTime);
-						}
-						setTimeout(() => {
-							this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByDay(moment().format('YYYY-MM'));
-						}, 1);
+		// if(!this._timeCount.rowData)
+		// {
+		// 	let loading = this._loadingCtrl.create({
+		// 		content: 'Fetching data from server'
+		// 	});
+
+		// 	loading.present();
+		// 	this._statisticsService.getTimeCount().subscribe(
+		// 		data => {
+		// 			if(data.length >= 1)
+		// 			{
+		// 				this._display = true;
+		// 				this._timeCount.rowData = { date: [], nceTime: [], recitationTime: [] };
+		// 				this._timeCount.chartLevel = 3;
+		// 				for(let i = 0; i < data.length; i++)
+		// 				{
+		// 					this._timeCount.rowData.date.push(data[i].date);
+		// 					this._timeCount.rowData.nceTime.push(data[i].nceTime);
+		// 					this._timeCount.rowData.recitationTime.push(data[i].recitationTime);
+		// 				}
+		// 				setTimeout(() => {
+		// 					this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByDay(moment().format('YYYY-MM'));
+		// 					loading.dismiss();
+		// 				}, 1);
 						
-					}
-					else
-					{
-						this._display = false;
-						let alert = this._toastCtrl.create({
-							message: '没有足够的数据',
-							duration: 1500,
-							position: 'bottom'
-						});
-						alert.present();
-					}
-			}, err => console.log(err));
-		}
-		else
-		{
+		// 			}
+		// 			else
+		// 			{
+		// 				this._display = false;
+		// 				loading.dismiss();
+		// 				let toast = this._toastCtrl.create({
+		// 					message: '没有足够的数据',
+		// 					duration: 1500,
+		// 					position: 'bottom'
+		// 				});
+		// 				toast.present();
+		// 			}
+		// 	}, err => {
+		// 		loading.dismiss();
+		// 		let toast = this._toastCtrl.create({
+		// 			message: 'Your connection to the server is down, please check your network',
+		// 			duration: 1500,
+		// 			position: 'bottom'
+		// 		});
+		// 		toast.present();
+		// 		console.log(err);
+		// 	});
+		// }
+		// else
+		// {
+		// }
 			if(this._timeCount.chartLevel == 1)
 			{
 				let alert = this._toastCtrl.create({
@@ -166,8 +189,6 @@ export class StatisticsPage {
 			{
 				this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByDay(this._timeCount.chartDate);
 			}
-		}
-		
 	}
 
 
@@ -387,17 +408,23 @@ export class StatisticsPage {
 		this._timeCount.chartType = 'spec_day_pie';
 		this._timeCount.chartLevel = 4;
 		this._timeCount.chartDate = moment(d).format('YYYY-MM-DD');
-
-		nceTime = moment.duration(nceTime * 1000).asMinutes().toFixed(2);
-		recitationTime = moment.duration(recitationTime * 1000).asMinutes().toFixed(2);
-
+		
 		return c3.generate({
 			data: {
 				columns: [
 				 	['新概念', nceTime],
 		            ['背诵单词', recitationTime]
 				],
-				type: 'pie'
+				type: 'pie',
+				onclick: (d, e) => {
+					console.log(d);
+					let toast = this._toastCtrl.create({
+						message: 'Time for ' + d.name + ' :' + d.value + ' minutes',
+						duration: 1500,
+						position: 'bottom'
+					});
+					toast.present();
+				}
 			},
 			axis: {
 				y: {
@@ -411,89 +438,189 @@ export class StatisticsPage {
 		});
 	}
 
-	private _generateTodayTimeCountChart(){
-		this._timeCount.chartLevel = 4;
-		this._statisticsService.getTimeCount().then(
-			statistics => {
-				if(statistics && statistics[this._date.format('YYYY-MM-DD')])
+	private _generateTimeCountChart(){
+		this._statisticsService.getTimeCount().then(timeCount => {
+			if(timeCount.data.length > 0)
+			{
+				this._timeCount.rowData = { date: [], nceTime: [], recitationTime: [] };
+				for(let i = 0; i < timeCount.data.length; i++)
 				{
-					let temp = statistics[this._date.format('YYYY-MM-DD')];
-					this._timeCount.chartDate = this._date.format('YYYY-MM-DD');
-					this._timeCount.chartType = 'spec_day_pie';
-					setTimeout(() => {
-						this._timeCount.chartCtrl = c3.generate({
-										data: {
-											columns: [
-											 	_.take(temp.nceTime, temp.nceTime.length - 1),
-												_.take(temp.recitationTime, temp.recitationTime.length - 1)
-											],
-											type: 'pie'
-										},
-										tooltip :{
-											show: false
-										},
-										bindto: '#timeCountChart'
-									});
+					this._timeCount.rowData.date.push(timeCount.data[i].date);
+					this._timeCount.rowData.nceTime.push(timeCount.data[i].nceTime);
+					this._timeCount.rowData.recitationTime.push(timeCount.data[i].recitationTime);
+				}
+				if(this._timeCount.rowData.date[this._timeCount.rowData.date.length - 1] == moment().format('YYYY-MM-DD'))
+				{
+					this._timeCount.chartLevel = 4;
 
-						if(temp.nceTime[3] != 0 || temp.recitationTime[3] != 0)
-						{
-
-							temp.nceTime[2] = temp.nceTime[2] + temp.nceTime[3];
-							temp.recitationTime[2] = temp.recitationTime[2] + temp.recitationTime[3];
-							temp.nceTime[3] = 0;
-							temp.recitationTime[3] = 0;
-
-							setTimeout(() => {
-								this._timeCount.chartCtrl.load({
-									columns: [
-										temp.nceTime,
-										temp.recitationTime
-									]
+					this._timeCount.chartCtrl = c3.generate({
+						data: {
+							columns: [
+							 	['新概念', this._timeCount.rowData.nceTime[this._timeCount.rowData.nceTime.length - 1]],
+					            ['背诵单词', this._timeCount.rowData.recitationTime[this._timeCount.rowData.recitationTime.length - 1]]
+							],
+							type: 'pie',
+							onclick: (d, e) => {
+								let toast = this._toastCtrl.create({
+									message: 'Time for ' + d.name + ' :' + moment.duration(d.value * 1000).asMinutes().toFixed(2) + ' minutes',
+									duration: 2000,
+									position: 'bottom'
 								});
-
-								this._statisticsService.resetCalled('time_count', statistics);
-							}, 2000);
-						}
-					}, 1);
+								toast.present();
+							}
+						},
+						tooltip :{
+							show: false
+						},
+						bindto: '#timeCountChart'
+					});
 				}
 				else
 				{
-					this._display = false;
+					this._timeCount.chartCtrl = this._generateHistoryTimeCountChartByDay(this._timeCount.rowData.date[this._timeCount.rowData.date.length - 1]);
 				}
-			}, err => console.log(err));
+			}
+			else
+			{
+				this._timeCount.chartCtrl = false;
+			}
+			this._resolveChartLoading();
+		});
 	}
 
-
-	private _generateRecitationChart(){
-		setTimeout(() => {
-			this._recitation.chartCtrl = c3.generate({
-			    data: {
-			    	x: 'x',
-			        columns: [
-			        	['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06', '2013-01-07'],
-			            ['错误', 30, 20, 50, 40, 60, 50, 90],
-			            ['正确', 200, 130, 90, 240, 130, 220, 100],
-			            ['total', 230, 150, 140, 280, 190, 270, 190],
-			        ],
-			        type: 'line',
-			        types: {
-			            total: 'spline'
-			        },
-			        groups: [
-			            ['错误','正确']
-			        ]
-			    },
-			     axis: {
-			        x: {
-			            type: 'timeseries',
-			            tick: {
-			                format: '%m-%d'
-			            }
-			        }
-			    },
-			    bindto: '#recitationChart'
-			});
-		}, 1000);
+	private _generateRecitationStatisticsChart(){
+		this._statisticsService.getRecitationStatistics().then(recitationStatistics => {
+			if(recitationStatistics.data.length > 0)
+			{
+				this._recitationStatistics.rowData = { date: [], correct: [], incorrect: [] };
+				for(let i = 0; i < recitationStatistics.data.length; i++)
+				{
+					this._recitationStatistics.rowData.date.push(recitationStatistics.data[i].date);
+					this._recitationStatistics.rowData.correct.push(recitationStatistics.data[i].correct);
+					this._recitationStatistics.rowData.incorrect.push(recitationStatistics.data[i].incorrect);
+				}
+				if(this._recitationStatistics.rowData.date[this._recitationStatistics.rowData.date.length - 1] == moment().format('YYYY-MM-DD'))
+				{
+					this._recitationStatistics.chartLevel = 4;
+					setTimeout(() => {
+						this._recitationStatistics.chartCtrl = c3.generate({
+									data: {
+										columns: [
+										 	['错误', this._recitationStatistics.rowData.incorrect[this._recitationStatistics.rowData.date.length - 1]],
+											['正确', this._recitationStatistics.rowData.correct[this._recitationStatistics.rowData.date.length - 1]]
+										],
+										type: 'pie'
+									},
+									tooltip :{
+										show: false
+									},
+									bindto: '#recitationChart'
+								});
+						this._display = true;
+					}, 1000);
+				}
+				else
+				{
+					this._recitationStatistics.chartCtrl = this._generateHistoryRecitationStatisticsChartByDay(this._recitationStatistics.rowData.date[this._recitationStatistics.rowData.date.length - 1]);
+				}
+			}
+			else
+			{
+				this._recitationStatistics.chartCtrl = false;
+			}
+			this._resolveChartLoading();
+		});
 	}
 
+	private _generateHistoryRecitationStatisticsChartByDay(d: string){
+		let date = moment(d);
+		let x = [], correct = [], incorrect = [];
+		this._recitationStatistics.chartLevel = 4;
+
+		for(let i = 0; i < date.daysInMonth(); i++)
+		{
+			x.push(moment(moment(date).format('YYYY-MM').concat('-01')).add(i, 'days').format('YYYY-MM-DD'));
+			correct.push(0);
+			incorrect.push(0);
+		}
+
+		for(let i = 0; i < this._recitationStatistics.rowData.date.length; i++)
+		{
+			if(moment(this._recitationStatistics.rowData.date[i]).format('YYYY-MM') == date.format('YYYY-MM'))
+			{
+				this._recitationStatistics.chartDate = this._recitationStatistics.rowData.date[i];
+				for(let j = i; moment(this._recitationStatistics.rowData.date[j]).month() == date.month() && j < this._recitationStatistics.rowData.date.length; j++)
+				{
+					correct[moment(this._recitationStatistics.rowData.date[j]).date() - 1] = correct[moment(this._recitationStatistics.rowData.date[j]).date() - 1] + this._recitationStatistics.rowData.correct[j];
+					incorrect[moment(this._recitationStatistics.rowData.date[j]).date() - 1] = incorrect[moment(this._recitationStatistics.rowData.date[j]).date() - 1] + this._recitationStatistics.rowData.incorrect[j];
+				}
+				break;
+			}
+		}
+
+		return c3.generate({
+			data: {
+				x: 'x',
+				columns: [
+					['x'].concat(x),
+		            ['正确'].concat(correct),
+		            ['错误'].concat(_.slice(incorrect))
+				],
+				type: 'line',
+				group: [
+					['正确','错误']
+				],
+				onclick: (d, e) => {
+					let temp = this._recitationStatistics.chartCtrl.data(['正确', '错误']);
+					this._recitationStatistics.chartCtrl = this._generateHistoryRecitationStatisticsChartBySpecDay(d.x, temp[0].values[d.index].value, temp[1].values[d.index].value);
+				}
+			},
+    		axis: {
+		        x: {
+		            type: 'timeseries',
+		            tick: {
+		                format: '%d'
+		            }
+		        }
+		    },
+		    zoom: {
+		    	enabled: true
+		    },
+		    subchart: {
+		        show: true
+		    },
+		    tooltip :{
+		    	show: false
+		    },
+		    bindto: '#recitationChart'
+    	});
+	}
+
+	private _generateHistoryRecitationStatisticsChartBySpecDay(d: string, correct: number, incorrect: number){
+		this._recitationStatistics.chartLevel = 4;
+		this._recitationStatistics.chartDate = moment(d).format('YYYY-MM-DD');
+		
+		return c3.generate({
+			data: {
+				columns: [
+				 	['错误', incorrect],
+		            ['正确', correct]
+				],
+				type: 'pie',
+				onclick: (d, e) => {
+					console.log(d);
+					let toast = this._toastCtrl.create({
+						message: d.name + ': ' + d.value,
+						duration: 1500,
+						position: 'bottom'
+					});
+					toast.present();
+				}
+			},
+			tooltip :{
+				show: false
+			},
+			bindto: '#recitationChart'
+		});
+	}
 }

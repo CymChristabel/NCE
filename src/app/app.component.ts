@@ -51,12 +51,7 @@ export class MyApp {
   ) {
     this._storageService.get('isFirst').then(
       isFirst => {
-        if(isFirst == undefined)
-        {
-          this._storageService.set('isFirst', true);
-          this.rootPage = LandingPage;
-        }
-        else
+        if(isFirst)
         {
           if(this._userService.getUser() == undefined)
           {
@@ -73,15 +68,18 @@ export class MyApp {
                 else
                 {
                   this.rootPage = MainPage;
+                  this._statisticService.synchronizeData();
                 }
               }, err => {
-                if(err.status == 0)
-                {
-                  this._generateToast('network error').present();  
-                }
+                this._generateToast('network error').present();  
                 this.rootPage = MainPage;
               });
           }
+        }
+        else
+        {
+          this._storageService.set('isFirst', true);
+          this.rootPage = LandingPage;
         }
       }, err => console.log(err));
     this.initializeApp();
@@ -121,10 +119,10 @@ export class MyApp {
   }
 
   private _generateToast(message: string){
-      return this._toastCtrl.create({
-            message: message,
-            duration: 3000,
-            position: 'bottom'
-          });
+    return this._toastCtrl.create({
+          message: message,
+          duration: 3000,
+          position: 'bottom'
+        });
   }
 }

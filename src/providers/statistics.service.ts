@@ -10,45 +10,105 @@ import * as moment from 'moment';
 @Injectable()
 export class StatisticsService {
 	private _timeCount;
-	private _hasStudyTimeSynchronized;
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
 		this._timeCount = {};
-		this._hasStudyTimeSynchronized = true;
+		this._storageService.clear();
 	}
 
-	private _deleteTestData(){
-		this._storageService.remove('time_count');
-	}
-
-	//get date in YYYY-MM-DD format, no parameter will return current date
-	private _getDate(date: any = undefined){
-		return moment(date).format("YYYY-MM-DD");
-	}
-
-	public syncStatistics(){
+	public synchronizeData(){
 		let userID = this._userService.getUser().user.id;
-
 		if(userID)
 		{
-			let tempDate = moment().format('YYYY-MM-DD');
-			//sync time count statistics
-
-			this.getTimeCount().then(
-				localData => {
-					if(localData && _.keys(_.omit(localData, tempDate)).length > 0)
+			//synchronize time count statistics
+			this._storageService.get('time_count').then(
+				timeCount => {
+					if(timeCount == undefined)
+					{
+						timeCount = { data: [], unSubscribe: [] };
+					}
+					//test data
+					// timeCount.unSubscribe.push(
+					// 	{ date: '2015-01-01', nceTime: 5, recitationTime: 5},
+					// 	{ date: '2016-01-01', nceTime: 6, recitationTime: 6},
+					// 	{ date: '2016-01-02', nceTime: 7, recitationTime: 7},
+					// 	{ date: '2017-01-01', nceTime: 8, recitationTime: 8});
+					if(timeCount.unSubscribe.length == 0)
+					{
+						this._httpService.get({
+							url: '/studytimestatistics',
+							data: {
+								userID: userID
+							}
+						}).map(res => res.json())
+						.subscribe(
+							data => {
+								timeCount.data = data;
+								console.log(timeCount);
+								this._storageService.set('time_count', timeCount);
+							}, err => {
+								console.log(err);
+							});
+					}
+					else
 					{
 						this._httpService.post('/studytimestatistics/synchronize', {
-								user: userID,
-								data: _.omit(localData, tempDate)
-							}).map(res => res.json())
-							.subscribe(
-								complete => {
-										this._storageService.set('time_count', _.pick(localData, tempDate));
-								}, err => console.log(err));
+							userID: userID,
+							data: timeCount.unSubscribe
+						}).map(res => res.json())
+						  .subscribe(
+						  	data => {
+							  	timeCount.data = data;
+							  	timeCount.unSubscribe = [];
+							  	this._storageService.set('time_count', timeCount);
+							  }, err => {
+							  		console.log(err);
+							  });
 					}
-					
-				});
+			});
+			//synchronize recitation statistics
+			this._storageService.get('recitation_statistics').then(
+				recitationStatistics => {
+					if(recitationStatistics == undefined)
+					{
+						recitationStatistics = { data: [], unSubscribe: [] };
+					}
+					// test data
+					// recitationStatistics.unSubscribe.push(
+					// 	{ date: '2015-01-01', correct: 5, incorrect: 5, vocabularyID: 1},
+					// 	{ date: '2015-01-01', correct: 6, incorrect: 5, vocabularyID: 2},
+					// 	{ date: '2016-01-01', correct: 7, incorrect: 5, vocabularyID: 1},
+					// 	{ date: '2016-01-02', correct: 8, incorrect: 5, vocabularyID: 1},
+					// 	{ date: '2017-01-01', correct: 9, incorrect: 5, vocabularyID: 1});
+					if(recitationStatistics.unSubscribe.length == 0)
+					{
+						this._httpService.get({
+							url: '/recitationstatistics',
+							data: {
+								userID: userID
+							}
+						}).map(res => res.json())
+						.subscribe(
+							data => {
+								recitationStatistics.data = data;
+								this._storageService.set('recitation_statistics', recitationStatistics);
+							}, err => console.log(err));
+					}
+					else
+					{
+						this._httpService.post('/recitationstatistics/synchronize', {
+							userID: userID,
+							data: recitationStatistics.unSubscribe
+						}).map(res => res.json())
+						.subscribe(
+							data => {
+								recitationStatistics.data = data;
+								recitationStatistics.unSubscribe = [];
+								console.log(recitationStatistics);
+								this._storageService.set('recitation_statistics', recitationStatistics);
+							}, err => console.log(err));
+					}
+			});
 		}
 		
 	}
@@ -60,79 +120,143 @@ export class StatisticsService {
 
 	public endTimeCount(){
 		let timeDuration = moment().diff(this._timeCount.count, 'seconds');
-
-		this.getTimeCount().then(
-			timeCountStatistics => {
-				if(timeCountStatistics == undefined)
+		let date = moment().format('YYYY-MM-DD');
+		this._storageService.get('time_count').then(
+			timeCount => {
+				if(timeCount)
 				{
-					timeCountStatistics = {}
+					if(timeCount.data[timeCount.data.length - 1].date != date)
+					{
+						timeCount.push({
+							date: date,
+							nceTime: 0,
+							recitationTime: 0
+						});
+					}
+					this._timeCount.type == 'NCE'? timeCount.data[timeCount.data.length - 1].nceTime = timeCount.data[timeCount.data.length - 1].nceTime + timeDuration : timeCount.data[timeCount.data.length - 1].recitationTime = timeCount.data[timeCount.data.length - 1].recitationTime + timeDuration;
 				}
-				let tempTime = this._timeCount.count.format('YYYY-MM-DD');
-				if(timeCountStatistics[tempTime] == undefined)
+				else
 				{
-					timeCountStatistics[tempTime] = {};
-					timeCountStatistics[tempTime].nceTime = ['新概念', 0.1, 0, 0 ] ;  //third value stands for old data, forth for new data
-					timeCountStatistics[tempTime].recitationTime = ['背诵单词', 0.1, 0, 0 ];
+					timeCount = { data: [], unSubscribe: [] };
+					timeCount.push({
+							date: date,
+							nceTime: 0,
+							recitationTime: 0
+						});
+					this._timeCount.type == 'NCE'? timeCount.data[timeCount.data.length - 1].nceTime = timeCount.data[timeCount.data.length - 1].nceTime + timeDuration : timeCount.data[timeCount.data.length - 1].recitationTime = timeCount.data[timeCount.data.length - 1].recitationTime + timeDuration;
 				}
 
-				this._timeCount.type == 'NCE'
-					? timeCountStatistics[tempTime].nceTime[3] = timeCountStatistics[tempTime].nceTime[3] + timeDuration
-					: timeCountStatistics[tempTime].recitationTime[3] = timeCountStatistics[tempTime].recitationTime[3] + timeDuration;
-
-				// post or put to remote server
-				let userID = this._userService.getUser().user.id;
+				let nceTime = 0;
+				let recitationTime = 0;
+				this._timeCount.type == 'NCE'? nceTime = nceTime + timeDuration : recitationTime = recitationTime + timeDuration;
 
 				this._httpService.post('/studytimestatistics/createOrUpdate', {
-					hasSynchronized: this._hasStudyTimeSynchronized, 
-					data: 
-					{
-						date: tempTime,
-						nceTime: timeCountStatistics[tempTime].nceTime[2] + timeCountStatistics[tempTime].nceTime[3],
-						recitationTime: timeCountStatistics[tempTime].recitationTime[2] + timeCountStatistics[tempTime].recitationTime[3],
-						userID: userID
-					}
-				}).map(res => res.json())
+					date: date,
+					nceTime: nceTime,
+					recitationTime: recitationTime,
+					userID: this._userService.getUser().user.id
+				}).map(res => res)
 				.subscribe(
-					result => {
-						if(this._hasStudyTimeSynchronized == false)
-						{
-							timeCountStatistics[tempTime].nceTime[2] = result[0].nceTime;
-							timeCountStatistics[tempTime].recitationTime[2] = result[0].recitationTime;
-							timeCountStatistics[tempTime].nceTime[3] = 0;
-							timeCountStatistics[tempTime].recitationTime[3] = 0;
-							this._hasStudyTimeSynchronized = true;
-						}
-						this._storageService.set('time_count', timeCountStatistics);
+					ok => {
+						this._storageService.set('time_count', timeCount);
 					}, err =>{
-						console.log(err);
-						this._storageService.set('time_count', timeCountStatistics);
+						let flag = false;
+						for(let i = timeCount.unSubscribe.length - 1; i >= 0; i--)
+						{
+							if(timeCount.unSubscribe[i].date == date)
+							{
+								timeCount.unSubscribe[i].nceTime = timeCount.unSubscribe[i].nceTime + nceTime;
+								timeCount.unSubscribe[i].recitationTime = timeCount.unSubscribe[i].recitationTime + recitationTime;
+								flag = true;
+								break;
+							}
+						}
+						if(!flag)
+						{
+							timeCount.unSubscribe.push({
+								date: date,
+								nceTime: nceTime,
+								recitationTime: recitationTime
+							});
+						}
+						this._storageService.set('time_count', timeCount);
 					});
-			}, err => console.log(err));
+			});
 	}
 
 	public getTimeCount(){
 		return this._storageService.get('time_count');
 	}
 
-	public getHistoryTimeCount(){
-		return this._httpService.get({
-			url: '/studytimestatistics',
-			data: {
-				userID: this._userService.getUser().user.id
-			}
-		}).map(res => res.json());
+	public setRecitationStatistics(vocabularyID: number, correct: number, incorrect: number){
+		let date = moment().format('YYYY-MM-DD');
+		this._storageService.get('recitation_statistics').then(
+			recitationStatistics => {
+				if(recitationStatistics)
+				{
+					let flag = false;
+					for(let i = recitationStatistics.data.length - 1; i >= 0 && recitationStatistics.data[i].date == date; i--)
+					{
+						if(recitationStatistics.data[i].vocabularyID == vocabularyID)
+						{
+							recitationStatistics.data[i].correct = recitationStatistics.data[i].correct + correct;
+							recitationStatistics.data[i].incorrect = recitationStatistics.data[i].incorrect + incorrect;
+							flag = true;
+							break;
+						}
+					}
+					if(!flag)
+					{
+						recitationStatistics.data.push({
+							vocabularyID: vocabularyID,
+							date: date,
+							correct: correct,
+							incorrect: incorrect
+						});
+					}
+				}
+				else
+				{
+					recitationStatistics = { data: [{ date: date, vocabularyID: vocabularyID, correct: correct, incorrect: incorrect }], unSubscribe: [] };
+				}
+				this._httpService.post('/recitationstatistics/createOrUpdate', {
+					userID: this._userService.getUser().user.id,
+					vocabularyID: vocabularyID,
+					correct: correct,
+					incorrect: incorrect,
+					date: date
+				}).map(res => res)
+				.subscribe(
+					ok => {
+						this._storageService.set('recitation_statistics', recitationStatistics);
+				}, err => {
+					let flag = false;
+					for(let i = recitationStatistics.unSubscribe.length - 1; i >= 0 && recitationStatistics.unSubscribe[i].date == date; i--)
+					{
+						if(recitationStatistics.unSubscribe[i].vocabularyID == vocabularyID)
+						{
+							recitationStatistics.unSubscribe[i].correct = recitationStatistics.unSubscribe[i].correct + correct;
+							recitationStatistics.unSubscribe[i].incorrect = recitationStatistics.unSubscribe[i].incorrect + incorrect;
+							flag = true;
+							break;
+						}
+					}
+					if(!flag)
+					{
+						recitationStatistics.unSubscribe.push({
+							date: date,
+							correct: correct,
+							incorrect: incorrect,
+							vocabularyID: vocabularyID
+						});
+					}
+					console.log(recitationStatistics);
+					this._storageService.set('recitation_statistics', recitationStatistics);
+				});
+			});
 	}
 
-	public resetCalled(key: string, data: any){
-		this._storageService.set(key, data);
+	public getRecitationStatistics(){
+		return this._storageService.get('recitation_statistics');
 	}
-
-	public setRecitationStatistics(correct: number, incorrect: number, vocabularyID: number){
-		return this._httpService.post('/recitationstatistics/createOrUpdate', {
-			userID: this._userService.getUser().user.id,
-
-		})
-	}
-
-
 }

@@ -30,6 +30,13 @@ export class RecitationResultPage implements OnInit {
 		}
 	}
 
+	ionViewWillLeave(){
+		if(this._navParams.get('type') == 'recitation')
+		{
+			this._statisticsService.setRecitationStatistics(this._navParams.get('vocabularyID'), this._word.true.length, this._word.false.length);
+		}
+	}
+
 	private _showWordModal(word: any){
 		let modal = this._modalCtrl.create(WordModalPage, { word: word });
 		modal.present();

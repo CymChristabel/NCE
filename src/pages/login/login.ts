@@ -6,6 +6,7 @@ import { RegisterPage } from '../register/register';
 import { ForgetPasswordPage } from '../forget-password/forget-password';
 import { GeneralPage } from '../general/general';
 
+import { StatisticsService } from '../../providers/statistics.service';
 import { UserService } from '../../providers/user.service';
 import { StorageService } from '../../providers/storage.service';
 
@@ -17,7 +18,7 @@ import { StorageService } from '../../providers/storage.service';
 export class LoginPage {
   private _loginForm: FormGroup;
 
-  constructor(private _navCtrl: NavController, private _userService: UserService, private _storageService: StorageService, private _toastCtrl: ToastController, private _formBuilder: FormBuilder) {
+  constructor(private _navCtrl: NavController, private _userService: UserService, private _storageService: StorageService, private _statisticsService: StatisticsService, private _toastCtrl: ToastController, private _formBuilder: FormBuilder) {
     this._loginForm = this._formBuilder.group({
         'email': new FormControl('test@qq.com', Validators.compose([Validators.required, this._mailFormat])),
         'password': new FormControl('nimazhale',Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(16)])),
@@ -63,10 +64,11 @@ export class LoginPage {
         result => {
           if(result)
           {
+            this._statisticsService.synchronizeData();
             this._navCtrl.setRoot(GeneralPage);  
           }
         }, err => {
-          this._generateToast(JSON.parse(err._body).message).present();
+          this._generateToast('Your connection to the server is down, please check your network').present();
         });
     }
     else
