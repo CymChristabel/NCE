@@ -43,7 +43,7 @@ export class MyApp {
     private _toastCtrl: ToastController,
     private _storageService: StorageService,
     private _userService: UserService,
-    private _RecitationService: RecitationService,
+    private _recitationService: RecitationService,
     private _nceService: NCEService,
     private _taskService: TaskService,
     private _fileService: FileService,
@@ -69,6 +69,8 @@ export class MyApp {
                 {
                   this.rootPage = MainPage;
                   this._statisticService.synchronizeData();
+                  this._recitationService.synchronizeData();
+                  this._nceService.synchronizeData();
                 }
               }, err => {
                 this._generateToast('network error').present();  

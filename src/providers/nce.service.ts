@@ -35,6 +35,28 @@ export class NCEService {
 			}, err => console.log(err));
 	}
 
+	public synchronizeData(){
+		this._httpService.get({
+			url: '/nce_favorite',
+			data: {
+				userID: this._userService.getUser().user.id
+			}
+		}).map(res => res.json())
+		.subscribe(
+			favoriteList => {
+				for(let i = 0; i < favoriteList.length; i++)
+				{
+					favoriteList[i] = {
+						id: favoriteList[i].id,
+						bookID: favoriteList[i].book,
+						lessionID: favoriteList[i].lession.id,
+						title: favoriteList[i].lession.title
+					};
+				}
+				this._storageService.set('NCE_favorite', favoriteList);
+		}, err => console.log(err));
+	}
+
 	public getBookList(){
 		return this._bookList;
 	}
@@ -59,16 +81,7 @@ export class NCEService {
 		return this._storageService.get('NCE_book_list');
 	}
 
-	public synchronizeFavorite(){
-		this.getFavoriteList().then(
-			favoriteList => {
-				console.log(favoriteList);
-				this._httpService.post('/nce_favorite/synchronize', {
-					favoriteList: favoriteList,
-					userID: this._userService.getUser().user.id
-				}).map(res => res.json()).subscribe(data => console.log(1), err => console.log(err));
-			}, err => console.log(err));
-	}
+	
 
 	public addFavorite(bookID: number, lessionID: number, title: string){
 		return this._httpService.post('/nce_favorite/add', {

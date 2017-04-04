@@ -25,27 +25,41 @@ export class RecitationService{
 					.subscribe(
 						vocabularyList => {
 							this._vocabularyList = vocabularyList;
-							this._checkDownloadAndProgress();
+							this._checkDownload();
 							this._storageService.set('vocabularyList', vocabularyList);
 						}, err => console.log('vocabulary remote:' + err));
 				}
 				else
 				{
 					this._vocabularyList = localVocabularyList;
-					this._checkDownloadAndProgress();
+					this._checkDownload();
 				}
 			}
 		);
 	}
 
-	private _checkDownloadAndProgress(){
-		for(let i = 0; i < this._vocabularyList.length; i++)
-		{
-			this._storageService.get('vocabularyWord:' + this._vocabularyList[i].id).then(
-				result => {
-					result ? this._vocabularyList[i].isDownloaded = true : this._vocabularyList[i].isDownloaded = false;
-				});
-		}
+	public synchronizeData(){
+		this._httpService.get({
+			url: '/wordfavorite',
+			data: {
+				userID: this._userService.getUser().user.id
+			}
+		}).map(res => res.json())
+		.subscribe(
+			favoriteList => {
+				console.log(favoriteList);
+				for(let i = 0; i < favoriteList.length; i++)
+				{
+					favoriteList[i] = {
+						id: favoriteList[i].id,
+						vocabularyID: favoriteList[i].vocabulary,
+						wordID: favoriteList[i].word.id,
+						name: favoriteList[i].word.name
+					};
+				}
+				this._storageService.set('word_favorite', favoriteList);
+		}, err => console.log(err));
+
 		this._storageService.get('vocabularyProgress').then(
 			progress => {
 				if(progress)
@@ -63,7 +77,7 @@ export class RecitationService{
 							if(j == progress.length - 1)
 							{
 								this._vocabularyList[i].progress = 0;
-								this._vocabularyList[i].time = 1;
+								this._vocabularyList[i].time = 0;
 								progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
 							}
 						}		
@@ -71,16 +85,75 @@ export class RecitationService{
 				}
 				else
 				{
-					progress = [];
-					for(let i = 0; i < this._vocabularyList.length; i++)
-					{
-						this._vocabularyList[i].progress = 0;
-						this._vocabularyList[i].time = 1;
-						progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
-					}
+					this._httpService.get({
+						url: '/recitationprogress',
+						data: {
+							userID: this._userService.getUser().user.id
+						}
+					}).map(res => res.json())
+					.subscribe(
+						progressList => {
+							let temp = [];
+							for(let i = 0; i < progressList.length; i++)
+							{
+								temp.push({
+									id: progressList[i].vocabulary,
+									progress: progressList[i].progress,
+									time: progressList[i].time
+								});
+							}
+							for(let i = 0; i < this._vocabularyList.length; i++)
+							{
+								for(let j = 0; j < temp.length; j++)
+								{
+									if(this._vocabularyList[i].id == temp[j].id)
+									{
+										this._vocabularyList[i].progress = temp[j].progress;
+										this._vocabularyList[i].time = temp[j].time;
+										break;
+									}
+									if(j == temp.length - 1)
+									{
+										this._vocabularyList[i].progress = 0;
+										this._vocabularyList[i].time = 0;
+										temp.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
+									}
+								}	
+							}
+							this._storageService.set('vocabularyProgress', temp);
+						}, err => console.log(err));
+
 				}
-				this._storageService.set('vocabularyProgress', progress);
 			});
+	}
+
+	private _checkDownload(){
+		for(let i = 0; i < this._vocabularyList.length; i++)
+		{
+			this._storageService.get('vocabularyWord:' + this._vocabularyList[i].id).then(
+				result => {
+					result ? this._vocabularyList[i].isDownloaded = true : this._vocabularyList[i].isDownloaded = false;
+				});
+		}
+		// this._storageService.get('vocabularyProgress').then(
+		// 	progress => {
+		// 		console.log(progress);
+		// 		if(progress)
+		// 		{
+					
+		// 		}
+		// 		else
+		// 		{
+		// 			progress = [];
+		// 			for(let i = 0; i < this._vocabularyList.length; i++)
+		// 			{
+		// 				this._vocabularyList[i].progress = 0;
+		// 				this._vocabularyList[i].time = 1;
+		// 				progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
+		// 			}
+		// 		}
+		// 		this._storageService.set('vocabularyProgress', progress);
+		// 	});
 	}
 
 	public getVocabulary(vocabularyID: number){
