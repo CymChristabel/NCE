@@ -13,7 +13,6 @@ export class StatisticsService {
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
 		this._timeCount = {};
-		this._storageService.clear();
 	}
 
 	public synchronizeData(){
@@ -27,7 +26,7 @@ export class StatisticsService {
 					{
 						timeCount = { data: [], unSubscribe: [] };
 					}
-					//test data
+					//test async data
 					// timeCount.unSubscribe.push(
 					// 	{ date: '2015-01-01', nceTime: 5, recitationTime: 5},
 					// 	{ date: '2016-01-01', nceTime: 6, recitationTime: 6},
@@ -73,7 +72,7 @@ export class StatisticsService {
 					{
 						recitationStatistics = { data: [], unSubscribe: [] };
 					}
-					// test data
+					// test async data
 					// recitationStatistics.unSubscribe.push(
 					// 	{ date: '2015-01-01', correct: 5, incorrect: 5, vocabularyID: 1},
 					// 	{ date: '2015-01-01', correct: 6, incorrect: 5, vocabularyID: 2},
@@ -90,7 +89,7 @@ export class StatisticsService {
 						}).map(res => res.json())
 						.subscribe(
 							data => {
-								recitationStatistics.data = data;
+								recitationStatistics.data = _.sortBy(data, ['date'])
 								this._storageService.set('recitation_statistics', recitationStatistics);
 							}, err => console.log(err));
 					}
@@ -102,9 +101,8 @@ export class StatisticsService {
 						}).map(res => res.json())
 						.subscribe(
 							data => {
-								recitationStatistics.data = data;
+								recitationStatistics.data = _.sortBy(data, ['date'])
 								recitationStatistics.unSubscribe = [];
-								console.log(recitationStatistics);
 								this._storageService.set('recitation_statistics', recitationStatistics);
 							}, err => console.log(err));
 					}
@@ -116,7 +114,7 @@ export class StatisticsService {
 					{
 						nceStatistics = { data: [], unSubscribe: [] };
 					}
-					// test data
+					// test async data
 					// nceStatistics.unSubscribe = [
 					// 	{ lession: 1, date: '2016-03-03 19:32:02'}, 
 					// 	{ lession: 1, date: '2015-03-03 19:32:02'}, 
@@ -134,7 +132,7 @@ export class StatisticsService {
 						}).map(res => res.json())
 						.subscribe(
 							data => {
-								nceStatistics.data = data;
+								nceStatistics.data = _.sortBy(data, ['book', 'lession', 'date']);
 								this._storageService.set('NCE_statistics', nceStatistics);
 							}, err => console.log(err));
 					}
@@ -146,8 +144,7 @@ export class StatisticsService {
 						}).map(res => res.json())
 						.subscribe(
 							data => {
-								console.log(data);
-								nceStatistics.data = _.sortBy(data, ['lession', 'date']);
+								nceStatistics.data = _.sortBy(data, ['book', 'lession', 'date']);
 								nceStatistics.unSubscribe = [];
 								this._storageService.set('NCE_statistics', nceStatistics);
 							}, err => console.log(err));
@@ -167,33 +164,23 @@ export class StatisticsService {
 		let date = moment().format('YYYY-MM-DD');
 		this._storageService.get('time_count').then(
 			timeCount => {
-				if(timeCount)
-				{
-					if(timeCount.data[timeCount.data.length - 1].date != date)
-					{
-						timeCount.push({
-							date: date,
-							nceTime: 0,
-							recitationTime: 0
-						});
-					}
-					this._timeCount.type == 'NCE'? timeCount.data[timeCount.data.length - 1].nceTime = timeCount.data[timeCount.data.length - 1].nceTime + timeDuration : timeCount.data[timeCount.data.length - 1].recitationTime = timeCount.data[timeCount.data.length - 1].recitationTime + timeDuration;
-				}
-				else
+				if(timeCount == undefined)
 				{
 					timeCount = { data: [], unSubscribe: [] };
-					timeCount.push({
-							date: date,
-							nceTime: 0,
-							recitationTime: 0
-						});
-					this._timeCount.type == 'NCE'? timeCount.data[timeCount.data.length - 1].nceTime = timeCount.data[timeCount.data.length - 1].nceTime + timeDuration : timeCount.data[timeCount.data.length - 1].recitationTime = timeCount.data[timeCount.data.length - 1].recitationTime + timeDuration;
 				}
+				if(timeCount.data.length == 0 || timeCount.data[timeCount.data.length - 1].date != date)
+				{
+					timeCount.data.push({
+						date: date,
+						nceTime: 0,
+						recitationTime: 0
+					});
+				}
+				this._timeCount.type == 'NCE'? timeCount.data[timeCount.data.length - 1].nceTime = timeCount.data[timeCount.data.length - 1].nceTime + timeDuration : timeCount.data[timeCount.data.length - 1].recitationTime = timeCount.data[timeCount.data.length - 1].recitationTime + timeDuration;
 
 				let nceTime = 0;
 				let recitationTime = 0;
 				this._timeCount.type == 'NCE'? nceTime = nceTime + timeDuration : recitationTime = recitationTime + timeDuration;
-
 				this._httpService.post('/studytimestatistics/createOrUpdate', {
 					date: date,
 					nceTime: nceTime,
@@ -337,5 +324,9 @@ export class StatisticsService {
 						this._storageService.set('NCE_statistics', nceStatistics);
 					});
 			});
+	}
+
+	public getNCEStatistics(){
+		return this._storageService.get('NCE_statistics');
 	}
 }

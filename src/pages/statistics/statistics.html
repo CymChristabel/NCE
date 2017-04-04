@@ -18,14 +18,58 @@
 
 <ion-content padding>
 
-			<h2 style="text-align: center">学习时间分配</h2>
-				<div id='timeCountChart'></div>
-			<button ion-button full (click)="_viewHistoryTimeCountChart()">查看上一层记录</button>
-			<button ion-button full (click)="_transformTimeCountChartType()" *ngIf='_display'>Transform</button>
+	<h2 style="text-align: center">学习时间分配</h2>
+	<div id='timeCountChart'></div>
+	<img src="assets/img/oops.jpg" *ngIf='!_timeCount.chartCtrl'>
+	<div *ngIf='_timeCount.chartCtrl'>
+		<ion-fab center>
+		    <button ion-fab color="vibrant" mini><ion-icon name="options"></ion-icon></button>
+		    <ion-fab-list side="left">
+		      <button ion-fab color="secondary" (click)="_switchTimeCountChart()"><ion-icon name="arrow-round-up"></ion-icon></button>
+	      	</ion-fab-list>
+	      	<ion-fab-list side="right">
+		      <button ion-fab color="secondary" (click)="_transformTimeCountChartType()"><ion-icon name="options"></ion-icon></button>
+		    </ion-fab-list>
+	  	</ion-fab>
+	</div>
 
-			<h2 style="text-align: center">单词背诵正误比</h2>
-			<div id='recitationChart' *ngIf='_recitationStatistics.chartCtrl'></div>
-			<button ion-button full>查看上一层记录</button>
-			<button ion-button full *ngIf='_recitationStatistics.chartCtrl'>Transform</button>
+	<br />
+	<br />
+	<br />
+
+	<h2 style="text-align: center">单词背诵正误</h2>
+	<div id='recitationChart'></div>
+	<img src="assets/img/oops.jpg" *ngIf='!_recitationStatistics.chartCtrl'>
+	<div *ngIf='_recitationStatistics.chartCtrl'>
+		<ion-fab center>
+		    <button ion-fab color="light" mini><ion-icon name="options"></ion-icon></button>
+		    <ion-fab-list side="left">
+		      <button ion-fab color="dark" (click)="_switchRecitationStatisticsChart()"><ion-icon name="arrow-round-up"></ion-icon></button>
+	      	</ion-fab-list>
+	      	<ion-fab-list side="right">
+		      <button ion-fab color="dark" (click)="_transformRecitationStatisticsChartType()"><ion-icon name="options"></ion-icon></button>
+		    </ion-fab-list>
+	  	</ion-fab>
+	</div>
+
+	<br />
+	<br />
+	<br />
+
+	<h2 style="text-align: center">新概念英语学习情况</h2>
+	<h4 style="text-align: center" *ngIf='_nceStatistics.title'>{{_nceStatistics.title}}</h4>
+	<div id='nceChart'></div>
+	<img src="assets/img/oops.jpg" *ngIf='!_nceStatistics.chartCtrl'>
+	<div *ngIf='_nceStatistics.chartCtrl'>
+		<ion-fab center>
+		    <button ion-fab color="danger" mini><ion-icon name="options"></ion-icon></button>
+		    <ion-fab-list side="left">
+		      <button ion-fab color="candy" (click)="_switchNCEStatisticsChart()"><ion-icon name="arrow-round-up"></ion-icon></button>
+	      	</ion-fab-list>
+	      	<ion-fab-list side="right">
+		      <button ion-fab color="candy" (click)="_transformNCEStatisticsChartType()"><ion-icon name="options"></ion-icon></button>
+		    </ion-fab-list>
+	  	</ion-fab>
+	</div>
 
 </ion-content>

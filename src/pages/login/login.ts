@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from
 
 import { RegisterPage } from '../register/register';
 import { ForgetPasswordPage } from '../forget-password/forget-password';
-import { GeneralPage } from '../general/general';
+import { MainPage } from '../main/main';
 
 import { StatisticsService } from '../../providers/statistics.service';
 import { UserService } from '../../providers/user.service';
@@ -43,11 +43,6 @@ export class LoginPage {
   	this._navCtrl.push(ForgetPasswordPage);
   }
 
-  private _guestLogin(){
-    this._userService.guestLogin();
-    this._navCtrl.setRoot(GeneralPage);
-  }
-
   private _generateToast(message: string){
     return this._toastCtrl.create({
       message: message,
@@ -65,7 +60,7 @@ export class LoginPage {
           if(result)
           {
             this._statisticsService.synchronizeData();
-            this._navCtrl.setRoot(GeneralPage);  
+            this._navCtrl.setRoot(MainPage);  
           }
         }, err => {
           this._generateToast('Your connection to the server is down, please check your network').present();

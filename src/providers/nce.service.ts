@@ -43,8 +43,9 @@ export class NCEService {
 		return _.find(this._bookList, { id: id });
 	}
 
+
 	public getLession(bookID: number, lessionID: number){
-		return _.find(_.find(this._bookList, { id: bookID} ).lession, {id: lessionID});
+		return _.find(_.find(this._bookList, { id: bookID } ).lession, { id: lessionID });
 	}
 
 	public getRemoteBookList(){

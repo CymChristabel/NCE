@@ -68,7 +68,7 @@ export class MyApp {
                 else
                 {
                   this.rootPage = MainPage;
-                  // this._statisticService.synchronizeData();
+                  this._statisticService.synchronizeData();
                 }
               }, err => {
                 this._generateToast('network error').present();  
