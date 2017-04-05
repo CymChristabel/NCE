@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, MenuController } from 'ionic-angular';
 
-import { TaskSelectPage } from '../task-select/task-select';
+import { TaskCreatePage } from '../task-create/task-create';
  
 import { TaskService } from '../../providers/task.service';
 
@@ -13,11 +13,11 @@ import * as moment from 'moment';
   selector: 'page-general',
   templateUrl: 'general.html'
 })
+
 export class GeneralPage {
 	private _taskList;
 
 	constructor(private _navCtrl: NavController, private _menu: MenuController, private _taskService: TaskService) {
-  		
   		this._taskList = this._taskService.get();
 	}
 
@@ -64,7 +64,7 @@ export class GeneralPage {
 
   }
 
-  private _goTaskSelectPage(){
-    this._navCtrl.push(TaskSelectPage);
+  private _goTaskCreatePage(){
+    this._navCtrl.push(TaskCreatePage);
   }
 }

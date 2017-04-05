@@ -135,25 +135,6 @@ export class RecitationService{
 					result ? this._vocabularyList[i].isDownloaded = true : this._vocabularyList[i].isDownloaded = false;
 				});
 		}
-		// this._storageService.get('vocabularyProgress').then(
-		// 	progress => {
-		// 		console.log(progress);
-		// 		if(progress)
-		// 		{
-					
-		// 		}
-		// 		else
-		// 		{
-		// 			progress = [];
-		// 			for(let i = 0; i < this._vocabularyList.length; i++)
-		// 			{
-		// 				this._vocabularyList[i].progress = 0;
-		// 				this._vocabularyList[i].time = 1;
-		// 				progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
-		// 			}
-		// 		}
-		// 		this._storageService.set('vocabularyProgress', progress);
-		// 	});
 	}
 
 	public getVocabulary(vocabularyID: number){

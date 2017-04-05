@@ -10,7 +10,6 @@ import { RecitationSelectPage } from '../pages/recitation/recitation-select/reci
 import { MainPage } from '../pages/main/main';
 
 import { GeneralPage } from '../pages/general/general';
-import { TaskSelectPage } from '../pages/task-select/task-select';
 
 import { FavoritePage } from '../pages/favorite/favorite';
 
@@ -94,7 +93,6 @@ export class MyApp {
       { title: 'register', component: RegisterPage },
       { title: 'task', component: GeneralPage },
       { title: 'NCE', component: NCESelectPage },
-      { title: 'select', component: TaskSelectPage },
       { title: 'favorite', component: FavoritePage }
     ];
   }

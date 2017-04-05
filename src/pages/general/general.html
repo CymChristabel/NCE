@@ -22,14 +22,14 @@
 	    	<ion-row no-padding>
 				<ion-col>
 					<ion-icon name='star'></ion-icon>
-					{{_taskList.length}}
+					<!-- {{_taskList.length}} -->
 				</ion-col>
 				<ion-col text-right>
 					<ion-icon name='share-alt'></ion-icon>
 					Share
 				</ion-col>
 			</ion-row>
-			<button ion-button full (click)="_goTaskSelectPage()"> 
+			<button ion-button full (click)="_goTaskCreatePage()"> 
 				Add New Task
 			</button>
 		</ion-card-content>
@@ -39,7 +39,7 @@
 		<ion-list-header>
 			今日任务
 		</ion-list-header>
-		<ion-item-sliding *ngFor="let t of _taskList">
+		<!-- <ion-item-sliding *ngFor="let t of _taskList">
             <button ion-item full>
                 <ion-row>
                     <ion-col>
@@ -63,6 +63,6 @@
                     <ion-icon name="close"></ion-icon>
                 </button>
             </ion-item-options>
-        </ion-item-sliding>
+        </ion-item-sliding> -->
 	</ion-list>
 </ion-content>

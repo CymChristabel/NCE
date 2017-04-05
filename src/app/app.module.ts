@@ -21,7 +21,6 @@ import { RegisterPage } from '../pages/register/register';
 import { ForgetPasswordPage } from '../pages/forget-password/forget-password';
 //task manager and statistics related
 import { GeneralPage } from '../pages/general/general';
-import { TaskSelectPage } from '../pages/task-select/task-select';
 import { TaskCreatePage } from '../pages/task-create/task-create';
 import { StatisticsPage } from '../pages/statistics/statistics';
 //NCE related
@@ -56,9 +55,9 @@ import { StorageService } from '../providers/storage.service';
     ForgetPasswordPage,
 
     GeneralPage,
-    TaskSelectPage,
     MainPage,
     StatisticsPage,
+    TaskCreatePage,
 
     NCEStudyTextPage,
     NCESelectPage,
@@ -95,9 +94,9 @@ import { StorageService } from '../providers/storage.service';
     ForgetPasswordPage,
 
     GeneralPage,
-    TaskSelectPage,
     MainPage,
     StatisticsPage,
+    TaskCreatePage,
 
     NCEStudyTextPage,
     NCESelectPage,

@@ -6,13 +6,42 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>task-create</ion-title>
-  </ion-navbar>
-
+<ion-navbar>
+		<ion-title>创建任务</ion-title>
+	</ion-navbar>
+	<ion-toolbar no-border-top>
+	    <ion-segment [(ngModel)]="_select">
+			<ion-segment-button value="NCE">
+				新概念
+			</ion-segment-button>
+			<ion-segment-button value="word">
+				单词
+			</ion-segment-button>
+	    </ion-segment>
+  	</ion-toolbar>
 </ion-header>
 
 
 <ion-content padding>
+
+  	<div [ngSwitch]="_select">
+  		
+	    <ion-list *ngSwitchCase="'NCE'">
+	    	<ion-item>
+		    	<ion-label>book</ion-label>
+		   		<ion-select [(ngModel)]="_nce.bookSelect">
+			      <ion-option *ngFor="let i of _nce.book">{{i.title}}</ion-option>
+			    </ion-select>
+		  	</ion-item>
+
+
+	    </ion-list>
+
+	    <button ion-button full (click)="_createNCETask()">CREATE TASK</button>
+    <ion-list *ngSwitchCase="'word'">
+
+	</ion-list>
+
+	</div>
 
 </ion-content>
