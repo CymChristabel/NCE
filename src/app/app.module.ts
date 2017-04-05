@@ -1,7 +1,7 @@
 import { NgModule, ErrorHandler, Provider } from '@angular/core';
 import { Http, HttpModule, RequestOptions } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
 
 import { MainPage } from '../pages/main/main';
@@ -74,7 +74,8 @@ import { StorageService } from '../providers/storage.service';
   ],
   imports: [
     IonicModule.forRoot(MyApp),
-    HttpModule
+    HttpModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -113,7 +114,6 @@ import { StorageService } from '../providers/storage.service';
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    Storage,
     HttpService,
     StorageService
   ]

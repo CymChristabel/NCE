@@ -20,7 +20,7 @@ export class TaskCreatePage {
 	private _nce;
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _taskService: TaskService, private _nceService: NCEService, private _recitationService: RecitationService) {
 		this._select = 'NCE';
-		this._nce = { book: [], lessionData: [], lessionTitle: true, bookSelect: 'temp', lessionSelect: true };
+		this._nce = { book: [], lessionData: [], lessionTitle: true, bookSelect: true, lessionSelect: true };
 		
 	}
 
@@ -36,7 +36,7 @@ export class TaskCreatePage {
 				this._nce.lessionData[i].title.push(temp[i].lession[j].title);
 			}
 		}
-		this._nce.bookSelect = 'fk';
+		this._nce.bookSelect = this._nce.book[0].title;
 		this._nce.lessionTitle = this._nce.lessionData[0].title;
 	}
 
