@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, MenuController } from 'ionic-angular';
 
 import { TaskCreatePage } from '../task-create/task-create';
- 
+import { NCEStudyMainPage } from '../nce/nce-study/nce-study-main';
+
 import { TaskService } from '../../providers/task.service';
+import { NCEService } from '../../providers/nce.service';
 
 import * as c3 from 'c3';
 import * as _ from 'lodash';
@@ -17,42 +19,47 @@ import * as moment from 'moment';
 export class GeneralPage {
 	private _taskList;
 
-	constructor(private _navCtrl: NavController, private _menu: MenuController, private _taskService: TaskService) {
+	constructor(private _navCtrl: NavController, private _menu: MenuController, private _taskService: TaskService, private _nceService: NCEService) {
   		this._taskList = this._taskService.get();
 	}
 
 
   ionViewDidEnter() {
     this._menu.swipeEnable(true, 'left');
-   var chart = c3.generate({
+    let numerator = 0, denominator = 0;
+    for(let i = 0; i < this._taskList.recitationTask.length; i++)
+    {
+      numerator = numerator + this._taskList.recitationTask[i].current;
+      denominator = denominator + this._taskList.recitationTask[i].goal;
+    }
+    let temp = denominator / 2;
+    for(let i = 0; i < this._taskList.nceTask.length; i++)
+    {
+      denominator = denominator + temp;
+      if(this._taskList.nceTask[i].dailyFinished)
+      {
+        numerator = numerator + temp;
+      }
+    }
+    let result = (numerator * 100 / denominator).toFixed(1);
+    var chart = c3.generate({
         data: {
             columns: [
-                ['data', 91.4]
+                ['data', result]
             ],
-            type: 'gauge',
-            // onclick: function (d, i) { console.log("onclick", d, i); },
-            // onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-            // onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            type: 'gauge'
         },
         gauge: {
            label: {
                format: function(value, ratio) {
                    return value;
                },
-               show: true // to turn off the min/max labels.
+               show: true
            },
-           min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-           max: 100, // 100 is default
+           min: 0,
+           max: 100,
            units: ' %',
-           width: 50 // for adjusting arc thickness
-        },
-        color: {
-            pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
-            threshold: {
-    //            unit: 'value', // percentage is default
-    //            max: 200, // 100 is default
-                values: [30, 60, 90, 100]
-            }
+           width: 50
         },
         size: {
           height: 120
@@ -66,5 +73,31 @@ export class GeneralPage {
 
   private _goTaskCreatePage(){
     this._navCtrl.push(TaskCreatePage);
+  }
+
+  private _goNCEStudyPage(item: any){
+    this._navCtrl.push(NCEStudyMainPage, { bookID: item.bookID, lession: this._nceService.getLession(item.bookID, item.lessionID) });
+  }
+
+  private _deleteNCETask(bookID: number){
+    for(let i = 0; i < this._taskList.nceTask.length; i++)
+    {
+      if(this._taskList.nceTask[i].bookID == bookID)
+      {
+        this._taskList = this._taskService.deleteNCETask(i);
+        break;
+      }
+    }
+  }
+
+  private _deleteRecitationTask(vocabularyID: number){
+    for(let i = 0; i < this._taskList.recitationTask.length; i++)
+    {
+      if(this._taskList.recitationTask[i].vocabularyID == vocabularyID)
+      {
+        this._taskService.deleteRecitationTask(i);
+        break;
+      }
+    }
   }
 }

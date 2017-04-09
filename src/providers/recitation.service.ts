@@ -5,6 +5,7 @@ import { UserService } from './user.service';
 import { Injectable } from '@angular/core';
 
 import * as _ from 'lodash';
+import * as async from 'async';
 
 @Injectable()
 
@@ -38,93 +39,119 @@ export class RecitationService{
 		);
 	}
 
-	public synchronizeData(){
-		this._httpService.get({
-			url: '/wordfavorite',
-			data: {
-				userID: this._userService.getUser().user.id
-			}
-		}).map(res => res.json())
-		.subscribe(
-			favoriteList => {
-				console.log(favoriteList);
-				for(let i = 0; i < favoriteList.length; i++)
-				{
-					favoriteList[i] = {
-						id: favoriteList[i].id,
-						vocabularyID: favoriteList[i].vocabulary,
-						wordID: favoriteList[i].word.id,
-						name: favoriteList[i].word.name
-					};
-				}
-				this._storageService.set('word_favorite', favoriteList);
-		}, err => console.log(err));
-
-		this._storageService.get('vocabularyProgress').then(
-			progress => {
-				if(progress)
-				{
-					for(let i = 0; i < this._vocabularyList.length; i++)
-					{
-						for(let j = 0; j < progress.length; j++)
-						{
-							if(this._vocabularyList[i].id == progress[j].id)
-							{
-								this._vocabularyList[i].progress = progress[j].progress;
-								this._vocabularyList[i].time = progress[j].time;
-								break;
-							}
-							if(j == progress.length - 1)
-							{
-								this._vocabularyList[i].progress = 0;
-								this._vocabularyList[i].time = 0;
-								progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
-							}
-						}		
-					}
-				}
-				else
-				{
+	public synchronizeData(callback){
+		let userID = this._userService.getUser().user.id;
+		if(userID)
+		{
+			async.series([
+				(cb) => {
 					this._httpService.get({
-						url: '/recitationprogress',
+						url: '/wordfavorite',
 						data: {
-							userID: this._userService.getUser().user.id
+							userID: userID
 						}
 					}).map(res => res.json())
 					.subscribe(
-						progressList => {
-							let temp = [];
-							for(let i = 0; i < progressList.length; i++)
+						favoriteList => {
+							console.log(favoriteList);
+							for(let i = 0; i < favoriteList.length; i++)
 							{
-								temp.push({
-									id: progressList[i].vocabulary,
-									progress: progressList[i].progress,
-									time: progressList[i].time
-								});
+								favoriteList[i] = {
+									id: favoriteList[i].id,
+									vocabularyID: favoriteList[i].vocabulary,
+									wordID: favoriteList[i].word.id,
+									name: favoriteList[i].word.name
+								};
 							}
-							for(let i = 0; i < this._vocabularyList.length; i++)
+							this._storageService.set('word_favorite', favoriteList);
+							cb(null, true);
+					}, err => {
+						console.log(err)
+						cb(err, null);
+					});
+				},
+				(cb) => {
+					this._storageService.get('vocabularyProgress').then(
+						progress => {
+							if(progress)
 							{
-								for(let j = 0; j < temp.length; j++)
+								for(let i = 0; i < this._vocabularyList.length; i++)
 								{
-									if(this._vocabularyList[i].id == temp[j].id)
+									for(let j = 0; j < progress.length; j++)
 									{
-										this._vocabularyList[i].progress = temp[j].progress;
-										this._vocabularyList[i].time = temp[j].time;
-										break;
-									}
-									if(j == temp.length - 1)
-									{
-										this._vocabularyList[i].progress = 0;
-										this._vocabularyList[i].time = 0;
-										temp.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
-									}
-								}	
+										if(this._vocabularyList[i].id == progress[j].id)
+										{
+											this._vocabularyList[i].progress = progress[j].progress;
+											this._vocabularyList[i].time = progress[j].time;
+											break;
+										}
+										if(j == progress.length - 1)
+										{
+											this._vocabularyList[i].progress = 0;
+											this._vocabularyList[i].time = 0;
+											progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
+										}
+									}		
+								}
+								this._storageService.set('vocabularyProgress', progress);
+								cb(null, true);
 							}
-							this._storageService.set('vocabularyProgress', temp);
-						}, err => console.log(err));
+							else
+							{
+								this._httpService.get({
+									url: '/recitationprogress',
+									data: {
+										userID: userID
+									}
+								}).map(res => res.json())
+								.subscribe(
+									progressList => {
+										let temp = [];
+										for(let i = 0; i < progressList.length; i++)
+										{
+											temp.push({
+												id: progressList[i].vocabulary,
+												progress: progressList[i].progress,
+												time: progressList[i].time
+											});
+										}
+										for(let i = 0; i < this._vocabularyList.length; i++)
+										{
+											for(let j = 0; j < temp.length; j++)
+											{
+												if(this._vocabularyList[i].id == temp[j].id)
+												{
+													this._vocabularyList[i].progress = temp[j].progress;
+													this._vocabularyList[i].time = temp[j].time;
+													break;
+												}
+												if(j == temp.length - 1)
+												{
+													this._vocabularyList[i].progress = 0;
+													this._vocabularyList[i].time = 0;
+													temp.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
+												}
+											}	
+										}
+										this._storageService.set('vocabularyProgress', temp);
+										cb(null, true);
+									}, err => {
+										console.log(err)
+										cb(err, null);
+									});
 
-				}
-			});
+							}
+						});	
+					}
+				], (err, result) => {
+					callback(null, true);
+				});
+		}
+		else
+		{
+			callback(null, true);
+		}
+		
 	}
 
 	private _checkDownload(){
@@ -207,16 +234,19 @@ export class RecitationService{
 		return this._httpService.get({
 			url: '/recitationvocabulary',
 			data: {
-				id: vocabularyID
+				id: vocabularyID,
+				userID: this._userService.getUser().user.id
 			}
 		})
 		.map(res => {
 			if(_.has(res.json(), 'ok') == false)
 			{
 				let temp = _.find(this._vocabularyList, { id: vocabularyID });
-				this._storageService.set('vocabularyWord:' + vocabularyID, res.json()[0].word);
+				this._storageService.set('vocabularyWord:' + vocabularyID, res.json().word.word);
 				temp.isDownloaded = true;
-				temp.word = res.json()[0].word;
+				temp.progress = res.json().progress.progress;
+				temp.time = res.json().progress.time;
+				temp.word = res.json().word.word;
 				return temp;
 			}
 			return res.json();

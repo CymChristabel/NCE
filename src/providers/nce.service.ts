@@ -35,26 +35,39 @@ export class NCEService {
 			}, err => console.log(err));
 	}
 
-	public synchronizeData(){
-		this._httpService.get({
-			url: '/nce_favorite',
-			data: {
-				userID: this._userService.getUser().user.id
-			}
-		}).map(res => res.json())
-		.subscribe(
-			favoriteList => {
-				for(let i = 0; i < favoriteList.length; i++)
-				{
-					favoriteList[i] = {
-						id: favoriteList[i].id,
-						bookID: favoriteList[i].book,
-						lessionID: favoriteList[i].lession.id,
-						title: favoriteList[i].lession.title
-					};
+	public synchronizeData(callback){
+		let userID = this._userService.getUser().user.id;
+		if(userID)
+		{
+			this._httpService.get({
+				url: '/nce_favorite',
+				data: {
+					userID: this._userService.getUser().user.id
 				}
-				this._storageService.set('NCE_favorite', favoriteList);
-		}, err => console.log(err));
+			}).map(res => res.json())
+			.subscribe(
+				favoriteList => {
+					for(let i = 0; i < favoriteList.length; i++)
+					{
+						favoriteList[i] = {
+							id: favoriteList[i].id,
+							bookID: favoriteList[i].book,
+							lessionID: favoriteList[i].lession.id,
+							title: favoriteList[i].lession.title
+						};
+					}
+					this._storageService.set('NCE_favorite', favoriteList);
+					callback(null, true);
+			}, err => {
+				console.log(err)
+				callback(err, null);
+			});
+		}
+		else
+		{
+			callback(null, true);
+		}
+		
 	}
 
 	public getBookList(){
@@ -64,7 +77,6 @@ export class NCEService {
 	public getBook(id: number){
 		return _.find(this._bookList, { id: id });
 	}
-
 
 	public getLession(bookID: number, lessionID: number){
 		return _.find(_.find(this._bookList, { id: bookID } ).lession, { id: lessionID });

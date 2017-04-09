@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import * as async from 'async';
 
 @Injectable()
 export class StatisticsService {
@@ -15,143 +16,175 @@ export class StatisticsService {
 		this._timeCount = {};
 	}
 
-	public synchronizeData(){
+	public synchronizeData(callback){
 		let userID = this._userService.getUser().user.id;
 		if(userID)
 		{
-			//synchronize time count statistics
-			this._storageService.get('time_count').then(
-				timeCount => {
-					if(timeCount == undefined)
-					{
-						timeCount = { data: [], unSubscribe: [] };
-					}
-					//test async data
-					// timeCount.unSubscribe.push(
-					// 	{ date: '2015-01-01', nceTime: 5, recitationTime: 5},
-					// 	{ date: '2016-01-01', nceTime: 6, recitationTime: 6},
-					// 	{ date: '2016-01-02', nceTime: 7, recitationTime: 7},
-					// 	{ date: '2017-01-01', nceTime: 8, recitationTime: 8});
-					if(timeCount.unSubscribe.length == 0)
-					{
-						this._httpService.get({
-							url: '/studytimestatistics',
-							data: {
-								userID: userID
+			async.series([
+				(cb) => {
+					//synchronize time count statistics
+					this._storageService.get('time_count').then(
+						timeCount => {
+							if(timeCount == undefined)
+							{
+								timeCount = { data: [], unSubscribe: [] };
 							}
-						}).map(res => res.json())
-						.subscribe(
-							data => {
-								timeCount.data = data;
-								console.log(timeCount);
-								this._storageService.set('time_count', timeCount);
-							}, err => {
-								console.log(err);
-							});
-					}
-					else
-					{
-						this._httpService.post('/studytimestatistics/synchronize', {
-							userID: userID,
-							data: timeCount.unSubscribe
-						}).map(res => res.json())
-						  .subscribe(
-						  	data => {
-							  	timeCount.data = data;
-							  	timeCount.unSubscribe = [];
-							  	this._storageService.set('time_count', timeCount);
-							  }, err => {
-							  		console.log(err);
-							  });
-					}
-			});
-			//synchronize recitation statistics
-			this._storageService.get('recitation_statistics').then(
-				recitationStatistics => {
-					if(recitationStatistics == undefined)
-					{
-						recitationStatistics = { data: [], unSubscribe: [] };
-					}
-					// test async data
-					// recitationStatistics.unSubscribe.push(
-					// 	{ date: '2015-01-01', correct: 5, incorrect: 5, vocabularyID: 1},
-					// 	{ date: '2015-01-01', correct: 6, incorrect: 5, vocabularyID: 2},
-					// 	{ date: '2016-01-01', correct: 7, incorrect: 5, vocabularyID: 1},
-					// 	{ date: '2016-01-02', correct: 8, incorrect: 5, vocabularyID: 1},
-					// 	{ date: '2017-01-01', correct: 9, incorrect: 5, vocabularyID: 1});
-					if(recitationStatistics.unSubscribe.length == 0)
-					{
-						this._httpService.get({
-							url: '/recitationstatistics',
-							data: {
-								userID: userID
+							//test async data
+							// timeCount.unSubscribe.push(
+							// 	{ date: '2015-01-01', nceTime: 5, recitationTime: 5},
+							// 	{ date: '2016-01-01', nceTime: 6, recitationTime: 6},
+							// 	{ date: '2016-01-02', nceTime: 7, recitationTime: 7},
+							// 	{ date: '2017-01-01', nceTime: 8, recitationTime: 8});
+							if(timeCount.unSubscribe.length == 0)
+							{
+								this._httpService.get({
+									url: '/studytimestatistics',
+									data: {
+										userID: userID
+									}
+								}).map(res => res.json())
+								.subscribe(
+									data => {
+										timeCount.data = data;
+										console.log(timeCount);
+										this._storageService.set('time_count', timeCount);
+										cb(null, true);
+									}, err => {
+										console.log(err);
+										cb(err, null);
+									});
 							}
-						}).map(res => res.json())
-						.subscribe(
-							data => {
-								recitationStatistics.data = _.sortBy(data, ['date'])
-								this._storageService.set('recitation_statistics', recitationStatistics);
-							}, err => console.log(err));
-					}
-					else
-					{
-						this._httpService.post('/recitationstatistics/synchronize', {
-							userID: userID,
-							data: recitationStatistics.unSubscribe
-						}).map(res => res.json())
-						.subscribe(
-							data => {
-								recitationStatistics.data = _.sortBy(data, ['date'])
-								recitationStatistics.unSubscribe = [];
-								this._storageService.set('recitation_statistics', recitationStatistics);
-							}, err => console.log(err));
-					}
-			});
-			//synchronize nce_statistics
-			this._storageService.get('NCE_statistics').then(
-				nceStatistics => {
-					if(nceStatistics == undefined)
-					{
-						nceStatistics = { data: [], unSubscribe: [] };
-					}
-					// test async data
-					// nceStatistics.unSubscribe = [
-					// 	{ lession: 1, date: '2016-03-03 19:32:02'}, 
-					// 	{ lession: 1, date: '2015-03-03 19:32:02'}, 
-					// 	{ lession: 2, date: '2017-03-03 19:32:02'}, 
-					// 	{ lession: 3, date: '2015-03-03 19:32:02'}, 
-					// 	{ lession: 2, date: '2016-03-03 19:32:02'}
-					// ];
-					if(nceStatistics.unSubscribe.length == 0)
-					{
-						this._httpService.get({
-							url: '/nce_statistics',
-							data: {
-								userID: userID
+							else
+							{
+								this._httpService.post('/studytimestatistics/synchronize', {
+									userID: userID,
+									data: timeCount.unSubscribe
+								}).map(res => res.json())
+								  .subscribe(
+								  	data => {
+									  	timeCount.data = data;
+									  	timeCount.unSubscribe = [];
+									  	this._storageService.set('time_count', timeCount);
+									  	cb(null, true);
+									  }, err => {
+								  		console.log(err);
+								  		cb(err, null);
+									  });
 							}
-						}).map(res => res.json())
-						.subscribe(
-							data => {
-								nceStatistics.data = _.sortBy(data, ['book', 'lession', 'date']);
-								this._storageService.set('NCE_statistics', nceStatistics);
-							}, err => console.log(err));
-					}
-					else
-					{
-						this._httpService.post('/nce_statistics/synchronize', {
-							userID: userID,
-							data: nceStatistics.unSubscribe
-						}).map(res => res.json())
-						.subscribe(
-							data => {
-								nceStatistics.data = _.sortBy(data, ['book', 'lession', 'date']);
-								nceStatistics.unSubscribe = [];
-								this._storageService.set('NCE_statistics', nceStatistics);
-							}, err => console.log(err));
-					}
+					});
+				},
+				(cb) => {
+					//synchronize recitation statistics
+					this._storageService.get('recitation_statistics').then(
+						recitationStatistics => {
+							if(recitationStatistics == undefined)
+							{
+								recitationStatistics = { data: [], unSubscribe: [] };
+							}
+							// test async data
+							// recitationStatistics.unSubscribe.push(
+							// 	{ date: '2015-01-01', correct: 5, incorrect: 5, vocabularyID: 1},
+							// 	{ date: '2015-01-01', correct: 6, incorrect: 5, vocabularyID: 2},
+							// 	{ date: '2016-01-01', correct: 7, incorrect: 5, vocabularyID: 1},
+							// 	{ date: '2016-01-02', correct: 8, incorrect: 5, vocabularyID: 1},
+							// 	{ date: '2017-01-01', correct: 9, incorrect: 5, vocabularyID: 1});
+							if(recitationStatistics.unSubscribe.length == 0)
+							{
+								this._httpService.get({
+									url: '/recitationstatistics',
+									data: {
+										userID: userID
+									}
+								}).map(res => res.json())
+								.subscribe(
+									data => {
+										recitationStatistics.data = _.sortBy(data, ['date'])
+										this._storageService.set('recitation_statistics', recitationStatistics);
+										cb(null, true);
+									}, err => {
+										console.log(err)
+										cb(err, null);
+									});
+							}
+							else
+							{
+								this._httpService.post('/recitationstatistics/synchronize', {
+									userID: userID,
+									data: recitationStatistics.unSubscribe
+								}).map(res => res.json())
+								.subscribe(
+									data => {
+										recitationStatistics.data = _.sortBy(data, ['date'])
+										recitationStatistics.unSubscribe = [];
+										this._storageService.set('recitation_statistics', recitationStatistics);
+										cb(null, true);
+									}, err => {
+										console.log(err)
+										cb(err, null);
+									});
+							}
+					});
+				},
+				(cb) => {
+					//synchronize nce_statistics
+					this._storageService.get('NCE_statistics').then(
+						nceStatistics => {
+							if(nceStatistics == undefined)
+							{
+								nceStatistics = { data: [], unSubscribe: [] };
+							}
+							// test async data
+							// nceStatistics.unSubscribe = [
+							// 	{ lession: 1, date: '2016-03-03 19:32:02'}, 
+							// 	{ lession: 1, date: '2015-03-03 19:32:02'}, 
+							// 	{ lession: 2, date: '2017-03-03 19:32:02'}, 
+							// 	{ lession: 3, date: '2015-03-03 19:32:02'}, 
+							// 	{ lession: 2, date: '2016-03-03 19:32:02'}
+							// ];
+							if(nceStatistics.unSubscribe.length == 0)
+							{
+								this._httpService.get({
+									url: '/nce_statistics',
+									data: {
+										userID: userID
+									}
+								}).map(res => res.json())
+								.subscribe(
+									data => {
+										nceStatistics.data = _.sortBy(data, ['book', 'lession', 'date']);
+										this._storageService.set('NCE_statistics', nceStatistics);
+										cb(null, true);
+									}, err => {
+										console.log(err);
+										cb(err, null);
+									});
+							}
+							else
+							{
+								this._httpService.post('/nce_statistics/synchronize', {
+									userID: userID,
+									data: nceStatistics.unSubscribe
+								}).map(res => res.json())
+								.subscribe(
+									data => {
+										nceStatistics.data = _.sortBy(data, ['book', 'lession', 'date']);
+										nceStatistics.unSubscribe = [];
+										this._storageService.set('NCE_statistics', nceStatistics);
+										cb(null, true);
+									}, err => {
+										console.log(err);
+										cb(err, null);
+									});
+							}
+						});
+				}], (err, result) => {
+					callback(null, true);
 				});
 		}
-		
+		else
+		{
+			callback(null, true);
+		}
 	}
 
 	public startTimeCount(type: string){

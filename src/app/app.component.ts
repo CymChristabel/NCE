@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, MenuController, Nav, ToastController } from 'ionic-angular';
+import { Platform, MenuController, Nav, ToastController, LoadingController } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network } from 'ionic-native';
 
 import { LandingPage } from '../pages/landing/landing';
@@ -23,6 +23,8 @@ import { StorageService } from '../providers/storage.service';
 import { FileService } from '../providers/file.service';
 import { StatisticsService } from '../providers/statistics.service';
 
+import * as async from 'async';
+
 declare var cordova:any;
 
 @Component({
@@ -40,13 +42,14 @@ export class MyApp {
     public platform: Platform,
     public menu: MenuController,
     private _toastCtrl: ToastController,
+    private _loadingCtrl: LoadingController,
     private _storageService: StorageService,
     private _userService: UserService,
     private _recitationService: RecitationService,
     private _nceService: NCEService,
     private _taskService: TaskService,
     private _fileService: FileService,
-    private _statisticService: StatisticsService
+    private _statisticsService: StatisticsService
   ) {
     this._storageService.get('isFirst').then(
       isFirst => {
@@ -66,10 +69,26 @@ export class MyApp {
                 }
                 else
                 {
-                  this.rootPage = MainPage;
-                  this._statisticService.synchronizeData();
-                  this._recitationService.synchronizeData();
-                  this._nceService.synchronizeData();
+                  let loading = this._loadingCtrl.create({
+                    content: 'synchronizing...'
+                  });
+                  loading.present();
+                  async.series([
+                     (callback) => {
+                       this._taskService.synchronizeData(callback);
+                     },
+                     (callback) => {
+                       this._statisticsService.synchronizeData(callback);
+                     },
+                     (callback) => {
+                       this._recitationService.synchronizeData(callback);
+                     },
+                     (callback) => {
+                       this._nceService.synchronizeData(callback);
+                     }], (err, ok) => {
+                        loading.dismiss();
+                        this.rootPage = MainPage;
+                     });
                 }
               }, err => {
                 this._generateToast('network error').present();  

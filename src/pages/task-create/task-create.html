@@ -25,22 +25,43 @@
 <ion-content padding>
 
   	<div [ngSwitch]="_select">
-  		
-	    <ion-list *ngSwitchCase="'NCE'">
+  		<div *ngSwitchCase="'NCE'">
+	    <ion-list>
 	    	<ion-item>
 		    	<ion-label>book</ion-label>
-		   		<ion-select [(ngModel)]="_nce.bookSelect">
+		   		<ion-select [(ngModel)]="_nce.bookSelect" (ionChange)="_changeNCEBook()">
 			      <ion-option *ngFor="let i of _nce.book">{{i.title}}</ion-option>
 			    </ion-select>
 		  	</ion-item>
 
-
+		  	<ion-item>
+		    	<ion-label>start lession</ion-label>
+		   		<ion-select [(ngModel)]="_nce.lessionSelect">
+		   			<ion-option *ngFor="let i of _nce.lession.title">{{i}}</ion-option>
+			    </ion-select>
+		  	</ion-item>
 	    </ion-list>
-
 	    <button ion-button full (click)="_createNCETask()">CREATE TASK</button>
-    <ion-list *ngSwitchCase="'word'">
+	    </div>
 
-	</ion-list>
+	    <div *ngSwitchCase="'word'">
+		    <ion-list>
+				<ion-item>
+			    	<ion-label>vocabulary</ion-label>
+			   		<ion-select [(ngModel)]="_recitation.vocabularySelect">
+				      <ion-option *ngFor="let i of _recitation.vocabulary">{{i.title}}</ion-option>
+				    </ion-select>
+		  		</ion-item>
+				<ion-item>
+					<ion-label>单词数: {{_recitation.goalRange}}</ion-label>
+					<ion-range min="50" max="200" step="5" pin="true" [(ngModel)]="_recitation.goalRange">
+						<ion-icon range-left name="ice-cream" color="primary"></ion-icon>
+        				<ion-icon range-right name="nuclear" color="danger"></ion-icon>
+					</ion-range>
+		  		</ion-item>
+			</ion-list>
+			<button ion-button full (click)="_createRecitationTask()">CREATE TASK</button>
+		</div>
 
 	</div>
 

@@ -5,12 +5,8 @@ import { TaskService } from '../../providers/task.service';
 import { NCEService } from '../../providers/nce.service';
 import { RecitationService } from '../../providers/recitation.service';
 
-/*
-  Generated class for the TaskCreate page.
+import * as moment from 'moment';
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
 	selector: 'page-task-create',
 	templateUrl: 'task-create.html'
@@ -18,9 +14,11 @@ import { RecitationService } from '../../providers/recitation.service';
 export class TaskCreatePage {
 	private _select;
 	private _nce;
+	private _recitation;
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _taskService: TaskService, private _nceService: NCEService, private _recitationService: RecitationService) {
 		this._select = 'NCE';
-		this._nce = { book: [], lessionData: [], lessionTitle: true, bookSelect: true, lessionSelect: true };
+		this._nce = { book: [], lessionData: [], lession: [], bookSelect: true, lessionSelect: true };
+		this._recitation = { vocabulary: [], vocabularySelect: true, goalRange: 50 };
 		
 	}
 
@@ -37,10 +35,58 @@ export class TaskCreatePage {
 			}
 		}
 		this._nce.bookSelect = this._nce.book[0].title;
-		this._nce.lessionTitle = this._nce.lessionData[0].title;
+		this._nce.lession = { id: this._nce.lessionData[0].id, title: this._nce.lessionData[0].title };
+		this._nce.lessionSelect = this._nce.lession.title[0];
+		console.log(this._nce);
+		this._recitation.vocabulary = this._recitationService.getVocabularyList();
+		this._recitation.vocabularySelect = this._recitation.vocabulary[0].title;
+	}
+
+	private _changeNCEBook(){
+		for(let i = 0; i < this._nce.book.length; i++)
+		{
+			if(this._nce.book[i].title == this._nce.bookSelect)
+			{
+				this._nce.lession = this._nce.lessionData[i];
+				this._nce.lessionSelect = this._nce.lession.title[0];
+				break;
+			}
+		}
 	}
 
 	private _createNCETask(){
-		console.log(this._nce);
+		let bookID, lessionID;
+		for(let i = 0; i < this._nce.book.length; i++)
+		{
+			if(this._nce.book[i].title == this._nce.bookSelect)
+			{
+				bookID = this._nce.book[i].id;
+				break;
+			}
+		}
+		for(let i = 0; i < this._nce.lession.title.length; i++)
+		{
+			if(this._nce.lession.title[i] == this._nce.lessionSelect)
+			{
+				lessionID = this._nce.lession.id[i];
+				break;
+			}
+		}
+		this._taskService.createNCETask(bookID, lessionID, this._nce.bookSelect, this._nce.lessionSelect);
+		this._navCtrl.pop();
+	}
+
+	private _createRecitationTask(){
+		let vocabularyID;
+		for(let i = 0; i < this._recitation.vocabulary.length; i++)
+		{
+			if(this._recitation.vocabulary[i].title == this._recitation.vocabularySelect)
+			{
+				vocabularyID = this._recitation.vocabulary[i].id;
+				break;
+			}
+		}
+		this._taskService.createRecitationTask(vocabularyID, this._recitation.vocabularySelect, this._recitation.goalRange);
+		this._navCtrl.pop();
 	}
 }

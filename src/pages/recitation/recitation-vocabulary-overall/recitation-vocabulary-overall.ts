@@ -28,6 +28,7 @@ export class RecitationVocabularyOverallPage{
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _statisticsService: StatisticsService, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
 		this._vocabulary = this._recitationService.getVocabulary(this._navParam.get('id'));
 		this._startTimeCount = false;
+		console.log(this._vocabulary);
 	}
 
 	ionViewWillEnter(){

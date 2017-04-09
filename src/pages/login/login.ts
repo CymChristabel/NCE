@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController } from 'ionic-angular';
+import { NavController, ToastController, LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 
 import { RegisterPage } from '../register/register';
@@ -10,7 +10,9 @@ import { StatisticsService } from '../../providers/statistics.service';
 import { RecitationService } from '../../providers/recitation.service';
 import { NCEService } from '../../providers/nce.service';
 import { UserService } from '../../providers/user.service';
-import { StorageService } from '../../providers/storage.service';
+import { TaskService } from '../../providers/task.service';
+
+import * as async from 'async';
 
 @Component({
   selector: 'page-login',
@@ -20,7 +22,7 @@ import { StorageService } from '../../providers/storage.service';
 export class LoginPage {
   private _loginForm: FormGroup;
 
-  constructor(private _navCtrl: NavController, private _userService: UserService, private _storageService: StorageService, private _recitationService: RecitationService, private _nceService: NCEService, private _statisticsService: StatisticsService, private _toastCtrl: ToastController, private _formBuilder: FormBuilder) {
+  constructor(private _navCtrl: NavController, private _loadingCtrl: LoadingController, private _taskService: TaskService, private _userService: UserService, private _recitationService: RecitationService, private _nceService: NCEService, private _statisticsService: StatisticsService, private _toastCtrl: ToastController, private _formBuilder: FormBuilder) {
     this._loginForm = this._formBuilder.group({
         'email': new FormControl('test@qq.com', Validators.compose([Validators.required, this._mailFormat])),
         'password': new FormControl('nimazhale',Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(16)])),
@@ -59,13 +61,26 @@ export class LoginPage {
     {
       this._userService.login(form.value).subscribe(
         result => {
-          if(result)
-          {
-            this._navCtrl.setRoot(MainPage);
-            this._statisticsService.synchronizeData();
-            this._nceService.synchronizeData();
-            this._recitationService.synchronizeData();  
-          }
+            let loading = this._loadingCtrl.create({
+              content: 'synchronizing...'
+            });
+            loading.present();
+            async.series([
+               (callback) => {
+                 this._taskService.synchronizeData(callback);
+               },
+               (callback) => {
+                 this._statisticsService.synchronizeData(callback);
+               },
+               (callback) => {
+                 this._recitationService.synchronizeData(callback);
+               },
+               (callback) => {
+                 this._nceService.synchronizeData(callback);
+               }], (err, ok) => {
+                  loading.dismiss();
+                  this._navCtrl.setRoot(MainPage);
+            });
         }, err => {
           this._generateToast('Your connection to the server is down, please check your network').present();
         });
