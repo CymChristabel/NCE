@@ -27,10 +27,10 @@ export class FavoritePage {
 		this._select = 'NCE';
 
 		this._recitationService.getFavoriteList().then(
-						favoriteList => {
-							this._wordList = favoriteList;
-							console.log(this._wordList);
-						}, err => console.log(err));
+			favoriteList => {
+				this._wordList = favoriteList;
+				console.log(this._wordList);
+			}, err => console.log(err));
 
 		this._nceService.getFavoriteList().then(
 			favoriteList => {

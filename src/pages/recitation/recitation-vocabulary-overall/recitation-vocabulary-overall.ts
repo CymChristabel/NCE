@@ -23,12 +23,15 @@ import * as _ from 'lodash';
 
 export class RecitationVocabularyOverallPage{
 	private _vocabulary;
-	private _progressBar = 0;
+	private _progressBar;
 	private _startTimeCount;
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _statisticsService: StatisticsService, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
-		this._vocabulary = this._recitationService.getVocabulary(this._navParam.get('id'));
+		this._recitationService.getVocabulary(this._navParam.get('id')).then(
+			vocabulary => {
+				this._vocabulary = vocabulary;
+				this._progressBar = ((this._vocabulary.progress / this._vocabulary.word.length) * 100).toFixed(1);
+			});
 		this._startTimeCount = false;
-		console.log(this._vocabulary);
 	}
 
 	ionViewWillEnter(){

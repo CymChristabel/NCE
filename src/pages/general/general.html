@@ -33,7 +33,7 @@
             <ion-item>
                 <ion-row>
                     <ion-col>
-                        <h1 color="primary">{{t.bookTitle}}</h1>
+                        <a ion-text color="primary">{{t.bookTitle}}</a>
                     </ion-col>
                     <ion-col width-20 *ngIf="t.dailyFinished">
                         <ion-icon name="md-checkmark" class="default"></ion-icon>
@@ -53,10 +53,10 @@
             <ion-item>
                 <ion-row>
                     <ion-col>
-                        <h1 color="primary">{{t.vocabularyTitle}}</h1>
+                        <a ion-text color="primary">{{t.vocabularyTitle}}</a>
                     </ion-col>
                     <ion-col width-20 *ngIf="t.dailyFinished">
-                        <ion-icon name="md-checkmark" class="default"></ion-icon>
+                        <ion-icon name="md-checkmark" class="default" color="primary"></ion-icon>
                     </ion-col>
                 </ion-row>
                 <ion-row>

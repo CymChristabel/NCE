@@ -168,14 +168,22 @@ export class RecitationService{
 		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
 		if(_.has(temp, 'word') == false)
 		{
-			this._storageService.get('vocabularyWord:' + vocabularyID).then(
+			return this._storageService.get('vocabularyWord:' + vocabularyID).then(
 				word => {
-					temp.word = word;	
+					temp.word = word;
+					return temp;
 				});
 		}
+		else
+		{
+			return new Promise((resolve, reject) => {
+				resolve(temp);
+			});
+		}
+	}
 
-		return temp;
-
+	public getVocabularyForSlide(vocabularyID: number){
+		return _.find(this._vocabularyList, ['id', vocabularyID]);
 	}
 
 	public updateProgress(vocabularyID: number, value: number){

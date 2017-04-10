@@ -22,9 +22,8 @@ export class GeneralPage {
 	constructor(private _navCtrl: NavController, private _menu: MenuController, private _taskService: TaskService, private _nceService: NCEService) {
   		this._taskList = this._taskService.get();
 	}
-
-
-  ionViewDidEnter() {
+  
+  ionViewWillEnter() {
     this._menu.swipeEnable(true, 'left');
     let numerator = 0, denominator = 0;
     for(let i = 0; i < this._taskList.recitationTask.length; i++)

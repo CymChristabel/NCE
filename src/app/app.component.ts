@@ -110,7 +110,7 @@ export class MyApp {
       { title: 'landing', component: LandingPage },
       { title: 'login', component: LoginPage },
       { title: 'register', component: RegisterPage },
-      { title: 'task', component: GeneralPage },
+      { title: 'General', component: MainPage },
       { title: 'NCE', component: NCESelectPage },
       { title: 'favorite', component: FavoritePage }
     ];

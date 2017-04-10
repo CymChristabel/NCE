@@ -36,7 +36,7 @@ export class RecitationSlidePage{
 			else if(this._navParam.get('type') == 'recitation')
 			{
 				this._progress = this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).progress;
-
+				let temp = 
 				if(this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).word.length >= this._progress + 10)
 				{
 					this._slide = _.slice(this._recitationService.getVocabulary(this._navParam.get('vocabularyID')).word, this._progress, this._progress + 10);
