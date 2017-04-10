@@ -47,11 +47,17 @@ export class TaskService {
 									let flag = false;
 									for(let j = 0; j < taskList.data.nceTask.length; j++)
 									{
+										let temp = false;
+										if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD'))
+										{
+											temp = true;
+										}
 										if(taskList.data.nceTask[j].bookID == data.nceTask[i].book.id)
 										{
 											taskList.data.nceTask[j].lessionID = data.nceTask[i].nextLession.id;
 											taskList.data.nceTask[j].lessionTitle = data.nceTask[i].nextLession.title;
 											taskList.data.nceTask[j].lastUpdateDate = data.nceTask[i].updatedAt;
+											taskList.data.nceTask[j].dailyFinished = temp;
 											flag = true;
 											break;
 										}
@@ -89,11 +95,11 @@ export class TaskService {
 									});
 									if(taskList.data.recitationTask[i].current >= taskList.data.recitationTask[i].goal)
 									{
-										taskList.data.recitationTask[i].dailyFinished =  true;
+										taskList.data.recitationTask[i].dailyFinished = true;
 									}
 									else
 									{
-										taskList.data.recitationTask[i].dailyFinished =  false;	
+										taskList.data.recitationTask[i].dailyFinished = false;	
 									}
 								}
 								taskList.unSubscribe.recitationTask = [];
@@ -155,6 +161,7 @@ export class TaskService {
 								}
 
 								taskList.data.recitationTask = [];
+								console.log(data);
 								for(let i = 0; i < data.recitationTask.length; i++)
 								{
 									taskList.data.recitationTask.push({

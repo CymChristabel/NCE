@@ -334,11 +334,12 @@ export class StatisticsService {
 				}
 				nceStatistics.data.push({
 					lession: lessionID,
-					bookID: bookID,
+					book: bookID,
 					correct: correct,
 					incorrect: incorrect,
 					date: date.format('YYYY-MM-DD HH:mm:ss')
 				});
+				console.log(nceStatistics.data);
 				nceStatistics.data = _.sortBy(nceStatistics.data, ['lession', 'date']);
 				this._httpService.post('/nce_statistics', {
 					lessionID: lessionID,
@@ -353,7 +354,9 @@ export class StatisticsService {
 						this._storageService.set('NCE_statistics', nceStatistics);
 					}, err => {
 						console.log(err);
-						nceStatistics.unSubscribe.push(nceStatistics.data[nceStatistics.data - 1]);
+						nceStatistics.unSubscribe.push(nceStatistics.data[nceStatistics.data.length - 1]);
+						nceStatistics.unSubscribe[nceStatistics.unSubscribe.length - 1].bookID = nceStatistics.unSubscribe[nceStatistics.unSubscribe.length - 1].book;
+						delete nceStatistics.unSubscribe[nceStatistics.unSubscribe.length - 1].book;
 						this._storageService.set('NCE_statistics', nceStatistics);
 					});
 			});

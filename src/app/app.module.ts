@@ -5,7 +5,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
 
 import { MainPage } from '../pages/main/main';
-
+import { SettingPage } from '../pages/setting/setting';
 //recitation related
 import { RecitationSelectPage } from '../pages/recitation/recitation-select/recitation-select';
 import { RecitationVocabularyOverallPage } from '../pages/recitation/recitation-vocabulary-overall/recitation-vocabulary-overall';
@@ -18,7 +18,7 @@ import { RecitationResultPage } from '../pages/recitation/recitation-result/reci
 import { LandingPage } from '../pages/landing/landing';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
-import { ForgetPasswordPage } from '../pages/forget-password/forget-password';
+import { ChangePasswordPage } from '../pages/change-password/change-password';
 //task manager and statistics related
 import { GeneralPage } from '../pages/general/general';
 import { TaskCreatePage } from '../pages/task-create/task-create';
@@ -52,7 +52,7 @@ import { StorageService } from '../providers/storage.service';
     LandingPage,
     LoginPage,
     RegisterPage,
-    ForgetPasswordPage,
+    ChangePasswordPage,
 
     GeneralPage,
     MainPage,
@@ -71,6 +71,8 @@ import { StorageService } from '../providers/storage.service';
     WordModalPage,
 
     FavoritePage,
+
+    SettingPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -92,7 +94,7 @@ import { StorageService } from '../providers/storage.service';
     LandingPage,
     LoginPage,
     RegisterPage,
-    ForgetPasswordPage,
+    ChangePasswordPage,
 
     GeneralPage,
     MainPage,
@@ -111,6 +113,8 @@ import { StorageService } from '../providers/storage.service';
     WordModalPage,
 
     FavoritePage,
+
+    SettingPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

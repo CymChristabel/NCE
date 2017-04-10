@@ -1,0 +1,39 @@
+<ion-header>
+
+  <ion-navbar>
+  	<button ion-button menuToggle>
+  		<ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>setting</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding class="outer-content">
+	<button ion-item>
+		<ion-avatar item-left class="avatar">
+			<img src="assets/img/temp-avatar.jpg">
+		</ion-avatar>
+		 <h1>{{_user.nickname}}</h1>
+		 <h3>Email: {{_user.email}}</h3>
+	</button>
+	<div class="space"></div>
+	<ion-list>
+		<ion-list-header>
+			Options
+		</ion-list-header>
+		<button ion-item (click)="_synchronize()">
+			<ion-icon name="git-pull-request" color="primary" item-left></ion-icon>
+			Synchronize
+		</button>
+		<button ion-item (click)="_goChangePasswordPage()">
+			<ion-icon name="redo" color="primary" item-left></ion-icon>
+			Change password
+		</button>
+		<button ion-item (click)="_logOut()">
+			<ion-icon name="power" color="danger" item-left></ion-icon>
+			Log out
+		</button>
+	</ion-list>
+</ion-content>

@@ -11,7 +11,6 @@ export class UserService {
 		this._storageService.get('userData').then(
 			userData => {
 				this._userData = userData;
-				console.log(this._userData);
 			}, err => console.log(err));
 	}
 
@@ -59,7 +58,18 @@ export class UserService {
 			});
 	}
 
-
+	public changeNickname(nickname: string){
+		return this._httpService.post('/user/changeNickame', {
+			email: this._userData.email,
+			nickname: nickname
+		}).map(res => {
+			if(res.ok == true)
+			{
+				this._userData.user.nickname = res.json().nickname;
+			}
+			return res.json();
+		});
+	}
 
 	public testAuth(){
 		return this._httpService.get({
@@ -72,9 +82,11 @@ export class UserService {
 		return this._userData;
 	}
 
-	public guestLogin(){
-		this._userData = { user: { nickname: 'John Doe Guest', avatar: undefined }, guest: true};
-		console.log(this._userData);
-		this._storageService.set('userData', this._userData);
+	public changePassword(oldPassword: number, newPassword: number){
+		return this._httpService.post('/auth/resetPassword', {
+			email: this._userData.user.email,
+			oldPassword: oldPassword,
+			newPassword: newPassword
+		}).map(res => res.json())
 	}
 }

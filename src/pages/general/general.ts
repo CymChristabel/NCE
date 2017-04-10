@@ -41,32 +41,34 @@ export class GeneralPage {
       }
     }
     let result = (numerator * 100 / denominator).toFixed(1);
-    var chart = c3.generate({
-        data: {
-            columns: [
-                ['data', result]
-            ],
-            type: 'gauge'
-        },
-        gauge: {
-           label: {
-               format: function(value, ratio) {
-                   return value;
-               },
-               show: true
-           },
-           min: 0,
-           max: 100,
-           units: ' %',
-           width: 50
-        },
-        size: {
-          height: 120
-        },
-        tooltip: {
-          show: true
-        }
-    });
+    setTimeout(() => {
+      let chart = c3.generate({
+          data: {
+              columns: [
+                  ['data', result]
+              ],
+              type: 'gauge'
+          },
+          gauge: {
+             label: {
+                 format: function(value, ratio) {
+                     return value;
+                 },
+                 show: true
+             },
+             min: 0,
+             max: 100,
+             units: ' %',
+             width: 50
+          },
+          size: {
+            height: 120
+          },
+          tooltip: {
+            show: true
+          }
+      });
+    }, 1)
 
   }
 
