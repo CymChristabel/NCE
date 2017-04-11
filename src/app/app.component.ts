@@ -9,8 +9,6 @@ import { RecitationSelectPage } from '../pages/recitation/recitation-select/reci
 
 import { MainPage } from '../pages/main/main';
 
-import { GeneralPage } from '../pages/general/general';
-
 import { FavoritePage } from '../pages/favorite/favorite';
 
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
@@ -74,6 +72,9 @@ export class MyApp {
                   });
                   loading.present();
                   async.series([
+                     (callback) => {
+                       this._userService.synchronizeData(callback);
+                     },
                      (callback) => {
                        this._taskService.synchronizeData(callback);
                      },

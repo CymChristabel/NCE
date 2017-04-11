@@ -3,6 +3,7 @@ import { NavController, NavParams, LoadingController, ToastController, AlertCont
 
 import { ChangePasswordPage } from '../change-password/change-password';
 import { LoginPage } from '../login/login';
+import { ChangeUserDetailPage } from '../change-user-detail/change-user-detail';
 
 import { UserService } from '../../providers/user.service';
 import { StatisticsService } from '../../providers/statistics.service';
@@ -25,7 +26,7 @@ export class SettingPage {
 	private _logOut(){
 		let alert = this._alertCtrl.create({
 			title: 'Confirm log out',
-			message: 'Do you wish to log out? After logging out your data will be cleared',
+			message: 'Do you wish to log out? After logging out your local data will be cleared',
 			buttons: [
 				{
 					text: 'Confirm',
@@ -43,6 +44,9 @@ export class SettingPage {
 			]
 		});
 		alert.present();
+	}
+	private _goChangeUserDetailPage(){
+		this._navCtrl.push(ChangeUserDetailPage);
 	}
 
 	private _goChangePasswordPage(){

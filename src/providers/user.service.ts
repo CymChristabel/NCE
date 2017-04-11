@@ -14,6 +14,23 @@ export class UserService {
 			}, err => console.log(err));
 	}
 
+	public synchronizeData(callback){
+		if(this._userData)
+		{
+			this._httpService.post('/user/getUserDetail', {
+				email: this._userData.user.email
+			}).map(res => res.json())
+			.subscribe(
+				data => {
+					this._userData.user = data;
+					callback(null, true);
+				}, err => {
+					console.log(err);
+					callback(false, null);
+				});
+		}
+	}
+
 	private _updateUser(userData: any){
 		this._userData = userData;
 		this._httpService.getAuthToken('JWT ' + userData.token);
@@ -50,7 +67,6 @@ export class UserService {
 					else
 					{
 						this._updateUser(res.json());
-						console.log(this._userData);
 						return true;	
 					}
 				}
@@ -59,14 +75,15 @@ export class UserService {
 	}
 
 	public changeNickname(nickname: string){
-		return this._httpService.post('/user/changeNickame', {
-			email: this._userData.email,
+		return this._httpService.post('/user/changeNickname', {
+			email: this._userData.user.email,
 			nickname: nickname
 		}).map(res => {
 			if(res.ok == true)
 			{
 				this._userData.user.nickname = res.json().nickname;
 			}
+			this._storageService.set('userData', this._userData);
 			return res.json();
 		});
 	}
