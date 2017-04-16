@@ -93,7 +93,9 @@ export class NCEService {
 		return this._storageService.get('NCE_book_list');
 	}
 
-	
+	public getAudioPath(path: string){
+		return this._httpService.getBaseURL() + '/file/getAudio?audio=' + path; 
+	}
 
 	public addFavorite(bookID: number, lessionID: number, title: string){
 		return this._httpService.post('/nce_favorite/add', {

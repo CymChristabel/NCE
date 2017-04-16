@@ -1,20 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, Platform, NavParams, ViewController } from 'ionic-angular';
 
+import { RecitationService } from '../../providers/recitation.service';
+import { UserService } from '../../providers/user.service';
 import * as _ from 'lodash';
 
 @Component({
-  templateUrl: 'word-modal.html'
+  templateUrl: 'word-modal.html',
+  providers: [ RecitationService, UserService ]
 })
 
 export class WordModalPage{
+	@ViewChild('audio', { read: ElementRef }) audioCtrl: ElementRef;
 	private _word;
 	private _favorite;
 	private _lock;
 	private _favoriteID;
+	private _audioPath;
 
-	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController){
+	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController, private _recitationService: RecitationService){
 		this._word = this._navParams.get('word');
+		this._audioPath = this._recitationService.getAudioPath(this._word.audio);
 		this._lock = false;
 		//deal with explainnation
 		let temp = _.words(this._word.explainnation);

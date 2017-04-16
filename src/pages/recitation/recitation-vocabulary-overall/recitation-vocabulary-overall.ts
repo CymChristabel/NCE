@@ -26,11 +26,8 @@ export class RecitationVocabularyOverallPage{
 	private _progressBar;
 	private _startTimeCount;
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _statisticsService: StatisticsService, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
-		this._recitationService.getVocabulary(this._navParam.get('id')).then(
-			vocabulary => {
-				this._vocabulary = vocabulary;
-				this._progressBar = ((this._vocabulary.progress / this._vocabulary.word.length) * 100).toFixed(1);
-			});
+		this._vocabulary = this._recitationService.getVocabulary(this._navParam.get('id'));
+		this._progressBar = this._vocabulary.progress / this._vocabulary.wordNumber;
 		this._startTimeCount = false;
 	}
 

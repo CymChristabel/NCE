@@ -28,8 +28,8 @@
 
 
 <ion-content #popoverContent padding class="popover-page">
-	<div #popoverText class="text-to-change">
 
+	<div #popoverText class="text-to-change">
     <div style = 'text-align:center'>
       <font size="5">
       {{_lession.title}}
@@ -46,4 +46,23 @@
       </div>
     </div>
   </div>
+
 </ion-content>
+
+<ion-footer class="ion-footer">
+  <audio #textAudio [src]="_audioPath"></audio>
+  <div class="progress-outer" (click)="_clickAudioProgress($event)">
+    <div class="progress-inner" [style.width]="audioTime + '%'" style = 'text-align:center'>
+        {{audioTime}}%
+    </div>
+  </div>
+    <div align="center">
+    <button ion-button color="primary" clear ion-button icon-only (click)="_decreaseAudioSpeed()"><ion-icon name="trending-down"></ion-icon></button>
+    <button ion-button color="primary" clear ion-button icon-only (click)="_audioRewind()"><ion-icon name="skip-backward-outline"></ion-icon></button>
+    <button ion-button color="primary" clear ion-button icon-only (click)="audioCtrl.nativeElement.play()" *ngIf="audioCtrl.nativeElement.paused"><ion-icon name="play-outline"></ion-icon></button>
+    <button ion-button color="primary" clear ion-button icon-only (click)="audioCtrl.nativeElement.pause()" *ngIf="!audioCtrl.nativeElement.paused"><ion-icon name="pause-outline"></ion-icon></button>
+    <button ion-button color="primary" clear ion-button icon-only (click)="_audioFastForward()"><ion-icon name="skip-forward-outline"></ion-icon></button>
+    <button ion-button color="primary" clear ion-button icon-only (click)="_increaseAudioSpeed()"><ion-icon name="trending-up"></ion-icon></button>
+  </div>
+  
+</ion-footer>

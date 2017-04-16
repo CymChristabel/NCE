@@ -1,5 +1,5 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { NavController, NavParams, PopoverController, ViewController } from 'ionic-angular';
+import { Component, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
+import { NavController, NavParams, PopoverController, ViewController, ToastController, Platform } from 'ionic-angular';
 import { MediaPlugin } from 'ionic-native';
 
 import { NCEService } from '../../../providers/nce.service';
@@ -100,14 +100,18 @@ export class PopoverMenuPage {
 export class NCEStudyTextPage implements OnInit{
 	@ViewChild('popoverContent', { read: ElementRef }) content: ElementRef;
   	@ViewChild('popoverText', { read: ElementRef }) text: ElementRef;
+  	@ViewChild('textAudio', { read: ElementRef }) audioCtrl: ElementRef;
+  	@Input() audioTime = '0';
 
   	private _lession;
   	private _showTranslation;
   	private _favorite;
   	private _lock;
   	private _favoriteID;
-	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
+  	private _audioPath;
+	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _platform: Platform, private _toastCtrl: ToastController, private _popoverCtrl: PopoverController, private _nceService: NCEService) {
 		this._lession = this._navParams.get('lession');
+		this._audioPath = this._nceService.getAudioPath(this._lession.audio);
 		this._lession.engText = _.split(this._lession.engText, '\n');
 		this._lession.chnText = _.split(this._lession.chnText, '\n');
 		this._lock = false;
@@ -132,10 +136,9 @@ export class NCEStudyTextPage implements OnInit{
 
 	ngOnInit(){
 		this.text.nativeElement.style.fontSize = 'medium';
-	}
-
-	ionViewWillLeave(){
-		
+		this.audioCtrl.nativeElement.addEventListener('timeupdate', () => {
+			this.audioTime = ((this.audioCtrl.nativeElement.currentTime / this.audioCtrl.nativeElement.duration) * 100).toFixed(1);
+		}, false);
 	}
 
 	private _presentPopover(myEvent){
@@ -147,6 +150,61 @@ export class NCEStudyTextPage implements OnInit{
 		popover.present({
 			ev: myEvent
 		});
+	}
+
+	private _decreaseAudioSpeed(){
+		if(this.audioCtrl.nativeElement.playbackRate == 0.5)
+		{
+			let toast = this._toastCtrl.create({
+				message: 'Already minimum speed',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return;
+		}
+		this.audioCtrl.nativeElement.playbackRate = this.audioCtrl.nativeElement.playbackRate - 0.5;
+	}
+
+	private _increaseAudioSpeed(){
+		if(this.audioCtrl.nativeElement.playbackRate == 1.5)
+		{
+			let toast = this._toastCtrl.create({
+				message: 'Already maximun speed',
+				duration: 1500,
+				position: 'bottom'
+			});
+			toast.present();
+			return;
+		}
+		this.audioCtrl.nativeElement.playbackRate = this.audioCtrl.nativeElement.playbackRate + 0.5;
+	}
+
+	private _clickAudioProgress(e){
+		let rate = e.offsetX / this._platform.width();
+		this.audioCtrl.nativeElement.currentTime = this.audioCtrl.nativeElement.duration * rate;
+	}
+
+	private _audioFastForward(){
+		if(this.audioCtrl.nativeElement.currentTime + 5 < this.audioCtrl.nativeElement.duration)
+		{
+			this.audioCtrl.nativeElement.currentTime = this.audioCtrl.nativeElement.currentTime + 5;
+		}
+		else
+		{
+			this.audioCtrl.nativeElement.currentTime = this.audioCtrl.nativeElement.duration;
+		}
+	}
+
+	private _audioRewind(){
+		if(this.audioCtrl.nativeElement.currentTime - 5 > 0)
+		{
+			this.audioCtrl.nativeElement.currentTime = this.audioCtrl.nativeElement.currentTime - 5;
+		}
+		else
+		{
+			this.audioCtrl.nativeElement.currentTime = 0;
+		}
 	}
 
 	private _switch(){

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, NavParams, Slides } from 'ionic-angular';
 
 import { RecitationSummaryPage } from '../recitation-summary/recitation-summary';
@@ -14,19 +14,16 @@ import * as _ from 'lodash';
 
 export class RecitationSlidePage{
 	@ViewChild('_slider') _slider: Slides;
-
+	@ViewChild('audio') audioCtrl: ElementRef;
 	private _slide;
 	private _progress;
-
+	private _audioPath;
 	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _recitationService: RecitationService){
+
 	}
 
 	ionViewWillEnter()
 	{
-		// if(this._id == undefined)
-		// {
-		// 	this._id = this._navParam.get('id');
-		// }
 		if(this._navParam.get('review') == undefined)
 		{
 			if(this._navParam.get('type') == "NCE")
@@ -47,12 +44,20 @@ export class RecitationSlidePage{
 			}
 			this._initExplainnation();
 			this._slide.push('temp');
+			this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
 			this._slider.slideTo(0, 10);
 		}
 		else
 		{
 			this._slide = this._navParam.get('wordList');
+			this._slide.push('temp');
+			this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
+			this._slider.slideTo(0, 10);
 		}
+	}
+
+	ionViewDidEnter(){
+		this.audioCtrl.nativeElement.play();
 	}
 
 	private _initExplainnation(){
@@ -86,7 +91,12 @@ export class RecitationSlidePage{
 	}
 
 	onSlideChanged(){
-		if(this._slider.isEnd()){
+		if(!this._slider.isEnd()){
+			this.audioCtrl.nativeElement.src = this._recitationService.getAudioPath(this._slide[this._slider.getActiveIndex()].audio);
+			this.audioCtrl.nativeElement.play();
+		}
+		else
+		{
 			this._navCtrl.pop();
 			if(this._navParam.get('type') == 'NCE')
 			{
@@ -104,7 +114,7 @@ export class RecitationSlidePage{
 					type: this._navParam.get('type'),
 					vocabularyID: this._navParam.get('vocabularyID')
 				});
-			}			
+			}
 		}
 	}
 }

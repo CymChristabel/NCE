@@ -1,7 +1,26 @@
 @import url('https://fonts.googleapis.com/css?family=Fredericka+the+Great|Gilda+Display|Herr+Von+Muellerhoff|Kurale|Medula+One|Parisienne|Tangerine');
 
-page-nce-study {
+page-nce-study-text {
+	.progress-outer {
+		width: 96%;
+		margin: 10px 2%;
+		padding: 3px;
+		text-align: center;
+		background-color: #f4f4f4;
+		border: 1px solid #dcdcdc;
+		color: #fff;
+		border-radius: 20px;
+        white-space: nowrap;
+	}
 
+    .progress-inner {
+        min-width: 15%;
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 5px;
+        border-radius: 20px;
+        background-color: map-get($colors, primary);
+	}
 }
 page-popover {
 	.popover-page {

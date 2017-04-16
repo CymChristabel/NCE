@@ -35,6 +35,7 @@ export class RecitationService{
 					this._vocabularyList = localVocabularyList;
 					this._checkDownload();
 				}
+				console.log(this._vocabularyList);
 			}
 		);
 	}
@@ -71,76 +72,92 @@ export class RecitationService{
 					});
 				},
 				(cb) => {
-					this._storageService.get('vocabularyProgress').then(
-						progress => {
-							if(progress)
-							{
-								for(let i = 0; i < this._vocabularyList.length; i++)
-								{
-									for(let j = 0; j < progress.length; j++)
+					this._httpService.get({
+						url: '/recitationprogress',
+						data: {
+							userID: userID
+						}
+					}).map(res => res.json())
+					.subscribe(
+						progressList => {
+							this._storageService.get('vocabularyProgress').then(
+								localProgressList => {
+									if(localProgressList)
 									{
-										if(this._vocabularyList[i].id == progress[j].id)
-										{
-											this._vocabularyList[i].progress = progress[j].progress;
-											this._vocabularyList[i].time = progress[j].time;
-											break;
-										}
-										if(j == progress.length - 1)
-										{
-											this._vocabularyList[i].progress = 0;
-											this._vocabularyList[i].time = 0;
-											progress.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
-										}
-									}		
-								}
-								this._storageService.set('vocabularyProgress', progress);
-								cb(null, true);
-							}
-							else
-							{
-								this._httpService.get({
-									url: '/recitationprogress',
-									data: {
-										userID: userID
-									}
-								}).map(res => res.json())
-								.subscribe(
-									progressList => {
-										let temp = [];
 										for(let i = 0; i < progressList.length; i++)
 										{
-											temp.push({
+											let flag = false;
+											for(let j = 0; j < localProgressList.length; j++)
+											{
+												if(progressList[i].vocabulary == localProgressList[j].id)
+												{
+													if(progressList[i].progress > localProgressList[j].progress)
+													{
+														localProgressList[j].progress = progressList[i].progress;
+													}
+													else
+													{
+														this._httpService.post('/recitationprogress/createOrUpdate', {
+															userID: this._userService.getUser().user.id,
+															vocabularyID: localProgressList[j].id,
+															progress: localProgressList[j].progress,
+															time: localProgressList[j].time
+														}).map(res => res)
+														.subscribe(ok => true, err => console.log(err));
+													}
+													flag = true;
+													break;
+												}
+												if(!flag)
+												{
+													localProgressList.push({
+														id: progressList[i].vocabulary,
+														progress: progressList[i].progress,
+														time: progressList[i].time
+													});
+												}
+											}
+										}
+									}
+									else
+									{
+										localProgressList = [];
+										for(let i = 0; i < progressList.length; i++)
+										{
+											localProgressList.push({
 												id: progressList[i].vocabulary,
 												progress: progressList[i].progress,
 												time: progressList[i].time
 											});
 										}
-										for(let i = 0; i < this._vocabularyList.length; i++)
+									}
+									console.log(localProgressList);
+									for(let i = 0; i < this._vocabularyList.length; i++)
+									{
+										let flag = false;
+										for(let j = 0; j < localProgressList.length; j++)
 										{
-											for(let j = 0; j < temp.length; j++)
+											if(this._vocabularyList[i].id == localProgressList[j].id)
 											{
-												if(this._vocabularyList[i].id == temp[j].id)
-												{
-													this._vocabularyList[i].progress = temp[j].progress;
-													this._vocabularyList[i].time = temp[j].time;
-													break;
-												}
-												if(j == temp.length - 1)
-												{
-													this._vocabularyList[i].progress = 0;
-													this._vocabularyList[i].time = 0;
-													temp.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
-												}
-											}	
+												this._vocabularyList[i].progress = localProgressList[j].progress;
+												this._vocabularyList[i].time = localProgressList[j].time;
+												flag = true;
+												break;
+											}
 										}
-										this._storageService.set('vocabularyProgress', temp);
-										cb(null, true);
-									}, err => {
-										console.log(err)
-										cb(err, null);
-									});
-
-							}
+										if(!flag)
+										{
+											this._vocabularyList[i].progress = 0;
+											this._vocabularyList[i].time = 0;
+											localProgressList.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
+										}
+									}
+									this._storageService.set('vocabularyProgress', localProgressList);
+									cb(null, true);
+								});
+						}, err => {
+							console.log(err)
+							cb(err, null);
 						});	
 					}
 				], (err, result) => {
@@ -160,6 +177,7 @@ export class RecitationService{
 			this._storageService.get('vocabularyWord:' + this._vocabularyList[i].id).then(
 				result => {
 					result ? this._vocabularyList[i].isDownloaded = true : this._vocabularyList[i].isDownloaded = false;
+					result ? this._vocabularyList[i].wordNumber = result.length : this._vocabularyList[i].wordNumber = 0;
 				});
 		}
 	}
@@ -168,18 +186,12 @@ export class RecitationService{
 		let temp = _.find(this._vocabularyList, ['id', vocabularyID]);
 		if(_.has(temp, 'word') == false)
 		{
-			return this._storageService.get('vocabularyWord:' + vocabularyID).then(
+			this._storageService.get('vocabularyWord:' + vocabularyID).then(
 				word => {
 					temp.word = word;
-					return temp;
 				});
 		}
-		else
-		{
-			return new Promise((resolve, reject) => {
-				resolve(temp);
-			});
-		}
+		return temp;
 	}
 
 	public getVocabularyForSlide(vocabularyID: number){
@@ -252,8 +264,7 @@ export class RecitationService{
 				let temp = _.find(this._vocabularyList, { id: vocabularyID });
 				this._storageService.set('vocabularyWord:' + vocabularyID, res.json().word.word);
 				temp.isDownloaded = true;
-				temp.progress = res.json().progress.progress;
-				temp.time = res.json().progress.time;
+				temp.wordNumber = res.json().word.word.length;
 				temp.word = res.json().word.word;
 				return temp;
 			}
@@ -263,6 +274,10 @@ export class RecitationService{
 
 	public getVocabularyList(){
 		return this._vocabularyList;
+	}
+
+	public getAudioPath(path: string){
+		return this._httpService.getBaseURL() + '/file/getAudio?audio=' + path;
 	}
 
 	public addFavorite(vocabularyID: number, wordID: number, name: string = undefined){

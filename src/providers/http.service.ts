@@ -56,6 +56,10 @@ export class HttpService{
     	}
     	return parameter;
     }
+
+    public getBaseURL(){
+        return HttpService.BASE_URL;
+    }
     
     //http get must have a url key
     public get(param: Object, headers?: Object){

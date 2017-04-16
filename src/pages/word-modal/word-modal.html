@@ -21,6 +21,10 @@
 
 <ion-content padding>
     <h1 style="text-align:center">{{_word.name}}</h1>
+    <div align="center">
+      <audio #audio [src]="_audioPath" autoplay="autoplay"></audio>
+      <button ion-button color="primary" clear ion-button icon-only large (click)="audioCtrl.nativeElement.play()"><ion-icon name="volume-mute"></ion-icon></button>
+    </div>
     <p *ngFor='let e of _word.explainnation'>{{e}}</p>
     <h5>例句</h5>
     <div *ngFor='let e of _word.example'>

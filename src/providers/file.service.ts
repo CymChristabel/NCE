@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { File, Transfer} from 'ionic-native';
+import { File, Transfer } from 'ionic-native';
 
 
 

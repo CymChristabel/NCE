@@ -109,8 +109,6 @@ export class MyApp {
     this.pages = [
       { title: 'Recitation', component: RecitationSelectPage },
       { title: 'landing', component: LandingPage },
-      { title: 'login', component: LoginPage },
-      { title: 'register', component: RegisterPage },
       { title: 'General', component: MainPage },
       { title: 'NCE', component: NCESelectPage },
       { title: 'favorite', component: FavoritePage }

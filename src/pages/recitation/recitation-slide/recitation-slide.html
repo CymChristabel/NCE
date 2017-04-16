@@ -12,6 +12,10 @@
   <ion-slides #_slider (ionSlideWillChange)="onSlideChanged()">
     <ion-slide *ngFor="let p of _slide">
       <h1>{{p.name}}</h1>
+        <div align="center">
+          <audio #audio [src]="_audioPath"></audio>
+          <button ion-button color="primary" clear ion-button icon-only large (click)="audioCtrl.nativeElement.play()"><ion-icon name="volume-mute"></ion-icon></button>
+        </div>
       <p *ngFor='let e of p.explainnation'>{{e}}</p>
     </ion-slide>
   </ion-slides>

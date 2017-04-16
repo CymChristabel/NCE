@@ -60,7 +60,12 @@
                     </ion-col>
                 </ion-row>
                 <ion-row>
-                    <h2>进度: {{t.current}} / {{t.goal}}</h2>
+                <div class="progress-outer">
+                    <div class="progress-inner" [style.width]="t.current / t.goal * 100 + '%'">
+                        {{t.current}} / {{t.goal}}
+                    </div>
+                </div>
+                    <!-- <h2>进度: {{t.current}} / {{t.goal}}</h2> -->
                 </ion-row>
             </ion-item>
             <ion-item-options>
