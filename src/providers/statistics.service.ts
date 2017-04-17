@@ -365,4 +365,19 @@ export class StatisticsService {
 	public getNCEStatistics(){
 		return this._storageService.get('NCE_statistics');
 	}
+
+	public deleteLocalData(callback){
+		async.series([
+			(cb) => {
+				this._storageService.remove('NCE_statistics').then(cb(null, true));
+			},
+			(cb) => {
+				this._storageService.remove('recitation_statistics').then(cb(null, true));
+			},
+			(cb) => {
+				this._storageService.remove('time_count').then(cb(null, true));
+			}], (err, ok) => {
+				callback(null, true);
+			});
+	}
 }

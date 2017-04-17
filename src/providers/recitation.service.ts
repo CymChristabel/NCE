@@ -332,4 +332,16 @@ export class RecitationService{
 		return this._storageService.get('word_favorite');
 	}
 
+	public deleteLocalData(callback){
+		async.series([
+			(cb) => {
+				this._storageService.remove('word_favorite').then(cb(null, true));
+			},
+			(cb) => {
+				this._storageService.remove('vocabularyProgress').then(cb(null, true));
+			}], (err, ok) => {
+				callback(null, true);
+			});
+	}
+
 }

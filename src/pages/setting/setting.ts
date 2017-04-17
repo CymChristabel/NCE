@@ -31,9 +31,29 @@ export class SettingPage {
 				{
 					text: 'Confirm',
 					handler: () => {
-						this._userService.logout().then(
-							ok => {
-								this._app.getRootNav().setRoot(LoginPage)
+						let loading = this._loadingCtrl.create({
+							content: 'deleting local data...'
+						});
+						loading.present();
+						async.series([
+							(callback) => {
+								this._userService.deleteLocalData(callback);
+							},
+							(callback) => {
+								this._statisticsService.deleteLocalData(callback);
+							},
+							(callback) => {
+								this._taskService.deleteLocalData(callback);
+							},
+							(callback) => {
+								this._recitationService.deleteLocalData(callback);
+							},
+							(callback) => {
+								this._nceService.deleteLocalData(callback);
+							}
+							], (err, ok) => {
+								loading.dismiss();
+								this._app.getRootNav().setRoot(LoginPage);
 							});
 					}
 				},

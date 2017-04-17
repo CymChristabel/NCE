@@ -3,7 +3,6 @@ import { NavController, ToastController, LoadingController } from 'ionic-angular
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 
 import { RegisterPage } from '../register/register';
-import { ChangePasswordPage } from '../change-password/change-password';
 import { MainPage } from '../main/main';
 
 import { StatisticsService } from '../../providers/statistics.service';
@@ -41,10 +40,6 @@ export class LoginPage {
 
   private _goRegisterPage(){
   	this._navCtrl.push(RegisterPage);
-  }
-
-  private _goChangePasswordPage(){
-  	this._navCtrl.push(ChangePasswordPage);
   }
 
   private _generateToast(message: string){

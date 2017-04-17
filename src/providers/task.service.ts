@@ -121,6 +121,7 @@ export class TaskService {
 						}).map(res => res.json())
 						.subscribe(
 							data => {
+								console.log(data);
 								for(let i = 0; i < data.nceTask.length; i++)
 								{
 									let flag = false;
@@ -485,5 +486,9 @@ export class TaskService {
 
 		}
 		return this._taskList.data;
+	}
+
+	public deleteLocalData(callback){
+		this._storageService.remove('task_list').then(callback(null, true));
 	}
 }

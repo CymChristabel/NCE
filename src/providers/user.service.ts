@@ -50,10 +50,6 @@ export class UserService {
 				return false;
 			});
 	}
-
-	public logout(){
-		return this._storageService.remove('userData');
-	}
 	
 	public signUp(user: any){
 		return this._httpService.post('/auth/signup', user).map(
@@ -105,5 +101,9 @@ export class UserService {
 			oldPassword: oldPassword,
 			newPassword: newPassword
 		}).map(res => res.json())
+	}
+
+	public deleteLocalData(callback){
+		this._storageService.remove('userData').then(callback(null, true)); 
 	}
 }

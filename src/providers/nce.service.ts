@@ -153,4 +153,7 @@ export class NCEService {
 		return this._storageService.get('NCE_favorite');
 	}
 
+	public deleteLocalData(callback){
+		this._storageService.remove('NCE_favorite').then(callback(null, true));
+	}
 }
