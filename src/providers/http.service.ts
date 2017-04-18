@@ -34,7 +34,6 @@ export class HttpService{
 
     private _getHeaders(extraHeaders): Headers {
         let headers = new Headers({'Content-Type': 'application/json', 'Authorization': this._authToken});
-        // let headers = new Headers({'Content-Type': 'application/json'});
         if(extraHeaders && typeof extraHeaders == 'object')
         {
             extraHeaders.forEach((key, value) => {

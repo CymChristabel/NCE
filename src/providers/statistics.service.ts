@@ -17,7 +17,7 @@ export class StatisticsService {
 	}
 
 	public synchronizeData(callback){
-		let userID = this._userService.getUser().user.id;
+		let userID = this._userService.getUserID();
 		if(userID)
 		{
 			async.series([
@@ -218,7 +218,7 @@ export class StatisticsService {
 					date: date,
 					nceTime: nceTime,
 					recitationTime: recitationTime,
-					userID: this._userService.getUser().user.id
+					userID: this._userService.getUserID()
 				}).map(res => res)
 				.subscribe(
 					ok => {
@@ -284,7 +284,7 @@ export class StatisticsService {
 					recitationStatistics = { data: [{ date: date, vocabularyID: vocabularyID, correct: correct, incorrect: incorrect }], unSubscribe: [] };
 				}
 				this._httpService.post('/recitationstatistics/createOrUpdate', {
-					userID: this._userService.getUser().user.id,
+					userID: this._userService.getUserID(),
 					vocabularyID: vocabularyID,
 					correct: correct,
 					incorrect: incorrect,
@@ -344,7 +344,7 @@ export class StatisticsService {
 				this._httpService.post('/nce_statistics', {
 					lessionID: lessionID,
 					bookID: bookID,
-					userID: this._userService.getUser().user.id,
+					userID: this._userService.getUserID(),
 					correct: correct,
 					incorrect: incorrect,
 					date: date.format('YYYY-MM-DD HH:mm:ss')

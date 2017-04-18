@@ -18,16 +18,15 @@ import { RecitationService } from '../providers/recitation.service';
 import { NCEService } from '../providers/nce.service';
 import { UserService } from '../providers/user.service';
 import { StorageService } from '../providers/storage.service';
-import { FileService } from '../providers/file.service';
 import { StatisticsService } from '../providers/statistics.service';
-
+import { FriendService } from '../providers/friend.service';
 import * as async from 'async';
 
 declare var cordova:any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [ StorageService, RecitationService, NCEService, UserService, TaskService, FileService, StatisticsService ]
+  providers: [ StorageService, RecitationService, NCEService, UserService, TaskService, StatisticsService, FriendService ]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -46,8 +45,8 @@ export class MyApp {
     private _recitationService: RecitationService,
     private _nceService: NCEService,
     private _taskService: TaskService,
-    private _fileService: FileService,
-    private _statisticsService: StatisticsService
+    private _statisticsService: StatisticsService,
+    private _friendService: FriendService
   ) {
     this._storageService.get('isFirst').then(
       isFirst => {

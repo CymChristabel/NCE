@@ -1,0 +1,56 @@
+import { HttpService } from './http.service';
+import { StorageService } from './storage.service';
+import { UserService } from './user.service';
+import { Injectable } from '@angular/core';
+
+import * as socketIOClient from 'socket.io-client';
+import * as sailsIOClient from 'sails.io.js';
+
+@Injectable()
+export class FriendService {
+  	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
+
+  	}
+
+  	public searchUser(key: string){
+  		return this._httpService.get({
+  			url: '/friend/searchUser',
+  			data: {
+  				key: key,
+  				userID: this._userService.getUserID()
+  			}
+  		}).map(res => res.json());
+  	}
+
+  	public sendRequest(targetID: any){
+  		return this._httpService.post('/friend/postRequest', {
+  			userID: this._userService.getUserID(),
+  			responseUserID: targetID
+  		}).map(res => res.json());
+  	}
+
+    public acceptRequest(targetID: any){
+      return this._httpService.post('/friend/resolveRequest', {
+        userID: this._userService.getUserID(),
+        requestUserID: targetID
+      }).map(res => res.json());
+    }
+
+    public getFriend(){
+      return this._httpService.get({
+          url: '/friend/getFriend',
+          data: {
+            userID: this._userService.getUserID()
+          }
+        }).map(res => res.json());
+    }
+
+    public getRequest(){
+      return this._httpService.get({
+        url: '/friend/getRequest',
+        data: {
+          userID :this._userService.getUserID()
+        }
+      }).map(res => res.json());
+    }
+}

@@ -24,7 +24,7 @@ export class TaskService {
 	}
 
 	public synchronizeData(callback){
-		let userID = this._userService.getUser().user.id;
+		let userID = this._userService.getUserID();
 		if(userID)
 		{
 			this._storageService.get('task_list').then(
@@ -225,7 +225,7 @@ export class TaskService {
 			});
 		}
 		this._httpService.post('/task/createNCETask', {
-			userID: this._userService.getUser().user.id,
+			userID: this._userService.getUserID(),
 			bookID: bookID,
 			lessionID: lessionID,
 			startDate: date
@@ -256,7 +256,7 @@ export class TaskService {
 		let temp = this._taskList.data.nceTask[index];
 		this._taskList.data.nceTask.splice(index, 1);
 		this._httpService.post('/task/deleteNCETask', {
-			userID: this._userService.getUser().user.id,
+			userID: this._userService.getUserID(),
 			bookID: temp.bookID
 		}).map(res => res.json())
 		.subscribe(ok => {
@@ -299,7 +299,7 @@ export class TaskService {
 							this._taskList.data.nceTask[i].dailyFinished = true;
 
 							this._httpService.post('/task/updateNCETask', {
-								userID: this._userService.getUser().user.id,
+								userID: this._userService.getUserID(),
 								bookID: bookID,
 								lessionID: temp[j + 1].id
 							}).map(res => res)
@@ -328,7 +328,7 @@ export class TaskService {
 							this._taskList.data.nceTask[i].lastUpdateDate = moment().format('YYYY-MM-DD HH:mm:ss');
 							this._taskList.data.nceTask[i].dailyFinished = true;
 							this._httpService.post('/task/updateNCETask', {
-								userID: this._userService.getUser().user.id,
+								userID: this._userService.getUserID(),
 								bookID: bookID,
 								finished: true
 							}).map(res => res)
@@ -385,7 +385,7 @@ export class TaskService {
 		}
 		this._storageService.set('task_list', this._taskList);
 		this._httpService.post('/task/createRecitationTask', {
-			userID: this._userService.getUser().user.id,
+			userID: this._userService.getUserID(),
 			vocabularyID: vocabularyID,
 			goal: goal,
 			startDate: date
@@ -427,7 +427,7 @@ export class TaskService {
 		if(flag)
 		{
 			this._httpService.post('/task/updateRecitationTask', {
-				userID: this._userService.getUser().user.id,
+				userID: this._userService.getUserID(),
 				vocabularyID: vocabularyID,
 				current: temp.current
 			}).map(res => res)
@@ -457,7 +457,7 @@ export class TaskService {
 		let temp = this._taskList.data.recitationTask[index];
 		this._taskList.data.recitationTask.splice(index, 1);
 		this._httpService.post('/task/deleteRecitationTask', {
-			userID: this._userService.getUser().user.id,
+			userID: this._userService.getUserID(),
 			bookID: temp.vocabularyID
 		}).map(res => res.json())
 		.subscribe(ok => {

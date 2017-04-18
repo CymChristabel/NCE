@@ -36,13 +36,13 @@ export class NCEService {
 	}
 
 	public synchronizeData(callback){
-		let userID = this._userService.getUser().user.id;
+		let userID = this._userService.getUserID();
 		if(userID)
 		{
 			this._httpService.get({
 				url: '/nce_favorite',
 				data: {
-					userID: this._userService.getUser().user.id
+					userID: userID
 				}
 			}).map(res => res.json())
 			.subscribe(

@@ -1,22 +1,136 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 
-/*
-  Generated class for the Friend page.
+import { AddFriendPage } from '../add-friend/add-friend';
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
+import { FriendService } from '../../providers/friend.service';
+
+import * as async from 'async';
+
 @Component({
   selector: 'page-friend',
   templateUrl: 'friend.html'
 })
 export class FriendPage {
-
-  constructor(private _navCtrl: NavController, private _navParams: NavParams) {}
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad FriendPage');
+  private _requestList;
+  private _friendList;
+  private _networkFlag; //true means network normal
+  constructor(private _navCtrl: NavController, private _navParams: NavParams, private _friendService: FriendService, private _toastCtrl: ToastController, private _alertCtrl: AlertController) {
+    this._networkFlag = true;
   }
 
+  ionViewWillEnter() {
+    this._getList();
+  	setInterval(() => {
+  		this._getList();
+  	}, 10000);
+  }
+
+  private _goAddFriendPage(){
+  	this._navCtrl.push(AddFriendPage);
+  }
+
+  private _getList(){
+    this._friendService.getFriend().subscribe(
+      data => {
+        this._networkFlag = true;
+        this._friendList = data;
+        for(let i = 0; i < this._friendList.length; i++)
+        {
+          if(this._friendList[i].avatar == null)
+          {
+            this._friendList[i].avatar = 'assets/img/temp-avatar.jpg';
+          }
+        }
+      }, err => {
+        console.log(err);
+        if(this._networkFlag)
+        {
+          this._networkFlag = false;
+          let toast = this._toastCtrl.create({
+            message: 'network err',
+            duration: 1500,
+            position: 'bottom'
+          });
+          toast.present();
+        }
+      });
+
+    this._friendService.getRequest().subscribe(
+      data => {
+        this._networkFlag = true;
+        this._requestList = data;
+        for(let i = 0; i < this._requestList.length; i++)
+        {
+          if(this._requestList[i].avatar == null)
+          {
+            this._requestList[i].avatar = 'assets/img/temp-avatar.jpg';
+          }
+        }
+      }, err => {
+        console.log(err);
+        if(this._networkFlag)
+        {
+          this._networkFlag = false;
+          let toast = this._toastCtrl.create({
+            message: 'network err',
+            duration: 1500,
+            position: 'bottom'
+          });
+          toast.present();
+        }
+      });
+  }
+
+  private _acceptRequest(user){
+    let alert = this._alertCtrl.create({
+      title: 'Accept request',
+      message: 'Do you wish to be friend with this guy?',
+      buttons: [
+        {
+          text: 'Confirm',
+          handler: () => {
+            this._friendService.acceptRequest(user.id).subscribe(
+              data => {
+                this._networkFlag = true;
+                this._friendList = data;
+                for(let i = 0; i < this._friendList.length; i++)
+                {
+                  if(this._friendList[i].avatar == null)
+                  {
+                    this._friendList[i].avatar = 'assets/img/temp-avatar.jpg';
+                  }
+                }
+                for(let i = 0; i < this._requestList.length; i++)
+                {
+                  if(this._requestList[i] == user)
+                  {
+                     this._requestList.splice(i, 1);
+                     break;
+                  }
+                  
+                }
+              }, err => {
+                console.log(err);
+                if(this._networkFlag)
+                {
+                  this._networkFlag = false;
+                  let toast = this._toastCtrl.create({
+                    message: 'network err',
+                    duration: 1500,
+                    position: 'bottom'
+                  });
+                  toast.present();
+                }
+              });
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'Cancel'
+        }
+      ]
+    });
+    alert.present();
+  }
 }

@@ -20,7 +20,9 @@ import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { ChangePasswordPage } from '../pages/change-password/change-password';
 import { ChangeUserDetailPage } from '../pages/change-user-detail/change-user-detail';
+//friend related
 import { FriendPage } from '../pages/friend/friend';
+import { AddFriendPage } from '../pages/add-friend/add-friend';
 //task manager and statistics related
 import { GeneralPage } from '../pages/general/general';
 import { TaskCreatePage } from '../pages/task-create/task-create';
@@ -61,7 +63,9 @@ import { StorageService } from '../providers/storage.service';
     MainPage,
     StatisticsPage,
     TaskCreatePage,
+
     FriendPage,
+    AddFriendPage,
 
     NCEStudyTextPage,
     NCESelectPage,
@@ -105,7 +109,9 @@ import { StorageService } from '../providers/storage.service';
     MainPage,
     StatisticsPage,
     TaskCreatePage,
+
     FriendPage,
+    AddFriendPage,
 
     NCEStudyTextPage,
     NCESelectPage,

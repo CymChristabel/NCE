@@ -1,0 +1,31 @@
+<!--
+  Generated template for the AddFriend page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>add friend</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-searchbar (ionInput) = "_onInput($event)"></ion-searchbar>
+
+	<ion-list>
+		<div *ngFor="let i of _searchList">
+	  		<button ion-item (click) = "_sendRequest(i)">
+			    <ion-thumbnail item-left>
+			    	<img [src]="i.avatar">
+			    </ion-thumbnail>
+			    <h2>{{i.nickname}}</h2>
+			    <p>{{i.email}}</p>
+		  	</button>
+		</div>
+	</ion-list>
+
+</ion-content>

@@ -7,12 +7,45 @@
 <ion-header>
 
   <ion-navbar>
+  	<button ion-button menuToggle>
+  		<ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>friend</ion-title>
+    <ion-buttons end>
+		<button ion-button icon-only (click) = "_goAddFriendPage()">
+			<ion-icon name="add"></ion-icon>
+		</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+	<ion-list>
+	  	<ion-item-group>
+	  		<ion-item-divider color="light">request</ion-item-divider>
+	  		<div *ngFor="let i of _requestList">
+		  		<button ion-item (click)="_acceptRequest(i)">
+				    <ion-thumbnail item-left>
+				      <img [src]="i.avatar">
+				    </ion-thumbnail>
+				    <h2>{{i.nickname}}</h2>
+				    <p>{{i.email}}</p>
+			  	</button>
+		  	</div>
+	 	</ion-item-group>
+	 	<ion-item-group>
+	  		<ion-item-divider color="light">friends</ion-item-divider>
+	  		<div *ngFor="let i of _friendList">
+		  		<ion-item>
+				    <ion-thumbnail item-left>
+				      <img [src]="i.avatar">
+				    </ion-thumbnail>
+				    <h2>{{i.nickname}}</h2>
+				    <p>{{i.email}}</p>
+			  	</ion-item>
+		  	</div>
+	 	</ion-item-group>
+	</ion-list>
 </ion-content>

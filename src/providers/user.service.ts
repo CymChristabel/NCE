@@ -95,6 +95,10 @@ export class UserService {
 		return this._userData;
 	}
 
+	public getUserID(){
+		return this._userData.user.id;
+	}
+
 	public changePassword(oldPassword: number, newPassword: number){
 		return this._httpService.post('/auth/resetPassword', {
 			email: this._userData.user.email,

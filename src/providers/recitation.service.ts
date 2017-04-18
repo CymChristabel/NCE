@@ -41,7 +41,7 @@ export class RecitationService{
 	}
 
 	public synchronizeData(callback){
-		let userID = this._userService.getUser().user.id;
+		let userID = this._userService.getUserID();
 		if(userID)
 		{
 			async.series([
@@ -98,7 +98,7 @@ export class RecitationService{
 													else
 													{
 														this._httpService.post('/recitationprogress/createOrUpdate', {
-															userID: this._userService.getUser().user.id,
+															userID: this._userService.getUserID(),
 															vocabularyID: localProgressList[j].id,
 															progress: localProgressList[j].progress,
 															time: localProgressList[j].time
@@ -218,7 +218,7 @@ export class RecitationService{
 		});
 
 		this._httpService.post('/recitationprogress/createOrUpdate', {
-			userID: this._userService.getUser().user.id,
+			userID: this._userService.getUserID(),
 			vocabularyID: vocabularyID,
 			progress: temp.progress,
 			time: temp.time
@@ -255,7 +255,7 @@ export class RecitationService{
 			url: '/recitationvocabulary',
 			data: {
 				id: vocabularyID,
-				userID: this._userService.getUser().user.id
+				userID: this._userService.getUserID()
 			}
 		})
 		.map(res => {
@@ -284,7 +284,7 @@ export class RecitationService{
 		return this._httpService.post('/wordfavorite/add', {
 			vocabularyID: vocabularyID,
 			wordID: wordID,
-			userID: this._userService.getUser().user.id
+			userID: this._userService.getUserID()
 		}).map(res => {
 			this.getFavoriteList().then(
 				favoriteList => {
