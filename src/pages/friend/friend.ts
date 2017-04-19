@@ -17,6 +17,8 @@ export class FriendPage {
   private _networkFlag; //true means network normal
   constructor(private _navCtrl: NavController, private _navParams: NavParams, private _friendService: FriendService, private _toastCtrl: ToastController, private _alertCtrl: AlertController) {
     this._networkFlag = true;
+    this._requestList = [];
+    this._friendList = [];
   }
 
   ionViewWillEnter() {
@@ -108,7 +110,71 @@ export class FriendPage {
                      this._requestList.splice(i, 1);
                      break;
                   }
-                  
+                }
+              }, err => {
+                console.log(err);
+                if(this._networkFlag)
+                {
+                  this._networkFlag = false;
+                  let toast = this._toastCtrl.create({
+                    message: 'network err',
+                    duration: 1500,
+                    position: 'bottom'
+                  });
+                  toast.present();
+                }
+              });
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'Cancel'
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  private _rejectRequest(user){
+    this._friendService.rejectRequest(user.id).subscribe(
+      ok => {
+          for(let i = 0; i < this._requestList.length; i++)
+          {
+            if(this._requestList[i] == user)
+            {
+               this._requestList.splice(i, 1);
+               break;
+            }
+          }
+      }, err => {
+        console.log(err);
+        let toast = this._toastCtrl.create({
+          message: 'network err',
+          duration: 1500,
+          position: 'bottom'
+        });
+        toast.present();
+      });
+  }
+
+  private _sayGoodbye(user){
+    let alert = this._alertCtrl.create({
+      title: 'Accept request',
+      message: 'Do you wish to be break up with this guy?',
+      buttons: [
+        {
+          text: 'Confirm',
+          handler: () => {
+            this._friendService.sayGoodbye(user.id).subscribe(
+              ok => {
+                this._networkFlag = true;
+                for(let i = 0; i < this._friendList.length; i++)
+                {
+                  if(this._friendList[i] == user)
+                  {
+                     this._friendList.splice(i, 1);
+                     break;
+                  }
                 }
               }, err => {
                 console.log(err);

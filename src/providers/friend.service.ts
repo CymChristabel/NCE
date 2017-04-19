@@ -53,4 +53,18 @@ export class FriendService {
         }
       }).map(res => res.json());
     }
+
+    public sayGoodbye(targetID: number){
+      return this._httpService.post('/friend/sayGoodbye', {
+        userID: this._userService.getUserID(),
+        friendID: targetID
+      }).map(res => res)
+    }
+
+    public rejectRequest(targetID: number){
+      return this._httpService.post('/friend/rejectRequest', {
+        userID: this._userService.getUserID(),
+        requestUserID: targetID
+      }).map(res => res);
+    }
 }

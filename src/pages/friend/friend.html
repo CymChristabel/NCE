@@ -13,7 +13,7 @@
     <ion-title>friend</ion-title>
     <ion-buttons end>
 		<button ion-button icon-only (click) = "_goAddFriendPage()">
-			<ion-icon name="add"></ion-icon>
+			<ion-icon name="person-add"></ion-icon>
 		</button>
     </ion-buttons>
   </ion-navbar>
@@ -23,9 +23,9 @@
 
 <ion-content padding>
 	<ion-list>
-	  	<ion-item-group>
+	  	<ion-item-group *ngIf="_requestList.length > 0">
 	  		<ion-item-divider color="light">request</ion-item-divider>
-	  		<div *ngFor="let i of _requestList">
+	  		<ion-item-sliding *ngFor="let i of _requestList">
 		  		<button ion-item (click)="_acceptRequest(i)">
 				    <ion-thumbnail item-left>
 				      <img [src]="i.avatar">
@@ -33,18 +33,33 @@
 				    <h2>{{i.nickname}}</h2>
 				    <p>{{i.email}}</p>
 			  	</button>
-		  	</div>
+			    <ion-item-options>
+	                <button ion-button large color="danger" (click)="_rejectRequest(i)">
+	                    <ion-icon name="close"></ion-icon>
+	                </button>
+	            </ion-item-options>
+		  	</ion-item-sliding>
 	 	</ion-item-group>
 	 	<ion-item-group>
 	  		<ion-item-divider color="light">friends</ion-item-divider>
-	  		<div *ngFor="let i of _friendList">
-		  		<ion-item>
-				    <ion-thumbnail item-left>
-				      <img [src]="i.avatar">
-				    </ion-thumbnail>
-				    <h2>{{i.nickname}}</h2>
-				    <p>{{i.email}}</p>
-			  	</ion-item>
+		  		<div *ngIf="_friendList.length > 0">
+		  		<ion-item-sliding *ngFor="let i of _friendList">
+			  		<button ion-item>
+					    <ion-thumbnail item-left>
+					      <img [src]="i.avatar">
+					    </ion-thumbnail>
+					    <h2>{{i.nickname}}</h2>
+					    <p>{{i.email}}</p>
+				  	</button>
+				     <ion-item-options>
+		                <button ion-button large color="danger" (click)="_sayGoodbye(i)">
+		                    <ion-icon name="sad"></ion-icon>
+		                </button>
+		            </ion-item-options>
+			  	</ion-item-sliding>
+		  	</div>
+		  	<div *ngIf="_friendList.length == 0">
+		  		You don't have a friend, what a pity.
 		  	</div>
 	 	</ion-item-group>
 	</ion-list>
