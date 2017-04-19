@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { NavController, NavParams, MenuController, ToastController, ActionSheetController, LoadingController } from 'ionic-angular';
 
 import { StatisticsService } from '../../providers/statistics.service';
@@ -21,7 +21,7 @@ import * as moment from 'moment';
   templateUrl: 'statistics.html'
 })
 
-export class StatisticsPage {
+export class StatisticsPage implements AfterViewInit {
 	private _date;
 	private _loadingList;
 	//time chart related
@@ -36,7 +36,7 @@ export class StatisticsPage {
 		this._loadingList = { loading: {}, list: [] };
 	}
 
-	ionViewWillLoad() {
+	ngAfterViewInit() {
 		this._loadingList.loading = this._loadingCtrl.create({
 			content: 'init chart...'
 		});

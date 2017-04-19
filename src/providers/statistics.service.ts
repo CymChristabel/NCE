@@ -366,6 +366,16 @@ export class StatisticsService {
 		return this._storageService.get('NCE_statistics');
 	}
 
+	public compareStatistics(targetID: number){
+      return this._httpService.get({
+        url: '/friend/compareStatistics',
+        data: {
+          userID: this._userService.getUserID(),
+          friendID: targetID
+        }
+      }).map(res => res.json());
+    }
+
 	public deleteLocalData(callback){
 		async.series([
 			(cb) => {

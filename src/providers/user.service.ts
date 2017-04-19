@@ -23,6 +23,10 @@ export class UserService {
 			.subscribe(
 				data => {
 					this._userData.user = data;
+					if(this._userData.user.avatar == null)
+					{
+						this._userData.user.avatar = 'assets/img/temp-avatar.jpg';	
+					}
 					callback(null, true);
 				}, err => {
 					console.log(err);

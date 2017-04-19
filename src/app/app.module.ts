@@ -23,6 +23,7 @@ import { ChangeUserDetailPage } from '../pages/change-user-detail/change-user-de
 //friend related
 import { FriendPage } from '../pages/friend/friend';
 import { AddFriendPage } from '../pages/add-friend/add-friend';
+import { FriendComparePage } from '../pages/friend-compare/friend-compare';
 //task manager and statistics related
 import { GeneralPage } from '../pages/general/general';
 import { TaskCreatePage } from '../pages/task-create/task-create';
@@ -66,6 +67,7 @@ import { StorageService } from '../providers/storage.service';
 
     FriendPage,
     AddFriendPage,
+    FriendComparePage,
 
     NCEStudyTextPage,
     NCESelectPage,
@@ -112,6 +114,7 @@ import { StorageService } from '../providers/storage.service';
 
     FriendPage,
     AddFriendPage,
+    FriendComparePage,
 
     NCEStudyTextPage,
     NCESelectPage,

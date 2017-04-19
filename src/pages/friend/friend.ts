@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 
 import { AddFriendPage } from '../add-friend/add-friend';
+import { FriendComparePage } from '../friend-compare/friend-compare';
 
 import { FriendService } from '../../providers/friend.service';
 
@@ -30,6 +31,10 @@ export class FriendPage {
 
   private _goAddFriendPage(){
   	this._navCtrl.push(AddFriendPage);
+  }
+
+  private _goComparePage(friend){
+    this._navCtrl.push(FriendComparePage, { friend: friend });
   }
 
   private _getList(){

@@ -44,7 +44,7 @@
 	  		<ion-item-divider color="light">friends</ion-item-divider>
 		  		<div *ngIf="_friendList.length > 0">
 		  		<ion-item-sliding *ngFor="let i of _friendList">
-			  		<button ion-item>
+			  		<button ion-item (click)="_goComparePage(i)">
 					    <ion-thumbnail item-left>
 					      <img [src]="i.avatar">
 					    </ion-thumbnail>
