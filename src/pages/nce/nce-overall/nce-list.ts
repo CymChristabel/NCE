@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { NCEStudyPage } from '../nce-study/nce-study';
 import { NCEStudyMainPage } from '../nce-study/nce-study-main';
 
 import * as _ from 'lodash';

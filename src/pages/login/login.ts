@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from
 
 import { RegisterPage } from '../register/register';
 import { MainPage } from '../main/main';
+import { EmailPage } from '../forget-password/email-page/email-page';
 
 import { StatisticsService } from '../../providers/statistics.service';
 import { RecitationService } from '../../providers/recitation.service';
@@ -91,6 +92,9 @@ export class LoginPage {
         this._generateToast('password should between 8 and 16 characters').present();
       }
     }
+  }
 
+  private _goEmailPage(){
+    this._navCtrl.push(EmailPage);
   }
 }

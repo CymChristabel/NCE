@@ -25,7 +25,7 @@ export class RegisterPage{
 	}
 
 	private _mailFormat(c: AbstractControl){
-		let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+		let EMAIL_REGEXP =  /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
 
         if (c.value != "" && (c.value.length <= 5 || !EMAIL_REGEXP.test(c.value))) {
             return { "incorrectMailFormat": true };

@@ -103,12 +103,28 @@ export class UserService {
 		return this._userData.user.id;
 	}
 
-	public changePassword(oldPassword: number, newPassword: number){
+	public changePassword(oldPassword: string, newPassword: string){
 		return this._httpService.post('/auth/resetPassword', {
 			email: this._userData.user.email,
 			oldPassword: oldPassword,
 			newPassword: newPassword
 		}).map(res => res.json())
+	}
+
+	public requestForgetPassword(email: string){
+		return this._httpService.get({
+			url: '/auth/requestForgetPassword',
+			data: {
+				email: email
+			}
+		}).map(res => res.json());
+	}
+
+	public resolveForgetPassword(token: string, password: string){
+		return this._httpService.post('/auth/resolveForgetPassword', {
+			token: token,
+			password: password
+		}).map(res => res.json());
 	}
 
 	public deleteLocalData(callback){

@@ -20,6 +20,8 @@ import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { ChangePasswordPage } from '../pages/change-password/change-password';
 import { ChangeUserDetailPage } from '../pages/change-user-detail/change-user-detail';
+import { EmailPage } from '../pages/forget-password/email-page/email-page';
+import { ResetPage } from '../pages/forget-password/reset-page/reset-page';
 //friend related
 import { FriendPage } from '../pages/friend/friend';
 import { AddFriendPage } from '../pages/add-friend/add-friend';
@@ -59,6 +61,8 @@ import { StorageService } from '../providers/storage.service';
     RegisterPage,
     ChangePasswordPage,
     ChangeUserDetailPage,
+    EmailPage,
+    ResetPage,
 
     GeneralPage,
     MainPage,
@@ -106,7 +110,9 @@ import { StorageService } from '../providers/storage.service';
     RegisterPage,
     ChangePasswordPage,
     ChangeUserDetailPage,
-
+    EmailPage,
+    ResetPage,
+      
     GeneralPage,
     MainPage,
     StatisticsPage,
