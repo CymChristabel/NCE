@@ -33,19 +33,21 @@ export class HttpService{
     }
 
     private _getHeaders(extraHeaders): Headers {
-        let headers = new Headers({'Content-Type': 'application/json', 'Authorization': this._authToken});
+        let temp = { 'Content-Type': 'application/json', 'Authorization': this._authToken };
         if(extraHeaders && typeof extraHeaders == 'object')
         {
-            extraHeaders.forEach((key, value) => {
-                headers.append(key, value);
-            });
+            for(let i in extraHeaders)
+            {
+                temp[i] = extraHeaders[i];
+            }
         }
+        let headers = new Headers(temp);
         return headers;
     }
 
     private _parseParameter(param: Object){
     	var parameter = param['url'];
-    	if(param['data'].length != 0)
+    	if(param['data'] && param['data'].length != 0)
     	{
     		parameter = parameter + '?';
     		Object.getOwnPropertyNames(param['data']).forEach(function(val, idx, array){
@@ -92,4 +94,7 @@ export class HttpService{
         return Promise.reject(errMsg);
     }
 
+    public directGet(url: string, headers?: Object){
+        return this._http.get(url, { headers: new Headers(headers) });
+    }
 }

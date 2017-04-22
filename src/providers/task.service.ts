@@ -383,7 +383,6 @@ export class TaskService {
 				dailyFinished: false
 			});
 		}
-		this._storageService.set('task_list', this._taskList);
 		this._httpService.post('/task/createRecitationTask', {
 			userID: this._userService.getUserID(),
 			vocabularyID: vocabularyID,

@@ -13,7 +13,7 @@ export class StatisticsService {
 	private _timeCount;
 
 	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
-		this._timeCount = {};
+		this._timeCount = {};	
 	}
 
 	public synchronizeData(callback){

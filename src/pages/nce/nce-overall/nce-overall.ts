@@ -20,7 +20,4 @@ export class NCEOverallPage {
 		this._navCtrl.push(NCEListPage, { bookID: this._book.id, lession: this._book.lession });
 	}
 
-	private _submitTask(){
-
-	}
 }
