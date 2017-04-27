@@ -20,7 +20,20 @@ export class WordModalPage{
 
 	constructor(private _platform: Platform, private _navParams: NavParams, private _viewCtrl: ViewController, private _recitationService: RecitationService){
 		this._word = this._navParams.get('word');
-		this._audioPath = this._recitationService.getAudioPath(this._word.audio);
+		if(this._word.audio)
+		{
+			this._audioPath = this._recitationService.getAudioPath(this._word.audio);
+		}
+		else
+		{
+			this._recitationService.getAlternateAudioPath(this._word.name).then((path, err) => {
+				if(err || !path)
+				{
+					return
+				}
+				this._audioPath = path;
+			});
+		}
 		this._lock = false;
 		//deal with explainnation
 		let temp = _.words(this._word.explainnation);

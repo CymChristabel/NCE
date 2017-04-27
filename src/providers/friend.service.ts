@@ -9,7 +9,6 @@ import * as sailsIOClient from 'sails.io.js';
 @Injectable()
 export class FriendService {
   	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
-      this._httpService.directGet('http://v.163.com/special/opencourse/englishs1.html').map(res => res.json()).subscribe(data => console.log(data), err => console.log(err));
   	}
 
   	public searchUser(key: string){

@@ -44,14 +44,40 @@ export class RecitationSlidePage{
 			}
 			this._initExplainnation();
 			this._slide.push('temp');
-			this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
+			if(this._audioPath)
+			{
+				this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
+			}
+			else
+			{
+				this._recitationService.getAlternateAudioPath(this._slide[0].name).then((path, err) => {
+					if(err || !path)
+					{
+						return
+					}
+					this._audioPath = path;
+				});
+			}
 			this._slider.slideTo(0, 10);
 		}
 		else
 		{
 			this._slide = this._navParam.get('wordList');
 			this._slide.push('temp');
-			this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
+			if(this._audioPath)
+			{
+				this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
+			}
+			else
+			{
+				this._recitationService.getAlternateAudioPath(this._slide[0].name).then((path, err) => {
+					if(err || !path)
+					{
+						return
+					}
+					this._audioPath = path;
+				});
+			}
 			this._slider.slideTo(0, 10);
 		}
 	}
@@ -92,8 +118,23 @@ export class RecitationSlidePage{
 
 	onSlideChanged(){
 		if(!this._slider.isEnd()){
-			this.audioCtrl.nativeElement.src = this._recitationService.getAudioPath(this._slide[this._slider.getActiveIndex()].audio);
-			this.audioCtrl.nativeElement.play();
+			if(this._slide[this._slider.getActiveIndex()].audio)
+			{
+				this.audioCtrl.nativeElement.src = this._recitationService.getAudioPath(this._slide[this._slider.getActiveIndex()].audio);
+				this.audioCtrl.nativeElement.play();
+			}
+			else
+			{
+				this._recitationService.getAlternateAudioPath(this._slide[this._slider.getActiveIndex()].name).then((path, err) => {
+					if(err || !path)
+					{
+						return
+					}
+					this.audioCtrl.nativeElement.src = path;
+					this.audioCtrl.nativeElement.play();
+				});
+			}
+			
 		}
 		else
 		{

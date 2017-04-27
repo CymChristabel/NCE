@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 
 import * as _ from 'lodash';
 import * as async from 'async';
+import * as superagent from 'superagent';
+import * as cheerio from 'cheerio';
 
 @Injectable()
 
@@ -278,6 +280,27 @@ export class RecitationService{
 
 	public getAudioPath(path: string){
 		return this._httpService.getBaseURL() + '/file/getAudio?audio=' + path;
+	}
+
+	public getAlternateAudioPath(name: string){
+		return superagent.get('http://www.iciba.com/' + name)
+				.then((html, err) => {
+					if(err)
+					{
+						return err;
+					}
+					console.log(html);
+					let $ = cheerio.load(html.text);
+					let temp;
+					$('i.new-speak-step').each((i, elem) => {
+						if($(elem).attr('ms-on-mouseover'))
+						{
+							temp = $(elem).attr('ms-on-mouseover').slice(7, $(elem).attr('ms-on-mouseover').length - 2);
+							return;
+						}
+					});
+					return temp;
+				});
 	}
 
 	public addFavorite(vocabularyID: number, wordID: number, name: string = undefined){
