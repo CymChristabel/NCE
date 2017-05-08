@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, App } from 'ionic-angular';
 
-import { GeneralPage } from '../general/general';
+import { MainPage } from '../main/main';
 
 import { UserService } from '../../providers/user.service';
 
@@ -15,7 +15,7 @@ export class RegisterPage{
 
 	private _registerForm: FormGroup;
 
-	constructor(private _navCtrl: NavController, private _userService: UserService, private _formBuilder: FormBuilder, private _toastCtrl: ToastController){
+	constructor(private _navCtrl: NavController, private _userService: UserService, private _app: App , private _formBuilder: FormBuilder, private _toastCtrl: ToastController){
 			this._registerForm = this._formBuilder.group({
 				'email': new FormControl('test@qqq.com', Validators.compose([Validators.required, this._mailFormat])),
 		        'password': new FormControl('1111111111',Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(16)])),
@@ -41,7 +41,7 @@ export class RegisterPage{
 				result => {
 					if(result == true)
 					{
-						this._navCtrl.setRoot(GeneralPage);
+						this._app.getRootNav().setRoot(MainPage);
 					}
 					else if(result == -1)
 					{
