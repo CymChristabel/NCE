@@ -60,7 +60,7 @@ export class NCEService {
 					this._storageService.set('NCE_favorite', favoriteList);
 					callback(null, true);
 			}, err => {
-				console.log(err)
+				console.log(err);
 				callback(err, null);
 			});
 		}

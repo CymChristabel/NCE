@@ -79,7 +79,8 @@ export class LoginPage {
                   this._navCtrl.setRoot(MainPage);
             });
         }, err => {
-          this._generateToast('Your connection to the server is down, please check your network').present();
+          console.log(err);
+          this._generateToast(err.json().message).present();
         });
     }
     else

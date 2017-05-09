@@ -48,7 +48,7 @@ export class TaskService {
 									for(let j = 0; j < taskList.data.nceTask.length; j++)
 									{
 										let temp = false;
-										if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD'))
+										if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD') && data.nceTask[i].createdAt != data.nceTask[i].updatedAt)
 										{
 											temp = true;
 										}
@@ -65,7 +65,7 @@ export class TaskService {
 									if(!flag)
 									{
 										let temp = false;
-										if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD'))
+										if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD') && data.nceTask[i].createdAt != data.nceTask[i].updatedAt)
 										{
 											temp = true;
 										}
@@ -130,7 +130,7 @@ export class TaskService {
 										if(taskList.data.nceTask[j].bookID == data.nceTask[i].book.id)
 										{
 											let temp = false;
-											if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD'))
+											if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD') && data.nceTask[i].createdAt != data.nceTask[i].updatedAt)
 											{
 												temp = true;
 											}
@@ -145,7 +145,7 @@ export class TaskService {
 									if(!flag)
 									{
 										let temp = false;
-										if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD'))
+										if(moment(data.nceTask[i].updatedAt).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD') && data.nceTask[i].createdAt != data.nceTask[i].updatedAt)
 										{
 											temp = true;
 										}
@@ -162,7 +162,6 @@ export class TaskService {
 								}
 
 								taskList.data.recitationTask = [];
-								console.log(data);
 								for(let i = 0; i < data.recitationTask.length; i++)
 								{
 									taskList.data.recitationTask.push({

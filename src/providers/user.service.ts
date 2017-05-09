@@ -44,13 +44,11 @@ export class UserService {
 	public login(account: any){
 		return this._httpService.post('/auth/login', account).map(
 			res => {
-				if(res != undefined)
+				if(res.ok)
 				{
 					this._updateUser(res.json());
-					return true;
-					
 				}
-				return false;
+				return res;
 			});
 	}
 	
