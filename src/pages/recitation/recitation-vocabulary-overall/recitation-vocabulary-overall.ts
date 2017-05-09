@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, LoadingController, AlertController, ToastController } from 'ionic-angular';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { RecitationModalPage } from './modal';
@@ -25,14 +25,13 @@ export class RecitationVocabularyOverallPage{
 	private _vocabulary;
 	private _progressBar;
 	private _startTimeCount;
-	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _statisticsService: StatisticsService, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
+	constructor(private _navCtrl: NavController, private _navParam: NavParams, private _toastCtrl: ToastController, private _alertCtrl: AlertController, private _statisticsService: StatisticsService, private _recitationService: RecitationService, private _modalCtrl: ModalController, private _loadingCtrl: LoadingController) {
 		this._vocabulary = this._recitationService.getVocabulary(this._navParam.get('id'));
-		this._progressBar = this._vocabulary.progress / this._vocabulary.wordNumber;
 		this._startTimeCount = false;
 	}
 
 	ionViewWillEnter(){
-
+		this._progressBar = this._vocabulary.progress / this._vocabulary.wordNumber;
 	}
 
 	ionViewWillUnload(){
@@ -51,8 +50,18 @@ export class RecitationVocabularyOverallPage{
 		loading.present();
 		this._recitationService.downloadVocabulary(this._vocabulary.id).subscribe(
 			result => {
+				this._progressBar = this._vocabulary.progress / this._vocabulary.wordNumber;
 				loading.dismiss();
-			}, err => console.log(err));
+			}, err => {
+				console.log(err);
+				let toast = this._toastCtrl.create({
+					message: 'Network error',
+					duration: 2000,
+					position: 'bottom'
+				});
+				toast.present();
+				loading.dismiss();
+			});
 	}
 
 	private _showModal(){
@@ -72,5 +81,37 @@ export class RecitationVocabularyOverallPage{
 			vocabularyID: this._vocabulary.id,
 			type: 'recitation'
 		});
+	}
+
+	private _resetProgress(){
+		let alert = this._alertCtrl.create({
+			title: 'Reset Progress',
+			message: 'Do you wish to reset your progress?',
+			buttons: [
+				{
+					text: 'Confirm',
+					handler: () => {
+						this._recitationService.resetProgress(this._vocabulary.id).subscribe(
+							ok => {
+								this._progressBar = 0;
+							}, err => {
+								console.log(err);
+								let toast = this._toastCtrl.create({
+									message: 'Network error',
+									duration: 2000,
+									position: 'bottom'
+								});
+								toast.present();
+							});
+					}
+				},
+				{
+					text: 'Cancel',
+					role: 'cancel'
+				}
+			]
+		});
+
+		alert.present();
 	}
 }

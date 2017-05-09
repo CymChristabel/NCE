@@ -64,20 +64,21 @@ export class RecitationSlidePage{
 		{
 			this._slide = this._navParam.get('wordList');
 			this._slide.push('temp');
-			if(this._audioPath)
-			{
-				this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
-			}
-			else
-			{
-				this._recitationService.getAlternateAudioPath(this._slide[0].name).then((path, err) => {
-					if(err || !path)
-					{
-						return
-					}
-					this._audioPath = path;
-				});
-			}
+			this._audioPath = this._recitationService.getAudioPath(this._slide[0].audio);
+			// if(this._audioPath)
+			// {
+				
+			// }
+			// else
+			// {
+			// 	this._recitationService.getAlternateAudioPath(this._slide[0].name).then((path, err) => {
+			// 		if(err || !path)
+			// 		{
+			// 			return
+			// 		}
+			// 		this._audioPath = path;
+			// 	});
+			// }
 			this._slider.slideTo(0, 10);
 		}
 	}

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController, LoadingController } from 'ionic-angular';
+import { NavController, ToastController, LoadingController, MenuController } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 
 import { RegisterPage } from '../register/register';
@@ -22,7 +22,8 @@ import * as async from 'async';
 export class LoginPage {
   private _loginForm: FormGroup;
 
-  constructor(private _navCtrl: NavController, private _loadingCtrl: LoadingController, private _taskService: TaskService, private _userService: UserService, private _recitationService: RecitationService, private _nceService: NCEService, private _statisticsService: StatisticsService, private _toastCtrl: ToastController, private _formBuilder: FormBuilder) {
+  constructor(private _navCtrl: NavController, private _menuCtrl: MenuController, private _loadingCtrl: LoadingController, private _taskService: TaskService, private _userService: UserService, private _recitationService: RecitationService, private _nceService: NCEService, private _statisticsService: StatisticsService, private _toastCtrl: ToastController, private _formBuilder: FormBuilder) {
+    this._menuCtrl.swipeEnable(false);
     this._loginForm = this._formBuilder.group({
         'email': new FormControl('test@qq.com', Validators.compose([Validators.required, this._mailFormat])),
         'password': new FormControl('nimazhale',Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(16)])),

@@ -18,6 +18,7 @@ export class RecitationService{
 		console.log('init vocabulary service....');
 		this._storageService.get('vocabularyList').then(
 			localVocabularyList => {
+				console.log(localVocabularyList);
 				if(localVocabularyList == undefined)
 				{
 					this._httpService.get({
@@ -37,7 +38,6 @@ export class RecitationService{
 					this._vocabularyList = localVocabularyList;
 					this._checkDownload();
 				}
-				console.log(this._vocabularyList);
 			}
 		);
 	}
@@ -133,28 +133,30 @@ export class RecitationService{
 											});
 										}
 									}
-									console.log(localProgressList);
-									for(let i = 0; i < this._vocabularyList.length; i++)
+									if(this._vocabularyList)
 									{
-										let flag = false;
-										for(let j = 0; j < localProgressList.length; j++)
+										for(let i = 0; i < this._vocabularyList.length; i++)
 										{
-											if(this._vocabularyList[i].id == localProgressList[j].id)
+											let flag = false;
+											for(let j = 0; j < localProgressList.length; j++)
 											{
-												this._vocabularyList[i].progress = localProgressList[j].progress;
-												this._vocabularyList[i].time = localProgressList[j].time;
-												flag = true;
-												break;
+												if(this._vocabularyList[i].id == localProgressList[j].id)
+												{
+													this._vocabularyList[i].progress = localProgressList[j].progress;
+													this._vocabularyList[i].time = localProgressList[j].time;
+													flag = true;
+													break;
+												}
+											}
+											if(!flag)
+											{
+												this._vocabularyList[i].progress = 0;
+												this._vocabularyList[i].time = 0;
+												localProgressList.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
 											}
 										}
-										if(!flag)
-										{
-											this._vocabularyList[i].progress = 0;
-											this._vocabularyList[i].time = 0;
-											localProgressList.push({ id: this._vocabularyList[i].id, progress: 0, time: 0 });
-										}
+										this._storageService.set('vocabularyProgress', localProgressList);
 									}
-									this._storageService.set('vocabularyProgress', localProgressList);
 									cb(null, true);
 								});
 						}, err => {
@@ -194,6 +196,39 @@ export class RecitationService{
 				});
 		}
 		return temp;
+	}
+
+	public resetProgress(vocabularyID: number){
+		return this._httpService.post('/recitationprogress/resetProgress', {
+			userID: this._userService.getUserID(),
+			vocabularyID: vocabularyID
+		}).map(res => {
+			console.log(res);
+			if(res.ok)
+			{
+				for(let i = 0; i < this._vocabularyList.length; i++)
+				{
+					if(vocabularyID == this._vocabularyList[i].id)
+					{
+						this._vocabularyList[i].progress = 0;
+						break;
+					}
+				}
+				this._storageService.get('vocabularyProgress').then(
+					progressList => {
+						for(let i = 0; i < progressList.length; i++)
+						{
+							if(vocabularyID == progressList[i].id)
+							{
+								progressList[i].progress = 0;
+								break;
+							}
+						}
+						this._storageService.set('vocabularyProgress', progressList);
+					});
+			}
+			return res;
+		});
 	}
 
 	public getVocabularyForSlide(vocabularyID: number){

@@ -47,7 +47,6 @@ export class UserService {
 				if(res != undefined)
 				{
 					this._updateUser(res.json());
-					console.log(this._userData);
 					return true;
 					
 				}
@@ -67,7 +66,8 @@ export class UserService {
 					else
 					{
 						this._updateUser(res.json());
-						return true;	
+						console.log(this._userData);
+						return true;
 					}
 				}
 				return false;

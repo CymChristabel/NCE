@@ -28,4 +28,5 @@
   <button ion-button full *ngIf = "_vocabulary.isDownloaded" (click)="_showModal()">Show word list</button>
   <button ion-button full *ngIf = "!_vocabulary.isDownloaded" (click) = "_downloadPress()">Download</button>
   <button ion-button full *ngIf = "_vocabulary.isDownloaded" (click)= "_goRecitationSlidePage()">Strat</button>
+  <button ion-button full *ngIf = "_vocabulary.isDownloaded" (click)= "_resetProgress()">Reset</button>
 </ion-content>

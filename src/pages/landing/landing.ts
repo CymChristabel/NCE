@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from "ionic-angular";
+import { NavController, MenuController } from "ionic-angular";
 
-import { GeneralPage } from '../general/general';
+import { RegisterPage } from '../register/register';
 import { LoginPage } from '../login/login';
 
 @Component({
@@ -12,13 +12,13 @@ import { LoginPage } from '../login/login';
 
 export class LandingPage {
 
-    constructor(private _navCtrl: NavController) {
-
+    constructor(private _navCtrl: NavController, private _menuCtrl: MenuController) {
+        this._menuCtrl.swipeEnable(false);
     }
 
     slides = [
         {
-            title: "Shop online",
+            title: "Learning english",
             description: "Kies producten van je favoriete supermarkt(en) in onze webshop.",
             image: "../../img/tutorial1.png",
         },
@@ -40,7 +40,7 @@ export class LandingPage {
         this._navCtrl.setRoot(LoginPage);
     }
 
-    goGeneralPage() {
-        this._navCtrl.setRoot(GeneralPage);
+    goRegisterPage() {
+        this._navCtrl.setRoot(RegisterPage);
     }
 }

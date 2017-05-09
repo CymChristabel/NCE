@@ -18,6 +18,7 @@ export class NCEService {
 	private _bookList;
   	constructor(private _httpService: HttpService, private _storageService: StorageService, private _userService: UserService) {
   		console.log('init book service...');
+  		this._storageService.clear();
 		this.getLocalBookList().then(
 			localBookList => {
 				if(localBookList == undefined)
