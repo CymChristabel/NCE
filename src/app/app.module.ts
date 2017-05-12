@@ -40,6 +40,8 @@ import { NCEStudyWordPage } from '../pages/nce/nce-study/nce-study-word';
 //etc
 import { WordModalPage } from '../pages/word-modal/word-modal';
 import { FavoritePage } from '../pages/favorite/favorite';
+import { WordSearchPage } from '../pages/word-search/word-search';
+import { WordCrawledPage } from '../pages/word-crawled/word-crawled';
 //service related
 import { HttpService } from '../providers/http.service';
 import { StorageService } from '../providers/storage.service';
@@ -83,7 +85,8 @@ import { StorageService } from '../providers/storage.service';
     PopoverMenuPage,
 
     WordModalPage,
-
+    WordSearchPage,
+    WordCrawledPage,
     FavoritePage,
 
     SettingPage
@@ -132,7 +135,8 @@ import { StorageService } from '../providers/storage.service';
     PopoverMenuPage,
 
     WordModalPage,
-
+    WordSearchPage,
+    WordCrawledPage,
     FavoritePage,
 
     SettingPage

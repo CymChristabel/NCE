@@ -13,6 +13,8 @@ import { FavoritePage } from '../pages/favorite/favorite';
 
 import { NCESelectPage } from '../pages/nce/nce-select/nce-select';
 
+import { WordSearchPage } from '../pages/word-search/word-search';
+
 import { TaskService } from '../providers/task.service';
 import { RecitationService } from '../providers/recitation.service';
 import { NCEService } from '../providers/nce.service';
@@ -110,7 +112,8 @@ export class MyApp {
       { title: 'landing', component: LandingPage },
       { title: 'General', component: MainPage },
       { title: 'NCE', component: NCESelectPage },
-      { title: 'favorite', component: FavoritePage }
+      { title: 'favorite', component: FavoritePage },
+      { title: 'word search', component: WordSearchPage }
     ];
   }
 

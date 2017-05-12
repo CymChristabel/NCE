@@ -56,7 +56,6 @@ export class RecitationService{
 					}).map(res => res.json())
 					.subscribe(
 						favoriteList => {
-							console.log(favoriteList);
 							for(let i = 0; i < favoriteList.length; i++)
 							{
 								favoriteList[i] = {
@@ -334,7 +333,51 @@ export class RecitationService{
 							return;
 						}
 					});
+					console.log(temp);
 					return temp;
+				});
+	}
+
+	public wordCrawler(name: string){
+		return superagent.get('http://www.iciba.com/' + name)
+				.then((html, err) => {
+					if(err)
+					{
+						return err;
+					}
+					let $ = cheerio.load(html.text);
+					let word = { name: name, audio: '', meaning: [], example: [] };
+					$('i.new-speak-step').each((i, elem) => {
+						if($(elem).attr('ms-on-mouseover'))
+						{
+							word.audio = $(elem).attr('ms-on-mouseover').slice(7, $(elem).attr('ms-on-mouseover').length - 2);
+							return false;
+						}
+					});
+					$('ul.base-list').find('span.prop').each((i, elem) => {
+						let temp = { attribute: $(elem).text(), explainnation: [] };
+						word.meaning.push(temp);
+					});
+					let count = 0;
+					$('ul.base-list').find('p').each((i, elem) => {
+						$(elem).find('span').each((item, element) => {
+							word.meaning[count].explainnation.push($(element).text());
+						});
+						count = count + 1;
+					});
+					$('div.sentence-item').each((i, elem) => {
+						if(!$(elem).find('p.family-english').find('i.icon-sound').attr('ms-on-click'))
+						{
+							return false;
+						}
+						let temp = { engText: '', chnText: '', audio: '' };
+						temp.engText = $(elem).find('p.family-english').find('span').text();
+						temp.chnText = $(elem).find('p.family-chinese').text();
+						temp.audio = $(elem).find('p.family-english').find('i.icon-sound').attr('ms-on-click');
+						temp.audio = temp.audio.slice(7, temp.audio.length - 2);
+						word.example.push(temp);
+					});
+					return word;
 				});
 	}
 

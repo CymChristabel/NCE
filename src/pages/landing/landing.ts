@@ -20,18 +20,18 @@ export class LandingPage {
         {
             title: "New Concept English",
             description: "Best English learning app",
-            image: "../../img/tutorial1.png",
+            image: "assets/img/NCE2.jpg",
         },
         {
             title: "Recitation",
             description: "Scientific recitation methodologies",
-            image: "../../img/tutorial2.png",
+            image: "assets/img/NCE2.jpg",
         },
         {
             title: "Graphical Study Statistics",
             description: "Let you see your study progress more easily",
             loginbutton: "Log in",
-            image: "../../img/tutorial3.png",
+            image: "assets/img/NCE2.jpg",
             createaccountbutton: "Sign up"
         }
     ];
