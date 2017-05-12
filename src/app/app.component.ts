@@ -109,7 +109,6 @@ export class MyApp {
     // set our app's pages
     this.pages = [
       { title: 'Recitation', component: RecitationSelectPage },
-      { title: 'landing', component: LandingPage },
       { title: 'General', component: MainPage },
       { title: 'NCE', component: NCESelectPage },
       { title: 'favorite', component: FavoritePage },
