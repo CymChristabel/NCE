@@ -20,7 +20,6 @@ export class FriendComparePage implements AfterViewInit {
 	constructor(private _navCtrl: NavController, private _navParams: NavParams, private _toastCtrl: ToastController, private _loadingCtrl: LoadingController, private _userService: UserService, private _statisticsService: StatisticsService) {
 		this._user = this._userService.getUser().user;
 		this._friend = this._navParams.get('friend');
-		console.log(this._user);
 	}
 
 	ngAfterViewInit() {

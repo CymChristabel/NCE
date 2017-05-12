@@ -18,21 +18,21 @@ export class LandingPage {
 
     slides = [
         {
-            title: "Learning english",
-            description: "Kies producten van je favoriete supermarkt(en) in onze webshop.",
+            title: "New Concept English",
+            description: "Best English learning app",
             image: "../../img/tutorial1.png",
         },
         {
-            title: "Kies je bezorgadres",
-            description: "Ontvang je boodschappen al binnen 2 uur of op het moment dat jij wenst.",
+            title: "Recitation",
+            description: "Scientific recitation methodologies",
             image: "../../img/tutorial2.png",
         },
         {
-            title: "Ontvang je boodschappen",
-            description: "Boodschappen uit lokale supermarkten bezorgd tot in je keuken.",
+            title: "Graphical Study Statistics",
+            description: "Let you see your study progress more easily",
             loginbutton: "Log in",
             image: "../../img/tutorial3.png",
-            createaccountbutton: "Registreer nieuw account"
+            createaccountbutton: "Sign up"
         }
     ];
 
